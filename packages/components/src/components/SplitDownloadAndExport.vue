@@ -412,6 +412,7 @@ export default {
             }
         },
         saveAs(file) {
+            if(typeof window==="undefined") return;
             const downloadElement = document.createElement("a");
             const href = window.URL.createObjectURL(file); // 创建下载的链接
             // 自动点击下载

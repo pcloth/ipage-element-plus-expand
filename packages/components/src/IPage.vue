@@ -701,6 +701,7 @@ export default {
             }, 300);
         },
         tableHeightEventSwitch(on) {
+            if(typeof window==="undefined") return;
             window[["addEventListener", "removeEventListener"][on ? 0 : 1]](
                 "resize",
                 this.tableHeightUpdate,

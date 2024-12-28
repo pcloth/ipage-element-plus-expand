@@ -13,7 +13,6 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 export default {
   extends: DefaultTheme, // or ...DefaultTheme
   enhanceApp ({ app }) {
-    app.use(IpageElementPlusExpand)
     app.use(ElementPlus, {
         locale: zhCn
     })
