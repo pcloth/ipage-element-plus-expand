@@ -1,5 +1,6 @@
 import { deepAssign } from "./utils";
 import { Search, RefreshRight, Plus } from "@element-plus/icons-vue";
+import type { IPageElementPlusExpandConfigType } from "./type.d"
 export const config: IPageElementPlusExpandConfigType = {
     options: {
         class: {
@@ -233,10 +234,10 @@ export const config: IPageElementPlusExpandConfigType = {
      * 'dialogProps.appendToBody' 它将获取this.options.dialogProps.appendToBody
      * 不传递的话，返回整个配置
      */
-    get(deepPath) {
+    get(deepPath:string) {
         if (deepPath) {
             const paths = deepPath.split(".");
-            let result = this.options;
+            let result:any = this.options;
             for (const path of paths) {
                 // todo 这里可能要处理异常
                 result = result[path];

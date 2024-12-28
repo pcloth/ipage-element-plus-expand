@@ -12,6 +12,7 @@ import { QuestionFilled } from "@element-plus/icons-vue";
 
 import RenderCell from "./RenderCell";
 import { config as $c } from "../config";
+import type { CellItemType } from "../type.d";
 
 const cellProps = {
     modelValue: {
@@ -52,7 +53,7 @@ const cellProps = {
 const initSlots = (slots: object, cellProps: any, loadData: any) => {
     const _slots = {};
     for (const key in slots) {
-        const slot = slots[key];
+        const slot:any = slots[key];
         if (typeof slot === "function") {
             _slots[key] = (...arag) => {
                 return slot(...arag, loadData);
@@ -344,7 +345,7 @@ export default defineComponent({
     props: cellProps,
     setup(props, context) {
         // console.log(props.defaultProps, context, "RenderCell", this);
-        const $rcell = getCurrentInstance().proxy;
+        const $rcell = getCurrentInstance()?.proxy;
         return () => makeDom(props, $rcell, context);
     }
 });

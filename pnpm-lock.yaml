@@ -103,6 +103,40 @@ importers:
         specifier: ^3.3.4
         version: 3.5.13(typescript@5.4.2)
 
+  playground/vue-vite-playground:
+    dependencies:
+      element-plus:
+        specifier: ^2.9.1
+        version: 2.9.1(vue@3.5.13(typescript@5.4.2))
+      vue:
+        specifier: ^3.3.4
+        version: 3.5.13(typescript@5.4.2)
+      vue-router:
+        specifier: ^4.2.5
+        version: 4.5.0(vue@3.5.13(typescript@5.4.2))
+    devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^4.2.3
+        version: 4.6.2(vite@4.5.0(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4))(vue@3.5.13(typescript@5.4.2))
+      ipage-element-plus-expand:
+        specifier: workspace:^
+        version: link:../../packages/components
+      less:
+        specifier: ^4.2.0
+        version: 4.2.0
+      sass:
+        specifier: ^1.69.4
+        version: 1.69.4
+      typescript:
+        specifier: ^5.0.2
+        version: 5.4.2
+      vite:
+        specifier: ^4.4.5
+        version: 4.5.0(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4)
+      vue-tsc:
+        specifier: ^1.8.5
+        version: 1.8.27(typescript@5.4.2)
+
 packages:
 
   '@algolia/autocomplete-core@1.17.7':
@@ -948,6 +982,9 @@ packages:
 
   '@vue/compiler-ssr@3.5.13':
     resolution: {integrity: sha512-wMH6vrYHxQl/IybKJagqbquvxpWCuVYpoUJfCqFZwa/JY1GdATAQ+TgVtgrwwMZ0D07QhA99rs/EAAWfvG6KpA==}
+
+  '@vue/devtools-api@6.6.4':
+    resolution: {integrity: sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==}
 
   '@vue/devtools-api@7.6.8':
     resolution: {integrity: sha512-ma6dY/sZR36zALVsV1W7eC57c6IJPXsy8SNgZn1PLVWU4z4dPn5TIBmnF4stmdJ4sQcixqKaQ8pwjbMPzEZwiA==}
@@ -3063,6 +3100,11 @@ packages:
       '@vue/composition-api':
         optional: true
 
+  vue-router@4.5.0:
+    resolution: {integrity: sha512-HDuk+PuH5monfNuY+ct49mNmkCRK4xJAV9Ts4z9UFc4rzdDnxQLyCMGGc8pKhZhHTVzfanpNwB/lwqevcBwI4w==}
+    peerDependencies:
+      vue: ^3.2.0
+
   vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}
 
@@ -3908,6 +3950,11 @@ snapshots:
       vite: 4.5.0(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4)
       vue: 3.5.13(typescript@5.2.2)
 
+  '@vitejs/plugin-vue@4.6.2(vite@4.5.0(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4))(vue@3.5.13(typescript@5.4.2))':
+    dependencies:
+      vite: 4.5.0(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4)
+      vue: 3.5.13(typescript@5.4.2)
+
   '@vitejs/plugin-vue@4.6.2(vite@5.4.11(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4))(vue@3.5.13(typescript@5.4.2))':
     dependencies:
       vite: 5.4.11(@types/node@20.8.7)(less@4.2.0)(sass@1.69.4)
@@ -3990,6 +4037,8 @@ snapshots:
     dependencies:
       '@vue/compiler-dom': 3.5.13
       '@vue/shared': 3.5.13
+
+  '@vue/devtools-api@6.6.4': {}
 
   '@vue/devtools-api@7.6.8':
     dependencies:
@@ -6418,6 +6467,11 @@ snapshots:
 
   vue-demi@0.14.6(vue@3.5.13(typescript@5.4.2)):
     dependencies:
+      vue: 3.5.13(typescript@5.4.2)
+
+  vue-router@4.5.0(vue@3.5.13(typescript@5.4.2)):
+    dependencies:
+      '@vue/devtools-api': 6.6.4
       vue: 3.5.13(typescript@5.4.2)
 
   vue-template-compiler@2.7.16:

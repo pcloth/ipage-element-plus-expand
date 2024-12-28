@@ -10,7 +10,9 @@
     "skipLibCheck": true,
     "lib": ["DOM", "ESNext"],
     "allowImportingTsExtensions": true,
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "preserve", // 添加这一行
+    "jsxImportSource": "vue" // 添加这一行
   },
   "exclude": [
     "dist", "node_modules"
