@@ -195,11 +195,11 @@ export const toEventsAppendParams = (onEvent, loadData, on = true) => {
                     };
                 }
             } else if (fn.constructor.name === "Object") {
-                events[key] = toEventsAppendParams(onEvent[key], loadData);
+                events[key] = toEventsAppendParams(onEvent[key], loadData, on);
             } else if (fn.constructor.name === "Array") {
                 // 如果是array
                 events[key] = fn.map((element: any) => {
-                    return toEventsAppendParams(element, loadData);
+                    return toEventsAppendParams(element, loadData, on);
                 });
             } else {
                 events[key] = fn;
@@ -208,7 +208,7 @@ export const toEventsAppendParams = (onEvent, loadData, on = true) => {
         return events;
     } else if (onEvent.constructor.name === "Array") {
         return onEvent.map((element: any) => {
-            return toEventsAppendParams(element, loadData);
+            return toEventsAppendParams(element, loadData, on);
         });
     } else {
         return onEvent;

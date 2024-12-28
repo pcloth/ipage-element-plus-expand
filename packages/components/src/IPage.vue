@@ -71,6 +71,7 @@
                     v-model="currentRow"
                     :loading="formSubmitLoading"
                     @beforeSubmit="beforeSubmit"
+                    @validationFailed="validationFailed"
                     @cancel="showDialog = false"
                     @afterSubmit="afterSubmit"
                     ref="iform"
@@ -627,6 +628,9 @@ export default {
         },
         beforeSubmit(data) {
             this.$emit("beforeSubmit", data);
+        },
+        validationFailed(data) {
+            this.$emit("validationFailed", data);
         },
         afterSubmit(data) {
             this.handleSearch();

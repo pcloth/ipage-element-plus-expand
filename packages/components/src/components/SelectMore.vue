@@ -50,6 +50,7 @@ const { props: elSelectProps } = ElSelect;
 import { config as $c } from "../config";
 import { getPathValue, preventRepeat } from "../utils";
 import { Loading } from "@element-plus/icons-vue";
+import { nextTick } from "vue";
 export default {
     components: {
         Loading
@@ -137,6 +138,7 @@ export default {
         modelValue: {
             handler(value) {
                 this.customValue = value;
+                this.checkEchoFunc();
             },
             immediate: true
         },
@@ -171,8 +173,11 @@ export default {
     methods: {
         canShowEcho(item) {
             // 如果item已经在options中，不显示
-            return !this.options.some(
-                it => it[this.valueField] === item[this.valueField]
+            return (
+                item &&
+                !this.options.some(
+                    it => it[this.valueField] === item[this.valueField]
+                )
             );
         },
         getValueByPath(obj, path) {
@@ -201,10 +206,11 @@ export default {
             this.queryWord = "";
             this.params.pageNo = 1;
             this.options = [];
-            const flag =
-                this.modelValue && this.echoFunc && !this.echoOptions.length
-                    ? true
-                    : false;
+            this.checkEchoFunc();
+        },
+        async checkEchoFunc() {
+            await nextTick();
+            const flag = this.modelValue && this.echoFunc ? true : false;
             if (flag) {
                 // 没有回显数据的时候才调用
                 this.echoOptions = await this.echoFunc();
@@ -243,6 +249,9 @@ export default {
                 this.$emit("getCurrentItem", selected, args);
             } else {
                 // 单选
+                if (!args) {
+                    return;
+                }
                 const currentItem = this.options.find(
                     it => it[this.valueField] === args
                 );

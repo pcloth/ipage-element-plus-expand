@@ -56,6 +56,8 @@ export type CellItemType = {
     valueWatch?: Function;
     /** 自定义options的节点 loadData, row */
     optionDom?: Function;
+    /** 如果你已经安装了vue-the-mask，就可以直接使用输入框控制参数 */
+    mask?: string | Object;
 };
 
 export type ColumnType = {

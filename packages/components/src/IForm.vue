@@ -29,7 +29,7 @@
                 />
             </el-col>
             <el-col class="ipage_iform_buttons" :span="24" v-if="canShowButton">
-                <RenderCell
+                <!-- <RenderCell
                     v-if="canShowSubmitButton"
                     :item="mergeSubmitButton"
                     :qData="qData"
@@ -38,8 +38,8 @@
                     v-if="canShowCancelButton"
                     :item="mergeCancelButton"
                     :qData="qData"
-                />
-                <template v-for="btn in expandButtons" :key="btn.id">
+                /> -->
+                <template v-for="btn in mergeActionButtons" :key="btn.id">
                     <RenderCell
                         v-model="form[btn.id]"
                         :item="btn"
@@ -252,6 +252,23 @@ export default {
                 rcellData,
                 this.cancelButton ? this.cancelButton : { show: false }
             );
+        },
+        mergeActionButtons() {
+            const buttons = [];
+            if (this.canShowSubmitButton) {
+                buttons.push(this.mergeSubmitButton);
+            }
+            if (this.canShowCancelButton) {
+                buttons.push(this.mergeCancelButton);
+            }
+            if (this.expandButtons && this.expandButtons.length) {
+                buttons.push(...this.expandButtons);
+            }
+            // 对按钮进行排序
+            buttons.sort((a, b) => {
+                return (a.sort || 0) - (b.sort || 0);
+            });
+            return buttons;
         }
     },
     created() {
@@ -289,15 +306,12 @@ export default {
         },
         _handleSubmit() {
             this.$refs.formRef.validate(valid => {
-                console.log(299);
                 if (valid) {
                     if (this.submitLoading) {
                         return;
                     }
-                    console.log(1);
                     this.$emit("beforeSubmit", this.form);
                     if (this.submitFunc) {
-                        console.log(2);
                         this.submitLoading = true;
                         this.submitFunc(this.form)
                             .then(res => {

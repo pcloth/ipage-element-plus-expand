@@ -443,11 +443,11 @@ export default {
             width: 100%;
         }
 
-        v-deep .el-form-item--small.el-form-item {
+        :deep(.el-form-item--small.el-form-item) {
             margin-bottom: 16px;
         }
 
-        v-deep .el-form-item__content {
+        :deep(.el-form-item__content) {
             display: flex;
 
             .el-input,

@@ -15,8 +15,12 @@ import { config as $c } from "../config";
 
 const cellProps = {
     modelValue: {
-        type: [String, Number, Array, Object, Boolean],
-        default: "" // 默认值暂时放""副作用较小
+        type: [String, Number, Array, Object, Boolean]
+        /**
+         * 默认值暂时放""副作用较小
+         * ""会让组件报错，直接不定义默认值可能更好一些，观察一下哪些组件会报问题
+         */
+        // default: ""
     },
     item: {
         type: Object as PropType<CellItemType>
@@ -263,7 +267,6 @@ const makeDom = ($props, $rcell, $context) => {
     } else {
         dom = h(domConfig.dom(loadData), mergeProps, onSlots);
     }
-
     /** 处理v-model */
     dom.props.modelValue = modelValue;
     pressOtherValues($props, modelValue);

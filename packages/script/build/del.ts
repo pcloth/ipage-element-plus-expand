@@ -1,26 +1,21 @@
-import fs from 'node:fs'
-import { resolve } from 'node:path'
-import { rootPath } from './path'
+import { rmdirSync, existsSync, readdirSync, unlinkSync, statSync } from 'fs';
+import { join } from 'path';
 
-const stayFile = ['package.json', 'README.md']
-
-export async function delPath(path: string) {
-  let files: string[] = []
-
-  if (fs.existsSync(path)) {
-    files = fs.readdirSync(path)
-
-    files.forEach(async (file) => {
-      const currentPath = resolve(path, file)
-
-      if (fs.statSync(currentPath).isDirectory()) {
-        if (file !== 'node_modules') await delPath(currentPath)
-      }
-      else {
-        if (!stayFile.includes(file)) fs.unlinkSync(currentPath)
-      }
-    })
-
-    if (path !== `${rootPath}/dist`) fs.rmdirSync(path)
-  }
+export async function delPath (path: string) {
+    if (existsSync(path)) {
+        if (statSync(path).isDirectory()) {
+            const files = readdirSync(path);
+            for (const file of files) {
+                const curPath = join(path, file);
+                if (statSync(curPath).isDirectory()) {
+                    delPath(curPath); // 递归删除子目录
+                } else {
+                    unlinkSync(curPath); // 删除文件
+                }
+            }
+            rmdirSync(path); // 删除空目录
+        } else {
+            unlinkSync(path); // 删除文件
+        }
+    }
 }

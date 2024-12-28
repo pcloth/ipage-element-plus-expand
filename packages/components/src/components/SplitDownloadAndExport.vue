@@ -312,6 +312,7 @@ export default {
             this.loading = true;
             try {
                 await this.checkPageCount();
+                this.currentPage = 1;
             } catch (error) {
                 this.handleExportError(error);
                 return;
