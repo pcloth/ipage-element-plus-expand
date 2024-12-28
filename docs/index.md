@@ -5,8 +5,8 @@ titleTemplate: 组件库开发起始模板
 
 hero:
   name: ipage-element-plus-expand
-  text: element-plus扩展组件库
-  tagline: element-plus/组件库/快速业务交付
+  text: 高阶ElementPlus封装库
+#   tagline: element-plus/组件库/快速业务交付
   actions:
     - theme: brand
       text: Get Started

@@ -1,5 +1,14 @@
 .group {
-  > :nth-child(n) {
-    margin: 0 10px;
-  }
+    > :nth-child(n) {
+        margin: 0 10px;
+    }
 }
+.VPHome {
+    .name {
+        font-size: 41px!important;
+    }
+    .text {
+        font-size: 45px!important;
+    }
+}
+
