@@ -15,6 +15,7 @@
   "exports": {},
   "scripts": {
     "build": "gulp -f packages/script/build/index.ts",
+    "auto:npm": "pnpm build && cd dist & npm publish && cd ..",
     "component:create": "esno ./utils/create/index.ts",
     "comp:create": "esno ./utils/createComponent/index.ts",
     "comp:play": "pnpm run -C playground/vue-vite-playground dev",

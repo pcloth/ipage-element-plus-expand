@@ -1,38 +1,32 @@
 ---
 layout: home
-title: vuecomp-starter
+title: ipage-element-plus-expand
 titleTemplate: 组件库开发起始模板
 
 hero:
-  name: vuecomp-starter
-  text: 组件库开发解决方案
-  tagline: Vue3 + Vite + ts + sass / less
+  name: ipage-element-plus-expand
+  text: element-plus扩展组件库
+  tagline: element-plus/组件库/快速业务交付
   actions:
     - theme: brand
       text: Get Started
       link: /guide/features
     - theme: alt
       text: GitHub
-      link: https://github.com/windlil/vuecomp-starter
+      link: https://github.com/pcloth/ipage-element-plus-expand
     - theme: alt
       text: NPM
-      link: https://github.com/windlil/vuecomp-starter
+      link: https://www.npmjs.com/package/ipage-element-plus-expand
 features:
   - icon: 📦
-    title: 完善的打包配置
-    details: 打包后的组件库支持对组件和样式按需导入。
+    title: 丰富的业务组件
+    details: IPage、IForm、IDialogForm、ISearch、ITable
   - icon: ⚡️
-    title: 专注于组件文件的编写
-    details: 通过简单命令自动生成约定组件目录，自动导入配置文件，只需要关注组件文件的编写。
+    title: 快速交付业务
+    details: 能快速的根据接口文档完成增删改查页面
   - icon: 📖
-    title: 专注于文档内容的编写
-    details: 内置Vitepress以及自动化脚本，按照约定的目录结构编写文档，自动生成路由。
-  - icon: 💪
-    title: 约定式开发
-    details: 按照约定的方式来对组件库进行简单快速开发。
-  - icon: 🔩
-    title: 支持Less和Sass
-    details: 通过对环境变量的修改来转换对样式文件的打包模式。
+    title: 提高健壮性
+    details: 由于大部分页面都是IPage，提高了代码健壮性。
   - icon: 🔑
     title: 类型提示支持
     details: 支持完整的 TypeScript 类型。

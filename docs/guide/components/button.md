@@ -1,6 +1,7 @@
 ---
 sider_text="按钮 button"
 ---
+
 :::
 
 # Button 按钮
@@ -15,11 +16,8 @@ sider_text="按钮 button"
 
 ```vue
 <template>
-<div class="group">
-
-</div>
+    <div class="group"></div>
 </template>
-
 ```
 
 :::

@@ -6,7 +6,9 @@
 
 
 # 文档
-[点击查看文档](https://pcloth.github.io/ipage-element-plus-expand/#/zh-CN/docs/quickstart)
+文档补全中，暂时可以先看看vue2版本的文档，api差不多都兼容的；
+
+[点击查看vue2版本文档](https://pcloth.github.io/ipage-element-expand/#/zh-CN/docs/quickstart)
 
 # 安装
 ```
@@ -31,18 +33,9 @@ Vue.use(IpageElementExpand);
 import {config} from "ipage-element-plus-expand"
 config.set({
     extendedRenderCell:{
-        /** 自定义扩展组件
-         * 如果不需要配置数据、事件和v-model，请将loadData.$rcell上的几个参数关闭 
-         * h方法必须引入，不然可能报错
-         * 下方例子中的key=demo，在配置参数中就是：{slot:'demo'}
-        */
-        demo:(h,{$rcell})=>{
-            $rcell.needEvent = false
-            $rcell.needProps = false
-            $rcell.needVModel = false
-            return <span>11</span>
-        }
-        // demo:(h)=> <el-input></el-input>
+        "icon-select": {
+            dom: () => <IconSelect />
+        },
     }
 })
 ```

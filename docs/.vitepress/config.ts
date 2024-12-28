@@ -3,8 +3,8 @@ import { sidebar } from './config/sidebar'
 
 
 export default defineConfig({
-  title: `vuecomp-starter`,
-  description: 'vuecomp-starter',
+  title: `ipage-element-plus-expand`,
+  description: 'ipage-element-plus-expand 一个element-plus扩展组件库',
   base: '/vuecomp-starter/',
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }],
@@ -13,7 +13,7 @@ export default defineConfig({
   themeConfig: {
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2023-present The Muse Catcher',
+      copyright: 'Copyright by Pcloth © 2024',
     },
 
     nav: [
