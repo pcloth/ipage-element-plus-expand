@@ -1,20 +1,19 @@
 {
     "name": "ipage-element-plus-expand",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "type": "module",
     "scripts": {
         "build": "vite build"
     },
     "description": "这是一个element-plus的扩展组件库，用于扩展element-plus的组件，使其更加强大。",
     "license": "MIT",
-    "main": "es/index.js",
-    "module": "es/index.js",
-    "types": "index.d.ts",
-    "style": "es/style.css",
+    "main": "./es/index.js",
+    "module": "./es/index.js",
+    "types": "./es/index.d.ts",
+    "style": "./es/style.css",
     "files": [
         "lib",
         "es",
-        "index.d.ts",
         "README.MD"
     ],
     "devDependencies": {

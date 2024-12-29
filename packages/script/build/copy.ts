@@ -1,13 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const filesToCopy = [
+const filesToCopy:any = [
     {
         file:"package.json",
-        path:"../../components"
-    },
-    {
-        file:"index.d.ts",
         path:"../../components"
     },
     {
@@ -22,9 +18,12 @@ export const copyPackageFiles = () => {
         fs.mkdirSync(destDir, { recursive: true });
     }
     return new Promise((resolve, reject) => {
-        filesToCopy.forEach(file => {
+        filesToCopy.forEach((file:any) => {
             const sourceFile = path.join(file.path, file.file);
-            const destFile = path.join(destDir, file.file);
+            let destFile = path.join(destDir, file.file);
+            if(file.rename){
+                destFile = path.join(destDir, file.rename);
+            }
             console.log(`Copying ${file}...`, sourceFile, destFile);
             fs.copyFile(sourceFile, destFile, (err) => {
                 if (err) {
