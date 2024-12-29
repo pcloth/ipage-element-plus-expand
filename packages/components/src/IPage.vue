@@ -98,7 +98,6 @@ import IForm from "./IForm.vue";
 import ISearch from "./ISearch.vue";
 import RenderCell from "./components/RenderCell";
 import ITableColFilter from "./components/ITableColFilter.vue";
-// import SplitDownloadAndExport from "./components/SplitDownloadAndExport";
 
 export default {
     name: "IPage",
