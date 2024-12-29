@@ -13,7 +13,7 @@ import { QuestionFilled } from "@element-plus/icons-vue";
 import RenderCell from "./RenderCell";
 import { config as $c } from "../config";
 import type { CellItemType } from "../type.d";
-
+import { mask as vMask } from "../mask/index";
 const cellProps = {
     modelValue: {
         type: [String, Number, Array, Object, Boolean]
@@ -53,7 +53,7 @@ const cellProps = {
 const initSlots = (slots: object, cellProps: any, loadData: any) => {
     const _slots = {};
     for (const key in slots) {
-        const slot:any = slots[key];
+        const slot: any = slots[key];
         if (typeof slot === "function") {
             _slots[key] = (...arag) => {
                 return slot(...arag, loadData);
@@ -125,6 +125,7 @@ const makeDom = ($props, $rcell, $context) => {
         optionDom, // 自定义option
         _i_options = item.options, // 用户处理实际的options
         directives = [],
+        mask,
         debounce,
         valueWatch,
         slots = {},
@@ -247,9 +248,10 @@ const makeDom = ($props, $rcell, $context) => {
         ...onProps,
         ...onEvent
     };
-    // console.log(mergeProps, "mergeProps");
     let dom = null;
-
+    if (mask) {
+        directives.push({ name: "ve-mask", value: mask });
+    }
     /** 处理指令 */
     if (directives && directives.length) {
         const directiveList = directives.map(row => {
@@ -343,6 +345,7 @@ const makeDom = ($props, $rcell, $context) => {
 export default defineComponent({
     name: "RenderCell",
     props: cellProps,
+    directives: { veMask: vMask },
     setup(props, context) {
         // console.log(props.defaultProps, context, "RenderCell", this);
         const $rcell = getCurrentInstance()?.proxy;

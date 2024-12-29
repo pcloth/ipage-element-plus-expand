@@ -653,10 +653,7 @@ export default {
                             this.$refs.isearch.handleSearch();
                         })
                         .catch(error => {
-                            this.$message({
-                                type: "error",
-                                message: error
-                            });
+                            this.$emit("delete-error",error)
                         });
                 });
             }

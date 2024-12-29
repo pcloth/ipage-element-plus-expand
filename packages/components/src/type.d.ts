@@ -56,8 +56,34 @@ export type CellItemType = {
     valueWatch?: Function;
     /** 自定义options的节点 loadData, row */
     optionDom?: Function;
-    /** 如果你已经安装了vue-the-mask，就可以直接使用输入框控制参数 */
-    mask?: string | Object;
+    /** 
+     * 限定输入范围：
+     * 方法一：传入字符串或者数组字符串，表示如下默认值：
+
+    mask:"##-###"
+
+    其中默认的规则有：
+        C: { pattern: /[\u4e00-\u9fa5]/ },
+        "#": { pattern: /\d/ },
+        X: { pattern: /[0-9a-zA-Z]/ },
+        S: { pattern: /[a-zA-Z]/ },
+        A: { pattern: /[a-zA-Z]/, transform: v => v.toLocaleUpperCase() },
+        a: { pattern: /[a-zA-Z]/, transform: v => v.toLocaleLowerCase() },
+        "!": { escape: true }
+
+       方法二：传入对象，表示自定义规则，比如：
+        mask:{
+            mask:"ff",
+            tokens:{
+                f:{
+                    pattern: /[a-zA-Z]/, 
+                    transform: v => v.toLocaleUpperCase() 
+                }
+            }
+        }
+        它将只接收2个英文，并转换成大写
+     *  */
+    mask?: string|Array<string> | Object;
 };
 
 export type ColumnType = {
