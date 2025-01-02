@@ -7,6 +7,8 @@ import iDialogForm from "./IDialogForm.vue";
 import iTableColumn from "./components/ITableColumn.vue";
 import renderCell from "./components/RenderCell";
 import splitDownloadAndExport from "./components/SplitDownloadAndExport.vue";
+import veMask from "./mask/directives"
+
 // import renderSelectLoadmore from './components/RenderSelectLoadmore.vue';
 export const config = $config;
 export const IPage = ipage;
@@ -19,7 +21,9 @@ export const ITableColumn = iTableColumn;
 export const SplitDownloadAndExport = splitDownloadAndExport;
 // export const RenderSelectLoadmore = renderSelectLoadmore;
 
-const components = {
+export const VeMask = veMask;
+
+const components:any = {
     IPage,
     RenderCell,
     ISearch,
@@ -30,11 +34,12 @@ const components = {
     SplitDownloadAndExport
 };
 
-const install = function (Vue) {
+const install = function (Vue:any) {
     Object.keys(components).forEach(key => {
         const component = components[key];
         Vue.component(component.name || key, component);
     });
+    Vue.directive("ve-mask", veMask);
 };
 
 // 判断是否是直接引入文件，如果是，则自动安装组件
