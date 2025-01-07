@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 
-const componentsPath = './docs/guide/components'
+const componentsPath = './docs/examples/button'
 
 export function createComponentSiderBar() {
     if (!fs.existsSync(componentsPath)) {

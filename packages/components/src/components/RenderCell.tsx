@@ -13,7 +13,7 @@ import { QuestionFilled } from "@element-plus/icons-vue";
 import RenderCell from "./RenderCell";
 import { config as $c } from "../config";
 import type { CellItemType } from "../type.d";
-import { mask as vMask } from "../mask/index";
+import vMask from "../mask/directive";
 const cellProps = {
     modelValue: {
         type: [String, Number, Array, Object, Boolean]

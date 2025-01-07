@@ -7,7 +7,7 @@ import iDialogForm from "./IDialogForm.vue";
 import iTableColumn from "./components/ITableColumn.vue";
 import renderCell from "./components/RenderCell";
 import splitDownloadAndExport from "./components/SplitDownloadAndExport.vue";
-import veMask from "./mask/directives"
+import veMask from "./mask/directive"
 
 // import renderSelectLoadmore from './components/RenderSelectLoadmore.vue';
 export const config = $config;

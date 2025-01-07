@@ -1,53 +1,182 @@
-# 开发攻略
+# 快速上手
 
-### 1、修改环境变量
-
-`./.env`文件下
-
-```
-# CSS预处理器 默认支持sass和less
-CSS_PREPROCESSOR = 'scss'
-# 用于添加组件命名前缀，建议采用首字母大写格式，最后生成的组件会变成<vc-button></vc-button>这种格式
-COMPONENT_NAME = 'Vc'
+### 通过npm安装
+```sh
+npm install ipage-element-plus-expand --save
 ```
 
-
-
-### 2、创建约定文件
-
-建议运行 `pnpm component:create [组件名]`命令来创建组件开发需要用到的文件。
-
-
-
-详细介绍上述这条命令做了哪些操作（以创建button组件为例）：
-
-```
-├─packages
-|    ├─components
-|    |     ├─style
-|    |     |   └index.scss			   // 自动引入'button/src/style/index.scss'的样式，作为全局样式
-|    |     ├─src
-|    |     |  ├─components.ts          // 自动引入'button/src/index.ts'导出的组件
-|    |     |  ├─index.ts
-|    |     |  ├─button
-|    |     |  |   ├─index.ts           // 自动引入src下的组件，并且对组件进行注册
-|    |     |  |   ├─src				   // 自动创建组件开发使用到的文件
-|    |     |  |   |  ├─button.vue
-|    |     |  |   |  ├─style
-|    |     |  |   |  |   └index.scss
-├─docs
-|  ├─guide
-|  |   ├─components
-|  |   |     └button.md					// 自动创建组件文档说明需要的文件
+### 项目中引入
+```js main.js
+import IpageElementExpand from "ipage-element-plus-expand"
+import "ipage-element-plus-expand/es/style.css";
+Vue.use(IpageElementExpand)
 ```
 
-- 我们在组件开发的过程中只需要关注 `button/src` 下文件的编写。
-- 在编写说明文档的时候只需要关注 `docs/guide/components/`下的文档内容。
+### 页面中使用
+```html
+<div class="group">
+  <IPage
+            :searchItems="searchItems"
+            :columns="columns"
+            :formItems="formItems"
+            v-bind="otherProps"
+        />
+</div>
 
+<script setup lang="ts">
+import { ref } from "vue"
+/** 搜索字段 */
+const searchItems = ref<CellItemType[]>([
+    {
+        id:'name',
+        label:'姓名',
+        props:{
+            placeholder:"请输入姓名"
+        },
+    },
+    {
+        id:'gender',
+        label:'性别',
+        slot:'select',
+        props:{
+            placeholder:"请选择性别"
+        },
+        options:[
+            {
+                label:'男',
+                value:1
+            },
+            {
+                label:'女',
+                value:2
+            },
+            {
+                label:'保密',
+                value:3,
+                disabled:true
+            }
+        ]
+    },
+]);
 
+/** 展示字段 */
+const columns = ref<ColumnType[]>([
+    {
+        columnProps:{
+            prop:'name',
+            label:'姓名'
+        }
+    },
+    {
+        columnProps:{
+            prop:'gender',
+            label:'性别',
+            formatter:(val)=>{
+                return {
+                    1:'男',
+                    2:'女',
+                    3:'保密'
+                    }[val.gender]
+            }
+        }
+    }
+]);
 
-### 3、组件测试
+/** 编辑表单字段 */
+const formItems = ref<CellItemType[]>([
+    {
+        id:'name',
+        label:'姓名',
+        slot:'input',
+        props:{
+            placeholder:"请输入姓名"
+        },
+    },
+    {
+        id:'gender',
+        label:'性别',
+        slot:'select',
+        props:{
+            placeholder:"请选择性别"
+        },
+        options:[
+            {
+                label:'男',
+                value:1
+            },
+            {
+                label:'女',
+                value:2
+            },
+            {
+                label:'保密',
+                value:3,
+            }
+        ]
+    },
+]);
 
-vuecomp-starter已经帮助全局引入packages下的组件，我们只需要在文档中直接编写就可以看到组件。
+const mockApiFunc = async(params)=>{
+    return new Promise((resolve, reject) => {
+        const records = []
+        for(let i=0;i<10;i++){
+            records.push({
+                name:'张三',
+                gender:(i%2)+1,
+            })
+        }
+        setTimeout(()=>{
+            resolve({
+                data:{
+                    records
+                },
+                total:records.length
+            })
+        },1500)
+    })
+}
 
-也可以使用内置的测试环境对组件进行测试，我们已经对运行环境做了约定式路由处理，直接在pages下创建文件就可以自动映射对应的路由，类似于Nuxt。
+/** 其他页面参数 */
+const otherProps = ref<Record<string, any>>({
+    searchProps:{
+        queryFunc:mockApiFunc
+    },
+    deleteFunc:async (data)=>{
+        // 发起删除请求
+        return true
+    },
+    submitFunc:async (data)=>{
+        // 发起保存请求
+        return true
+    }
+});
+</script>
+```
+
+::: details 查看代码
+```vue
+<template>
+    <IPage
+        :searchItems="searchItems"
+        :columns="columns"
+        :formItems="formItems"
+        v-bind="otherProps"
+    />
+</template>
+<script setup lang="ts">
+import { ref } from "vue"
+/** 搜索字段 */
+const searchItems = ref<CellItemType[]>([]);
+
+/** 展示字段 */
+const columns = ref<ColumnType[]>([]);
+
+/** 编辑表单字段 */
+const formItems = ref<CellItemType[]>([]);
+
+/** 其他页面参数 */
+const otherProps = ref<Record<string, any>>({});
+</script>
+```
+:::
+

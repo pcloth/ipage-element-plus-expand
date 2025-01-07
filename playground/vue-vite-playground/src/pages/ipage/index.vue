@@ -1,9 +1,37 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-    <div class="group">
-        <IPage></IPage>
+    <div>
+        <IPage
+            :searchItems="searchItems"
+            :columns="columns"
+            :formItems="formItems"
+            v-bind="otherProps"
+        />
     </div>
 </template>
+
+<script setup lang="tsx">
+import { ref } from "vue";
+defineOptions({
+    name: ""
+});
+
+/** 搜索字段 */
+const searchItems = ref<CellItemType[]>([
+    {
+        id: "name",
+        slot:"input",
+        label:"姓名"
+    }
+]);
+
+/** 展示字段 */
+const columns = ref<ColumnType[]>([]);
+
+/** 编辑表单字段 */
+const formItems = ref<CellItemType[]>([]);
+
+/** 其他页面参数 */
+const otherProps = ref<Record<string, any>>({});
+</script>
+
+<style lang="scss" scoped></style>
