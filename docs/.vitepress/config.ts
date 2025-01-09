@@ -20,18 +20,9 @@ export default defineConfig({
             message: 'Released under the MIT License.',
             copyright: 'Copyright by Pcloth © 2024',
         },
-
         nav: [
-            { 
-                text: '组件', 
-                activeMatch: '/examples/',
-                items: [
-                    {
-                        text: '基础组件',
-                        link: '/examples/button'
-                    }
-                ]
-            },
+            sidebar['/guide/'][0],
+            sidebar['/examples/'][1],
             { text: 'Github', link: 'https://github.com/pcloth/ipage-element-plus-expand' },
         ],
         sidebar,
