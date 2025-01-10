@@ -2,7 +2,7 @@ import fs from 'node:fs'
 
 export function createVitepressComp(compName: string) {
 
-  const dir = `./docs/guide/components/${compName}.md`
+  const dir = `./documents/guide/components/${compName}.md`
   const template = `---
 sider_text="侧边栏名称"
 ---`

@@ -20,9 +20,9 @@
         "comp:create": "esno ./utils/createComponent/index.ts",
         "comp:play": "pnpm run -C playground/vue-vite-playground dev",
         "comp:new": "esno ./utils/createTestVue/index.ts",
-        "docs:dev": "vitepress dev docs --port 8000",
+        "docs:dev": "vitepress dev documents --port 8000",
         "docs:new": "esno ./utils/createVitepressComp/index.ts",
-        "docs:build": "vitepress build docs && node ./utils/copyDocsDist.js"
+        "docs:build": "vitepress build documents && node ./utils/copyDocsDist.js"
     },
     "files": [
         "dist"

@@ -4,8 +4,8 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const srcDir = path.resolve(__dirname, '../docs/.vitepress/dist');
-const destDir = path.resolve(__dirname, '../documents');
+const srcDir = path.resolve(__dirname, '../documents/.vitepress/dist');
+const destDir = path.resolve(__dirname, '../docs');
 
 console.log(srcDir, destDir, '<<<')
 fs.rmdirSync(destDir, { recursive: true });
