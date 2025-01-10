@@ -22,8 +22,8 @@ features:
     title: 快速交付业务
     details: 能快速的根据接口文档完成增删改查页面
   - icon: 📖
-    title: 提高健壮性
-    details: 由于大部分页面都是IPage，提高了代码健壮性。
+    title: 可扩展的渲染核心
+    details: 你可以全局配置自己的组件加入到渲染核心中，方便更好的集成业务
   - icon: 🔑
     title: 类型提示支持
     details: 支持完整的 TypeScript 类型。

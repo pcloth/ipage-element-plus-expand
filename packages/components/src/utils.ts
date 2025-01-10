@@ -1,5 +1,5 @@
 /** 处理一个值是否有效，确定是否需要合并 */
-export const effectiveValue = obj => {
+export const effectiveValue = (obj:any) => {
     if (obj === undefined || obj === null) return false;
     if (Array.isArray(obj)) {
         return obj.length > 0;

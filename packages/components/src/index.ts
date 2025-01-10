@@ -1,4 +1,12 @@
-import { config as $config } from "./config.js";
+export type { 
+    CellItemType, 
+    ColumnType, 
+    ElementConfigType, 
+    IPageElementPlusExpandConfigType 
+} from './type';
+
+export { config  } from "./config.js";
+
 import ipage from "./IPage.vue";
 import iSearch from "./ISearch.vue";
 import iTable from "./ITable.vue";
@@ -8,9 +16,8 @@ import iTableColumn from "./components/ITableColumn.vue";
 import renderCell from "./components/RenderCell";
 import splitDownloadAndExport from "./components/SplitDownloadAndExport.vue";
 import veMask from "./mask/directive"
+import selectMore from './components/SelectMore.vue';
 
-// import renderSelectLoadmore from './components/RenderSelectLoadmore.vue';
-export const config = $config;
 export const IPage = ipage;
 export const RenderCell = renderCell;
 export const ISearch = iSearch;
@@ -19,7 +26,7 @@ export const IForm = iForm;
 export const IDialogForm = iDialogForm;
 export const ITableColumn = iTableColumn;
 export const SplitDownloadAndExport = splitDownloadAndExport;
-// export const RenderSelectLoadmore = renderSelectLoadmore;
+export const SelectMore = selectMore;
 
 export const VeMask = veMask;
 
@@ -31,6 +38,7 @@ const components:any = {
     IForm,
     IDialogForm,
     ITableColumn,
+    SelectMore,
     SplitDownloadAndExport
 };
 

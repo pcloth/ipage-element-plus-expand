@@ -16,7 +16,7 @@ defineOptions({
 });
 
 /** 搜索字段 */
-const searchItems = ref<CellItemType[]>([
+const searchItems = ref<any[]>([
     {
         id: "name",
         slot:"input",
@@ -25,10 +25,10 @@ const searchItems = ref<CellItemType[]>([
 ]);
 
 /** 展示字段 */
-const columns = ref<ColumnType[]>([]);
+const columns = ref<any[]>([]);
 
 /** 编辑表单字段 */
-const formItems = ref<CellItemType[]>([]);
+const formItems = ref<any[]>([]);
 
 /** 其他页面参数 */
 const otherProps = ref<Record<string, any>>({});

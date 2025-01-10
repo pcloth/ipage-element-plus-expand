@@ -7,7 +7,7 @@ const _componentsSiderBarItems: {
 
 const componentsSiderBarItems =
     createComponentSiderBar() ?? _componentsSiderBarItems;
-    
+
 export const sidebar = {
     "/guide/": [
         {
@@ -27,29 +27,29 @@ export const sidebar = {
                 },
             ],
         },
-        {
-            text: "组件例子",
-            items: componentsSiderBarItems,
-        },
+        // {
+        //     text: "组件例子",
+        //     items: componentsSiderBarItems,
+        // },
     ],
     "/examples/": [
-        {
-            text: "指引",
-            items: [
-                {
-                    text: "特性",
-                    link: "/guide/features",
-                },
-                {
-                    text: "快速上手",
-                    link: "/guide/started",
-                },
-                {
-                    text: "开发攻略",
-                    link: "/guide/go",
-                },
-            ],
-        },
+        // {
+        //     text: "指引",
+        //     items: [
+        //         {
+        //             text: "特性",
+        //             link: "/guide/features",
+        //         },
+        //         {
+        //             text: "快速上手",
+        //             link: "/guide/started",
+        //         },
+        //         {
+        //             text: "开发攻略",
+        //             link: "/guide/go",
+        //         },
+        //     ],
+        // },
         {
             text: "组件例子",
             items: componentsSiderBarItems,

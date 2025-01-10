@@ -95,7 +95,7 @@ export type ColumnType = {
     cell?: CellItemType;
 };
 
-type ElementConfigType = {
+export type ElementConfigType = {
     [key: string]: {
         dom: (loadData?: any) => JSX.Element;
         optionDom?: (loadData: any, item?: any) => JSX.Element;

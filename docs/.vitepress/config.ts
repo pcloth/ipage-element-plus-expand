@@ -21,10 +21,10 @@ export default defineConfig({
             copyright: 'Copyright by Pcloth © 2024',
         },
         nav: [
-            // @ts-ignore // 为了保障nav和sidebar区域都包含了全部组件内容
-            // sidebar['/guide/'][0],
-            // // @ts-ignore
-            // sidebar['/guide/'][1],
+            // @ts-ignore
+            sidebar['/guide/'][0],
+            // @ts-ignore
+            sidebar['/examples/'][0],
             { text: 'NPM', link: 'https://www.npmjs.com/package/ipage-element-plus-expand' },
             { text: 'Github', link: 'https://github.com/pcloth/ipage-element-plus-expand' },
         ],
