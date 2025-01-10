@@ -11,12 +11,14 @@
 
 <script setup lang="tsx">
 import { ref } from "vue";
+import type {CellItemType} from "@compiled";
+// import type {CellItemType} from "@/../../packages/components/src/type";
 defineOptions({
     name: ""
 });
 
 /** 搜索字段 */
-const searchItems = ref<any[]>([
+const searchItems = ref<CellItemType[]>([
     {
         id: "name",
         slot:"input",

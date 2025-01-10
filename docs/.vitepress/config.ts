@@ -6,7 +6,7 @@ import createDemoContainer from './MdToVue/demo'
 export default defineConfig({
     title: `ipage-element-plus-expand`,
     description: 'ipage-element-plus-expand 一个element-plus扩展组件库',
-    base: '/document/',
+    base: './',
     head: [
         ['link', { rel: 'icon', type: 'image/svg+xml', href: 'logo.svg' }],
     ],
