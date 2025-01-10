@@ -88,11 +88,14 @@ export type CellItemType = {
 
 export type ColumnType = {
     /** 传递给el-table-column组件的参数 */
-    columnProps?: object;
+    columnProps?: any;
     /** 渲染函数，jsx模式 */
     render?: Function;
     /** 使用RenderCell组件配置 */
     cell?: CellItemType;
+    /** 嵌套单元格 */
+    children?: ColumnType[];
+    show: boolean | Function | Promise<boolean>;
 };
 
 export type ElementConfigType = {
@@ -160,4 +163,12 @@ export type IPageElementPlusExpandConfigType = {
     };
     get: (deepPath: string) => any;
     set: (options: any) => void;
+};
+
+export type LoadDataType = {
+    item: CellItemType,
+    data: any;
+    qData?: any;
+    allItems?: CellItemType[];
+    $rcell?:any;
 };

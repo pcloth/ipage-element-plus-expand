@@ -12,7 +12,7 @@ import { QuestionFilled } from "@element-plus/icons-vue";
 
 import RenderCell from "./RenderCell";
 import { config as $c } from "../config";
-import type { CellItemType } from "../type.d";
+import type { CellItemType, LoadDataType } from "../type";
 import vMask from "../mask/directive";
 const cellProps = {
     modelValue: {
@@ -50,7 +50,7 @@ const cellProps = {
 };
 
 /** 初始化插槽 */
-const initSlots = (slots: object, cellProps: any, loadData: any) => {
+const initSlots = (slots: object, cellProps: any, loadData: LoadDataType) => {
     const _slots = {};
     for (const key in slots) {
         const slot: any = slots[key];
@@ -157,7 +157,7 @@ const makeDom = ($props, $rcell, $context) => {
         $isFormItem = $props.isFormItem;
     }
 
-    const loadData = {
+    const loadData:LoadDataType = {
         item: $props.item,
         data: $props.formData,
         qData: $props.qData,

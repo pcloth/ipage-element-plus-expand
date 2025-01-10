@@ -89,7 +89,7 @@
     </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { deepAssign, getPathValue } from "./utils";
 import { config as $c } from "./config";
 
@@ -98,6 +98,8 @@ import IForm from "./IForm.vue";
 import ISearch from "./ISearch.vue";
 import RenderCell from "./components/RenderCell";
 import ITableColFilter from "./components/ITableColFilter.vue";
+import type { CellItemType, ColumnType, LoadDataType } from "./type";
+import { PropType } from "vue";
 
 export default {
     name: "IPage",
@@ -111,7 +113,7 @@ export default {
     },
     props: {
         searchItems: {
-            type: Array,
+            type: Array as PropType<CellItemType[]>,
             default: () => []
         },
         searchValue: {
@@ -127,7 +129,7 @@ export default {
             default: () => ({})
         },
         columns: {
-            type: Array,
+            type: Array as PropType<ColumnType[]>,
             default: () => []
         },
         showColumnButton: {
@@ -141,11 +143,11 @@ export default {
         },
         // 支持renderCell组件参数格式
         columnButtons: {
-            type: Array,
+            type: Array as PropType<CellItemType[]>,
             default: () => []
         },
         columnButtonProps: {
-            type: Object,
+            type: Object as PropType<CellItemType>,
             default: () => {
                 return {};
             }
@@ -185,14 +187,14 @@ export default {
         },
         // 添加按钮
         addButton: {
-            type: [Object, Boolean],
+            type: [Object as PropType<CellItemType>, Boolean],
             default: () => {
                 return {};
             }
         },
         // 工具条
         toolbarButtons: {
-            type: [Array, Boolean],
+            type: [Array as PropType<CellItemType[]>, Boolean],
             default: () => {
                 return [];
             }
@@ -212,14 +214,14 @@ export default {
         },
         // 行编辑按钮
         editButton: {
-            type: [Object, Boolean],
+            type: [Object as PropType<CellItemType>, Boolean],
             default: () => {
                 return {};
             }
         },
         // 编辑表单字段
         formItems: {
-            type: Array,
+            type: Array as PropType<CellItemType[]>,
             default: () => []
         },
         // 编辑表单校验规则
@@ -242,7 +244,7 @@ export default {
             // },
         },
         deleteButton: {
-            type: [Object, Boolean],
+            type: [Object as PropType<CellItemType>, Boolean],
             default: () => {
                 return {};
             }
@@ -280,7 +282,7 @@ export default {
                 ...$c.get("button"),
                 ...$c.get("addButton"),
                 on: {
-                    click: (_, loadData) => {
+                    click: (_:any, loadData:LoadDataType) => {
                         this._openDialog_("add", loadData);
                     }
                 }
@@ -289,7 +291,7 @@ export default {
                 ...$c.get("button"),
                 ...$c.get("editButton"),
                 on: {
-                    click: (_, loadData) => {
+                    click: (_:any, loadData:LoadDataType) => {
                         this._openDialog_("edit", loadData);
                     }
                 }
@@ -298,7 +300,7 @@ export default {
                 ...$c.get("button"),
                 ...$c.get("deleteButton"),
                 on: {
-                    click: (_, loadData) => {
+                    click: (_:any, loadData:LoadDataType) => {
                         this.askDelete(loadData);
                     }
                 }
@@ -308,7 +310,7 @@ export default {
                     ...$c.get("toolbarButton"),
                     ...$c.get("refreshButton"),
                     on: {
-                        click: (_, loadData) => {
+                        click: (_:any, loadData:LoadDataType) => {
                             const { $rcell } = loadData;
                             $rcell.$el.classList.add("refreshAnimation");
                             this.handleSearch().finally(() => {
@@ -380,7 +382,7 @@ export default {
                     ...props_,
                     slots: {
                         /** 筛选可见字段功能 */
-                        header: (data, loadData) => {
+                        header: (data:any, loadData:LoadDataType) => {
                             const className = "IPage_toolBar";
                             return (
                                 <div class={className}>
@@ -400,7 +402,7 @@ export default {
                             );
                         }
                     },
-                    render: ({ row }) => {
+                    render: ({ row }:any) => {
                         const buttons = [];
                         let editButtonConf = {};
                         let deleteButtonConf = {};
@@ -506,7 +508,7 @@ export default {
         }
     },
     methods: {
-        _hasButton(buttonConf) {
+        _hasButton(buttonConf:CellItemType | boolean) {
             if (typeof buttonConf === "boolean") {
                 return buttonConf;
             } else if (typeof buttonConf === "object") {
@@ -514,10 +516,10 @@ export default {
             }
             return false;
         },
-        _calculateDisplayableFields(columns) {
-            const showColumnKeys = [];
-            columns.forEach(item => {
-                const prop = item.columnProps.prop;
+        _calculateDisplayableFields(columns:ColumnType[]) {
+            const showColumnKeys:string[] = [];
+            columns.forEach((item,idx) => {
+                const prop = item?.columnProps?.prop||idx.toString();
                 showColumnKeys.push(prop);
                 if (item.children) {
                     const children = this._calculateDisplayableFields(
@@ -528,8 +530,8 @@ export default {
             });
             return showColumnKeys;
         },
-        _getColumns(columns) {
-            const _columns = [];
+        _getColumns(columns:ColumnType[]) {
+            const _columns:ColumnType[] = [];
             columns.forEach(item => {
                 const prop = item.columnProps.prop;
                 if (item.children) {
@@ -542,7 +544,7 @@ export default {
             });
             return _columns;
         },
-        _vColumnRenderCell_(allItems, row) {
+        _vColumnRenderCell_(allItems:CellItemType[], row:any) {
             return allItems.map(item => {
                 return (
                     <RenderCell
@@ -555,12 +557,12 @@ export default {
             });
         },
         // 准备给外部使用的唤醒弹窗方法
-        openDialog(row, dialogProps) {
+        openDialog(row:any, dialogProps:any) {
             this.dialogProps_ = dialogProps || {};
             this.currentRow = row;
             this.showDialog = true;
         },
-        async _openDialog_(type, loadData) {
+        async _openDialog_(type:string, loadData:LoadDataType) {
             this.dialogType = type;
             let openApi = null;
             if (type === "add") {
@@ -589,22 +591,22 @@ export default {
                 this.$refs.iform?.clearValidate();
             });
         },
-        pageChange(pageNo) {
+        pageChange(pageNo:number) {
             this.filterQData.pageNo = pageNo;
             this.handleSearch();
         },
-        handleSizeChange(pageSize) {
+        handleSizeChange(pageSize:number) {
             this.filterQData.pageSize = pageSize;
             this.filterQData.pageNo = 1;
             this.handleSearch();
         },
-        handleSearch(params) {
+        handleSearch(params:any) {
             return this.$refs.isearch.handleSearch(params);
         },
-        _handleSearchNow(params) {
+        _handleSearchNow(params:any) {
             return this.$refs.isearch._handleSearchNow(params);
         },
-        searchSuccess(res) {
+        searchSuccess(res:any) {
             const keyPaths = $c.get("response");
             let data = [];
             let total = 0;
@@ -625,18 +627,18 @@ export default {
             }
             this.$emit("searchSuccess", res);
         },
-        beforeSubmit(data) {
+        beforeSubmit(data:any) {
             this.$emit("beforeSubmit", data);
         },
-        validationFailed(data) {
+        validationFailed(data:any) {
             this.$emit("validationFailed", data);
         },
-        afterSubmit(data) {
+        afterSubmit(data:any) {
             this.handleSearch();
             this.showDialog = false;
             this.$emit("afterSubmit", data);
         },
-        askDelete(loadData) {
+        askDelete(loadData:LoadDataType) {
             if (this.deleteFunc) {
                 this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
                     confirmButtonText: "确定",
@@ -658,15 +660,15 @@ export default {
             }
             this.$emit("delete-row", loadData);
         },
-        beforeSearch(params) {
+        beforeSearch(params:any) {
             this.dataList = [];
             this.dataLoading = true;
             this.$emit("beforeSearch", params);
         },
-        searchFail(data) {
+        searchFail(data:any) {
             this.$emit("searchFail", data);
         },
-        searchFinally(data) {
+        searchFinally(data:any) {
             this.$emit("searchFinally", data);
             this.dataLoading = false;
         },

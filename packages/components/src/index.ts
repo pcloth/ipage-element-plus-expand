@@ -5,7 +5,7 @@ export type {
     IPageElementPlusExpandConfigType 
 } from './type';
 
-export { config  } from "./config.js";
+import { config as $config} from "./config"
 
 import ipage from "./IPage.vue";
 import iSearch from "./ISearch.vue";
@@ -18,6 +18,7 @@ import splitDownloadAndExport from "./components/SplitDownloadAndExport.vue";
 import veMask from "./mask/directive"
 import selectMore from './components/SelectMore.vue';
 
+export const config = $config;
 export const IPage = ipage;
 export const RenderCell = renderCell;
 export const ISearch = iSearch;
