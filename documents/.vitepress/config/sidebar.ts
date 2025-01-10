@@ -22,9 +22,9 @@ export const sidebar = {
                     link: "/guide/started",
                 },
                 {
-                    text: "开发攻略",
-                    link: "/guide/go",
-                },
+                    text: "更新日志",
+                    link: "/guide/history"
+                }
             ],
         },
         // {

@@ -8,9 +8,9 @@
 
 
 # 文档
-文档补全中，暂时可以先看看vue2版本的文档，api差不多都兼容的；
+文档补全中
 
-[点击查看vue2版本文档](https://pcloth.github.io/ipage-element-expand/#/zh-CN/docs/quickstart)
+[点击查看文档](https://pcloth.github.io/ipage-element-plus-expand)
 
 # 安装
 ```
