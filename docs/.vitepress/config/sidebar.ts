@@ -7,6 +7,7 @@ const _componentsSiderBarItems: {
 
 const componentsSiderBarItems =
     createComponentSiderBar() ?? _componentsSiderBarItems;
+    
 export const sidebar = {
     "/guide/": [
         {

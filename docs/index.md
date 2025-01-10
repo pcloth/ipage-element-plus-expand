@@ -9,14 +9,11 @@ hero:
 #   tagline: element-plus/组件库/快速业务交付
   actions:
     - theme: brand
-      text: Get Started
+      text: 开始使用
       link: /guide/features
     - theme: alt
-      text: GitHub
-      link: https://github.com/pcloth/ipage-element-plus-expand
-    - theme: alt
-      text: NPM
-      link: https://www.npmjs.com/package/ipage-element-plus-expand
+      text: 组件
+      link: /examples/RenderCell/base
 features:
   - icon: 📦
     title: 丰富的业务组件

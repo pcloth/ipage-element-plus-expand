@@ -1,4 +1,3 @@
-sider_text="渲染核心基本用法"
 ## 基本用法
 
 这是整个系列的核心组件，它负责将js和json数据渲染成element-plus的一些组件

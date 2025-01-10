@@ -4,6 +4,8 @@
 项目基础配置环境配置来源于`vuecomp-starter`
 说明文档：https://windlil.github.io/vuecomp-starter/
 
+文档组件预览和解析来自于element-plus官方github仓库，我魔改了一下方便自己使用。
+
 
 # 文档
 文档补全中，暂时可以先看看vue2版本的文档，api差不多都兼容的；

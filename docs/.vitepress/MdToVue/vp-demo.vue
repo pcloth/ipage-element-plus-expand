@@ -13,7 +13,9 @@ const props = defineProps<{
 }>();
 
 const vm = getCurrentInstance()!;
-window.vm = vm;
+if(typeof window !== 'undefined'){
+    window.vm = vm;
+}
 
 const { copy, isSupported } = useClipboard({
     source: decodeURIComponent(props.rawSource),
