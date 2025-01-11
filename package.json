@@ -16,13 +16,9 @@
     "scripts": {
         "build": "gulp -f packages/script/build/index.ts",
         "auto:npm": "pnpm build && cd dist & npm publish && cd ..",
-        "component:create": "esno ./utils/create/index.ts",
-        "comp:create": "esno ./utils/createComponent/index.ts",
-        "play": "pnpm run -C playground/vue-vite-playground dev",
-        "comp:new": "esno ./utils/createTestVue/index.ts",
-        "docs:dev": "vitepress dev documents --port 8000",
-        "docs:new": "esno ./utils/createVitepressComp/index.ts",
-        "docs:build": "vitepress build documents && node ./utils/copyDocsDist.js"
+        "dev:play": "pnpm run -C playground/vue-vite-playground dev",
+        "dev:docs": "vitepress dev documents --port 8000",
+        "build:docs": "vitepress build documents && node ./utils/copyDocsDist.js"
     },
     "files": [
         "dist"
@@ -65,6 +61,6 @@
         "@element-plus/icons-vue": "^2.3.1",
         "@iconify-json/ri": "^1.2.5",
         "@vueuse/core": "^12.3.0",
-        "ipage-element-plus-expand": "^0.0.4"
+        "ipage-element-plus-expand": "^0.0.5"
     }
 }

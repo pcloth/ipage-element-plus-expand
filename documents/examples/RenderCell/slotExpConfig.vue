@@ -2,8 +2,11 @@
     <RenderCell :item="item"/>
 </template>
 <script lang="jsx">
+    // 你正式引入用配置用这个
     // import { config } from "ipage-element-plus-expand";
-    import { config } from "../../../dist"
+
+    // 这个引入只是为了演示，实际你项目中应该引入上面那个
+    import {config} from "../../../packages/components/src"
     config.set({
         extendedRenderCell:{
             demo:{

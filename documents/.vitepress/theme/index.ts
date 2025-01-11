@@ -6,8 +6,10 @@ import './style/index.scss'
 // import 'ipage-element-plus-expand/es/style.css'
 
 // 引入本地编译包
-import IpageElementPlusExpand from '../../../dist'
-import '../../../dist/es/style.css'
+// import IpageElementPlusExpand from '../../../dist'
+// import '../../../dist/es/style.css'
+
+import IpageElementPlusExpand from '../../../packages/components/src/index'
 
 
 import ElementPlus from 'element-plus'

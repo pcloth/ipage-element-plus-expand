@@ -1,1 +1,0 @@
-import{G as r,a as n,_ as s,B as a,o as l,b as c}from"./framework.CAdZE8c5.js";const u={data(){return{item:{slot:"render",isFormItem:!1,render:e=>(console.log(e,"loadData"),r("span",null,[n("这是一个自定义渲染")]))}}}};function d(e,p,m,_,o,i){const t=a("RenderCell");return l(),c(t,{item:o.item},null,8,["item"])}const E=s(u,[["render",d]]);export{E as default};
