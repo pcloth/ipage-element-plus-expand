@@ -519,7 +519,13 @@ export default {
         _calculateDisplayableFields(columns:ColumnType[]) {
             const showColumnKeys:string[] = [];
             columns.forEach((item,idx) => {
-                const prop = item?.columnProps?.prop||idx.toString();
+                if(!item.columnProps){
+                    item.columnProps = {}
+                }
+                if (!item.columnProps.prop) {
+                    item.columnProps.prop = `column${idx}`;
+                }
+                const prop = item.columnProps.prop;
                 showColumnKeys.push(prop);
                 if (item.children) {
                     const children = this._calculateDisplayableFields(
