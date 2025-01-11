@@ -1,4 +1,7 @@
-# 
+# Element-Plus业务扩展组件库
+
+<img src="https://img.shields.io/npm/v/ipage-element-plus-expand?label=Version&style=flat-square">
+<img src="https://img.shields.io/npm/dm/ipage-element-plus-expand?label=Downloads&style=flat-square">
 
 # 鸣谢
 项目基础配置环境配置来源于`vuecomp-starter`

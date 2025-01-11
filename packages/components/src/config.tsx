@@ -1,5 +1,5 @@
 import { deepAssign } from "./utils";
-// 这里@element-plus/icons-vue可能不支持ssr模式，如果在ssr模式下报错
+// TODO 在vitepreww文档中引入编译后的config.js文件，会触发报错，有空看一下
 import { Search, RefreshRight, Plus } from "@element-plus/icons-vue";
 import type { IPageElementPlusExpandConfigType } from "./type.d"
 export const config: IPageElementPlusExpandConfigType = {
