@@ -699,6 +699,7 @@ export default {
             }, 300);
         },
         tableHeightEventSwitch(on) {
+            // 防御一下在ssr环境中编译
             if(typeof window==="undefined") return;
             window[["addEventListener", "removeEventListener"][on ? 0 : 1]](
                 "resize",

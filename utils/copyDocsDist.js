@@ -7,7 +7,6 @@ const __dirname = path.dirname(__filename);
 const srcDir = path.resolve(__dirname, '../documents/.vitepress/dist');
 const destDir = path.resolve(__dirname, '../docs');
 
-console.log(srcDir, destDir, '<<<')
 fs.rmdirSync(destDir, { recursive: true });
 fs.mkdirSync(destDir, { recursive: true });
 // 复制目录下全部文件，包括子目录

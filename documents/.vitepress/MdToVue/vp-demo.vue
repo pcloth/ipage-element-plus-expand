@@ -13,6 +13,7 @@ const props = defineProps<{
 }>();
 
 const vm = getCurrentInstance()!;
+// 防御一下在ssr环境中编译
 if(typeof window !== 'undefined'){
     window.vm = vm;
 }

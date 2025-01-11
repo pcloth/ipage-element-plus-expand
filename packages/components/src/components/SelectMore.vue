@@ -219,6 +219,8 @@ export default {
         // 监听加载更多是否显示
         async listening() {
             await this.$nextTick();
+            // 防御一下在ssr环境中编译
+            if(typeof window === 'undefined') return;
             const el = this.$refs.readMoreRef?.$el;
             this.readMoreObserver = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) {

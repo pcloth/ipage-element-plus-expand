@@ -14,3 +14,7 @@
     }
 }
 
+/** 中央容器 */
+.VPDoc.has-aside .content-container {
+    max-width:calc(100vw - var(--vp-sidebar-width)*2)!important;
+}

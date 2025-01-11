@@ -17,6 +17,9 @@ importers:
       '@vueuse/core':
         specifier: ^12.3.0
         version: 12.3.0(typescript@5.2.2)
+      ipage-element-plus-expand:
+        specifier: ^0.0.4
+        version: 0.0.4
     devDependencies:
       '@element-plus/build':
         specifier: workspace:^0.0.1
@@ -4721,6 +4724,9 @@ packages:
   ip-address@9.0.5:
     resolution: {integrity: sha512-zHtQzGojZXTwZTHQqra+ETKd4Sn3vgi7uBmlPoXVWZqYvuKmtI0l/VZTjqGmJY9x88GGOaZ9+G9ES8hC4T4X8g==}
     engines: {node: '>= 12'}
+
+  ipage-element-plus-expand@0.0.4:
+    resolution: {integrity: sha512-p+0mXw/FanwG+FtY2qviU2P5wKcjJzgkJtEmJ69nsd0kmwaE7X3hTgpZ5xsmgYkamhIaYJYVU3FzbHOorX7zFw==}
 
   is-absolute@1.0.0:
     resolution: {integrity: sha512-dOWoqflvcydARa360Gvv18DZ/gRuHKi2NU/wU5X1ZFzdYfH29nkiNZsF3mp4OJ3H4yo9Mx8A/uAGNzpzPN3yBA==}
@@ -12920,6 +12926,12 @@ snapshots:
     dependencies:
       jsbn: 1.1.0
       sprintf-js: 1.1.3
+
+  ipage-element-plus-expand@0.0.4:
+    dependencies:
+      js-export-excel: 1.1.4
+      jszip: 3.10.1
+      vue-the-mask: 0.11.1
 
   is-absolute@1.0.0:
     dependencies:

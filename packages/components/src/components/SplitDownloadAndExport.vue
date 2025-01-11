@@ -412,6 +412,7 @@ export default {
             }
         },
         saveAs(file) {
+            // 防御一下在ssr环境中编译
             if(typeof window==="undefined") return;
             const downloadElement = document.createElement("a");
             const href = window.URL.createObjectURL(file); // 创建下载的链接

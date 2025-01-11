@@ -45,6 +45,8 @@ export type CellItemType = {
     };
     /** 是否包裹一个el-col 组件 */
     isCol?: boolean;
+    /** 当在ifrom组件中使用时，可以用它快速指定上层col的span */
+    span?:number;
     /** el-col 组件的props参数 */
     colProps?: object;
     /** 当前组件是否有valueRange
@@ -95,7 +97,7 @@ export type ColumnType = {
     cell?: CellItemType;
     /** 嵌套单元格 */
     children?: ColumnType[];
-    show: boolean | Function | Promise<boolean>;
+    show?: boolean | Function | Promise<boolean>;
 };
 
 export type ElementConfigType = {

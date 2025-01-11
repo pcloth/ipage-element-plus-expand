@@ -27,9 +27,6 @@ export const ElementConfig: ElementConfigType = {
         dom: () => <el-select />,
         optionDom: () => <el-option />
     },
-    "select-v2": {
-        dom: () => <el-select />
-    },
     option: {
         dom: () => <el-option />
     },

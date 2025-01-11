@@ -64,6 +64,7 @@
     "dependencies": {
         "@element-plus/icons-vue": "^2.3.1",
         "@iconify-json/ri": "^1.2.5",
-        "@vueuse/core": "^12.3.0"
+        "@vueuse/core": "^12.3.0",
+        "ipage-element-plus-expand": "^0.0.4"
     }
 }

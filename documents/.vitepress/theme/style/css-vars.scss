@@ -3,7 +3,8 @@
 // css variables
 :root {
   // layouts
-  --vp-screen-max-width: 1376px;
+  --vp-layout-max-width: 1920px;
+  --vp-screen-max-width: 1440px;
 
   // colors
   --text-color: var(--el-text-color-primary);

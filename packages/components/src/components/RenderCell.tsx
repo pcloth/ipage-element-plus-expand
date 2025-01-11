@@ -137,6 +137,7 @@ const makeDom = ($props, $rcell, $context) => {
         isFormItem,
         formItemProps = {},
         isCol = false,
+        span,
         colProps = {},
         isButtonGroup = false,
         ...rest
@@ -334,6 +335,9 @@ const makeDom = ($props, $rcell, $context) => {
     }
     /** 添加列项目 */
     if (isCol) {
+        if(span){
+            colProps.span = span;
+        }
         dom = <el-col {...colProps}>{dom}</el-col>;
     }
     if (isButtonGroup) {

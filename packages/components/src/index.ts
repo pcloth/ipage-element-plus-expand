@@ -52,6 +52,7 @@ const install = function (Vue:any) {
 };
 
 // 判断是否是直接引入文件，如果是，则自动安装组件
+// 防御一下在ssr环境中编译
 if (typeof window !== "undefined" && window.Vue) {
     install(window.Vue);
 }
