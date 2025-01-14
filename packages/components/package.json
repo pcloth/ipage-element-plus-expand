@@ -1,6 +1,6 @@
 {
     "name": "ipage-element-plus-expand",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "type": "module",
     "scripts": {
         "build": "vite build"

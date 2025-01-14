@@ -1,0 +1,68 @@
+<template>
+    <ISearch 
+        v-model="filter" 
+        :searchItems="searchItems" 
+        :searchResetButton="false"
+        :searchSubmitButton="searchSubmitButton"
+        :expandButtons="expandButtons"
+    />
+</template>
+<script>
+    export default {
+        data(){
+            return {
+                filter:{
+                    gender:2,
+                },
+                results:{},
+                searchSubmitButton:{
+                    tip:'立即搜索>>>'
+                },
+                expandButtons:[
+                    {
+                        id:'customButton',
+                        tip:'自定义按钮',
+                        isFormItem:true,
+                        on:{
+                            click:()=>{
+                                alert('按下了自定义按钮按钮')
+                            }
+                        }
+                    }
+                ],
+                searchItems:[
+                    {
+                        id:'name',
+                        label:'姓名',
+                        props:{
+                            placeholder:"请输入姓名"
+                        },
+                    },
+                    {
+                        id:'gender',
+                        label:'性别',
+                        slot:'select',
+                        props:{
+                            placeholder:"请选择性别"
+                        },
+                        options:[
+                            {
+                                label:'男',
+                                value:1
+                            },
+                            {
+                                label:'女',
+                                value:2
+                            },
+                            {
+                                label:'中性',
+                                value:3,
+                                disabled:true
+                            }
+                        ]
+                    } 
+                ]
+            }
+        }
+    }
+</script>

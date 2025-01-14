@@ -72,11 +72,28 @@
 
 ## loadData 荷载数据
 传递给组件方法的有如下数据：`item`、`data`、`qData`、`allItems`、`$rcell`
+:::tip
+所有在item配置on和props下面的方法，都会被注入`loadData`，在方法自身参数的最后面，比如change事件
+```js
+{
+    "id":"name",
+    "slot":"input",
+    "on":{
+        "change":(val,loadData)=>{
+            // 常规的change只会提交val参数，而渲染核心会附加一个loadData进来。
+            console.log(val,loadData,"change")
+        }
+    }
+}
+```
+:::
+
+### loadData 数据包括以下内容
 1. `item`为自生接收到的props.item
 2. `data`为props.formData
 3. `qData`为props.qData
 4. `allItems`为props.allItems
-5. `$rcell`为组件的this
+5. `$rcell`为组件的实例
 
 
 

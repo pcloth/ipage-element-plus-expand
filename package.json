@@ -15,7 +15,7 @@
     "exports": {},
     "scripts": {
         "build": "gulp -f packages/script/build/index.ts",
-        "auto:npm": "pnpm build && cd dist & npm publish && cd ..",
+        "publish:npm": "pnpm build && cd dist & npm publish && cd ..",
         "dev:play": "pnpm run -C playground/vue-vite-playground dev",
         "dev:docs": "vitepress dev documents --port 8000",
         "build:docs": "vitepress build documents && node ./utils/copyDocsDist.js"

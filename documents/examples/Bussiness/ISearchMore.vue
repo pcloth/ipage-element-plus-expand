@@ -1,0 +1,61 @@
+<template>
+    <ISearch 
+        v-model="filter" 
+        :searchItems="searchItems" 
+    />
+</template>
+<script>
+    export default {
+        data(){
+            return {
+                filter:{
+                    gender:1,
+                },
+                results:{},
+                searchItems:[
+                    {
+                        id:'name',
+                        label:'姓名',
+                        props:{
+                            placeholder:"请输入姓名"
+                        },
+                    },
+                    {
+                        id:'gender',
+                        label:'性别',
+                        slot:'select',
+                        props:{
+                            placeholder:"请选择性别"
+                        },
+                        options:[
+                            {
+                                label:'男',
+                                value:1
+                            },
+                            {
+                                label:'女',
+                                value:2
+                            },
+                            {
+                                label:'中性',
+                                value:3,
+                                disabled:true
+                            }
+                        ]
+                    },
+                    {
+                        id:'createTime',
+                        label:'创建时间',
+                        slot:'date-picker',
+                        isMore:true,
+                        props:{
+                            type:'daterange',
+                            startPlaceholder:"请输入开始时间",
+                            endPlaceholder:"请输入结束时间",
+                        },
+                    }
+                ]
+            }
+        }
+    }
+</script>

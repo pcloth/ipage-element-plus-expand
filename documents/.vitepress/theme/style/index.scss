@@ -1,10 +1,10 @@
-@import url("./css-vars.scss");
+// @import url("./css-vars.scss");
 
-.group {
-    > :nth-child(n) {
-        margin: 0 10px;
-    }
-}
+// .group {
+//     > :nth-child(n) {
+//         margin: 0 10px;
+//     }
+// }
 .VPHome {
     .name {
         font-size: 41px!important;
@@ -16,5 +16,12 @@
 
 /** 中央容器 */
 .VPDoc.has-aside .content-container {
-    max-width:calc(100vw - var(--vp-sidebar-width)*2)!important;
+    // max-width:calc(100vw - var(--vp-sidebar-width)*2)!important;
+    max-width: 100%!important;
+}
+
+:root {
+    --vp-sidebar-width: 272px;
+    --vp-layout-max-width: 1640px;
+    --border-color: var(--el-border-color-darker);
 }
