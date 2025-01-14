@@ -40,6 +40,7 @@
                     ref="table"
                     :data="dataList"
                     :columns="mergeColumns"
+                    :showColumnFilter="showColumnFilter"
                     :showColumnKeys="showColumnKeys"
                 />
             </slot>

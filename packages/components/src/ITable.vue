@@ -44,6 +44,10 @@ export default {
         showColumnKeys: {
             type: Array,
             default: () => []
+        },
+        showColumnFilter:{
+            type:Boolean,
+            default: false
         }
     },
     data() {
@@ -117,17 +121,24 @@ export default {
         if (!this.showTable) return null;
         const columnDoms = [];
         const children = this.columns || [];
-        children.forEach(item => {
+        children.forEach((item,idx) => {
+            if(!item.columnProps){
+                item.columnProps = {}
+            }
+            if(!item.columnProps.prop){
+                item.columnProps.prop = `column${idx}`;
+            }
             const prop = item.columnProps.prop;
             const isOperate = item.isOperate;
             const canShowChild =
-                isOperate || this.showColumnKeys.includes(prop);
+                isOperate || this.showColumnFilter && this.showColumnKeys.includes(prop)||!this.showColumnFilter;
             if (canShowChild) {
                 columnDoms.push(
                     <ITableColumn
                         item={item}
                         columns={this.columns}
                         showColumnKeys={this.showColumnKeys}
+                        showColumnFilter={this.showColumnFilter}
                     ></ITableColumn>
                 );
             }

@@ -30,6 +30,10 @@ export default {
         showColumnKeys: {
             type: Array,
             default: () => []
+        },
+        showColumnFilter:{
+            type:Boolean,
+            default:true
         }
     },
     data() {
@@ -149,7 +153,7 @@ export default {
         const children = this.item.children || [];
         children.forEach(item => {
             const prop = item.columnProps.prop;
-            const canShowChild = this.showColumnKeys.includes(prop);
+            const canShowChild = this.showColumnFilter && this.showColumnKeys.includes(prop)||!this.showColumnFilter;
             if (canShowChild) {
                 columnDoms.push(<ITableColumn item={item}></ITableColumn>);
             }
