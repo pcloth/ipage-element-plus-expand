@@ -27,7 +27,7 @@
                 v-if="hasMore"
                 placement="bottom"
                 trigger="click"
-                :width="360"
+                width="auto"
                 :teleported="false"
             >
                 <template #reference>
@@ -474,7 +474,14 @@ export default {
             padding: 8px;
         }
     }
+}
 
-    //
+.isearch {
+    :deep(.el-form-item__content) {
+        min-width: 80px;
+    }
+    :deep(.el-input) {
+        width: 160px;
+    }
 }
 </style>
