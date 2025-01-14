@@ -27,6 +27,7 @@
                         id:'gender',
                         label:'性别',
                         slot:'select',
+                        // span:24,
                         props:{
                             placeholder:"请选择性别"
                         },

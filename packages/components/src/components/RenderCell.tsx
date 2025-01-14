@@ -157,7 +157,6 @@ const makeDom = ($props, $rcell, $context) => {
     if (isFormItem === undefined) {
         $isFormItem = $props.isFormItem;
     }
-
     const loadData:LoadDataType = {
         item: $props.item,
         data: $props.formData,
@@ -334,7 +333,7 @@ const makeDom = ($props, $rcell, $context) => {
         );
     }
     /** 添加列项目 */
-    if (isCol) {
+    if (isCol||span) {
         if(span){
             colProps.span = span;
         }

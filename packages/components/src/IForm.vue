@@ -1,33 +1,11 @@
 <template>
-    <el-form
-        ref="formRef"
-        :model="form"
-        :class="formClass"
-        v-bind="formProps || {}"
-        v-on="formOn || {}"
-        :rules="formRules"
-        @submit.prevent="nativeFormSubmission"
-        v-loading="loading"
-    >
+    <el-form ref="formRef" :model="form" :class="formClass" v-bind="formProps || {}" v-on="formOn || {}"
+        :rules="formRules" @submit.prevent="nativeFormSubmission" v-loading="loading">
         <el-row>
-            <el-col
-                :span="v.span ? v.span : 12"
-                v-for="v in formItems"
-                :key="v.id"
-            >
-                <!-- :input="nv => $set(form, v.id, nv)" -->
-                <!-- @update:modelValue="setFormData(v.id, $event)" -->
-                <RenderCell
-                    v-model="form[v.id]"
-                    :key="v.id"
-                    :item="v"
-                    :allItems="formItems"
-                    :formData="form"
-                    :qData="qData"
-                    :isFormItem="true"
-                    defaultSlot="input"
-                />
-            </el-col>
+            <template v-for="v in formItems" :key="v.id">
+                <RenderCell v-model="form[v.id]" :item="v" :allItems="formItems" :formData="form" :qData="qData"
+                    :isFormItem="true" defaultSlot="input" />
+            </template>
             <el-col class="ipage_iform_buttons" :span="24" v-if="canShowButton">
                 <!-- <RenderCell
                     v-if="canShowSubmitButton"
@@ -40,14 +18,8 @@
                     :qData="qData"
                 /> -->
                 <template v-for="btn in mergeActionButtons" :key="btn.id">
-                    <RenderCell
-                        v-model="form[btn.id]"
-                        :item="btn"
-                        :formData="form"
-                        :qData="qData"
-                        :allItems="expandButtons"
-                        defaultSlot="button"
-                    />
+                    <RenderCell v-model="form[btn.id]" :item="btn" :formData="form" :qData="qData"
+                        :allItems="expandButtons" defaultSlot="button" />
                 </template>
             </el-col>
         </el-row>
@@ -66,7 +38,7 @@ export default {
     props: {
         modelValue: {
             type: Object,
-            default: () => {}
+            default: () => { }
         },
         formClass: {
             type: String,
@@ -178,7 +150,7 @@ export default {
         },
         qData: {
             type: Object,
-            default: () => {}
+            default: () => { }
         }
     },
     data() {
