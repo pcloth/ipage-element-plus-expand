@@ -160,7 +160,7 @@ const makeDom = ($props, $rcell, $context) => {
     if (isFormItem === undefined) {
         $isFormItem = $props.isFormItem;
     }
-    const loadData:LoadDataType = {
+    const loadData: LoadDataType = {
         item: $props.item,
         data: $props.formData,
         qData: $props.qData,
@@ -274,6 +274,9 @@ const makeDom = ($props, $rcell, $context) => {
         dom = h(domConfig.dom(loadData), mergeProps, onSlots);
     }
     /** 处理v-model */
+    if(!dom.props){
+        dom.props = {};
+    }
     dom.props.modelValue = modelValue;
     pressOtherValues($props, modelValue);
     valueWatch && valueWatch(modelValue, loadData);
@@ -337,10 +340,10 @@ const makeDom = ($props, $rcell, $context) => {
     }
     /** 添加列项目
      * 如果指定了span或者默认span，就添加列
-    */
-    const span_ = span||$props.defaultSpan
-    if (isCol||span_) {
-        if(span_){
+     */
+    const span_ = span || $props.defaultSpan;
+    if (isCol || span_) {
+        if (span_) {
             colProps.span = span_;
         }
         dom = <el-col {...colProps}>{dom}</el-col>;

@@ -86,6 +86,8 @@ export type CellItemType = {
         它将只接收2个英文，并转换成大写
      *  */
     mask?: string|Array<string> | Object;
+    /** addButton和deleteButton特别可以附加弹窗参数，方便设置弹窗样式 */
+    dialogTitle?: string;
 };
 
 export type ColumnType = {

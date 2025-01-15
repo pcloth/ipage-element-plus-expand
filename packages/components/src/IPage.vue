@@ -1,61 +1,26 @@
 <template>
     <div class="pageTemplate" :class="className">
         <slot name="search">
-            <ISearch
-                ref="isearch"
-                @resetFields="$emit('resetFields')"
-                v-model="filter"
-                v-bind="searchProps"
-                :qData="realPageParams"
-                @searchSuccess="searchSuccess"
-                :search-items="searchItems"
-                @beforeSearch="beforeSearch"
-                @searchFail="searchFail"
-                @searchFinally="searchFinally"
-            />
+            <ISearch ref="isearch" @resetFields="$emit('resetFields')" v-model="filter" v-bind="searchProps"
+                :qData="realPageParams" @searchSuccess="searchSuccess" :search-items="searchItems"
+                @beforeSearch="beforeSearch" @searchFail="searchFail" @searchFinally="searchFinally" />
         </slot>
         <slot name="operation">
-            <div
-                class="operation"
-                :class="operationClass"
-                v-if="addButton || operationButtons.length"
-            >
-                <RenderCell
-                    defaultSlot="button"
-                    :isFormItem="false"
-                    v-for="(item, oix) in operations"
-                    :item="item"
-                    :key="item.id ? item.id : `operation${oix}`"
-                />
+            <div class="operation" :class="operationClass" v-if="addButton || operationButtons.length">
+                <RenderCell defaultSlot="button" :isFormItem="false" v-for="(item, oix) in operations" :item="item"
+                    :key="item.id ? item.id : `operation${oix}`" />
             </div>
         </slot>
         <div ref="tablewrap" class="tableWrap" :class="tableWrap">
             <slot name="table" :data="dataList" :loading="dataLoading">
-                <ITable
-                    v-loading="dataLoading"
-                    :tableProps="tableProps"
-                    :tableHeight="tableHeight"
-                    :tableSlots="tableSlots"
-                    :tableOn="tableOn"
-                    ref="table"
-                    :data="dataList"
-                    :columns="mergeColumns"
-                    :showColumnFilter="showColumnFilter"
-                    :showColumnKeys="showColumnKeys"
-                />
+                <ITable v-loading="dataLoading" :tableProps="tableProps" :tableHeight="tableHeight"
+                    :tableSlots="tableSlots" :tableOn="tableOn" ref="table" :data="dataList" :columns="mergeColumns"
+                    :showColumnFilter="showColumnFilter" :showColumnKeys="showColumnKeys" />
             </slot>
             <slot name="pagination">
-                <el-pagination
-                    ref="pagination"
-                    class="pagination"
-                    :class="paginationClass"
-                    :total="total"
-                    v-model:current-page="filterQData.pageNo"
-                    v-model:page-size="filterQData.pageSize"
-                    @current-change="pageChange"
-                    @size-change="handleSizeChange"
-                    v-bind="mergePaginationProps"
-                />
+                <el-pagination ref="pagination" class="pagination" :class="paginationClass" :total="total"
+                    v-model:current-page="filterQData.pageNo" v-model:page-size="filterQData.pageSize"
+                    @current-change="pageChange" @size-change="handleSizeChange" v-bind="mergePaginationProps" />
             </slot>
         </div>
 
@@ -63,24 +28,11 @@
             <slot name="dialog-header" />
             <slot name="dialog-content" :row="currentRow">
                 <!-- 加一个骨架屏幕，等详情接口加载完后在进行渲染表单，避免有些组件初始化时候参数有问题 -->
-                <el-skeleton
-                    :rows="formItems.length"
-                    animated
-                    v-if="formLoading"
-                />
-                <IForm
-                    v-model="currentRow"
-                    :loading="formSubmitLoading"
-                    @beforeSubmit="beforeSubmit"
-                    @validationFailed="validationFailed"
-                    @cancel="showDialog = false"
-                    @afterSubmit="afterSubmit"
-                    ref="iform"
-                    v-else-if="dialogType === 'edit' || dialogType === 'add'"
-                    v-bind="formProps"
-                    :formItems="formItems"
-                    :formRules="formRules"
-                />
+                <el-skeleton :rows="formItems.length" animated v-if="formLoading" />
+                <IForm v-model="currentRow" :loading="formSubmitLoading" @beforeSubmit="beforeSubmit"
+                    @validationFailed="validationFailed" @cancel="showDialog = false" @afterSubmit="afterSubmit"
+                    ref="iform" v-else-if="dialogType === 'edit' || dialogType === 'add'" v-bind="formProps"
+                    :formItems="formItems" :formRules="formRules" />
                 <slot name="dialog-more" :row="currentRow" />
             </slot>
             <template v-slot:footer>
@@ -93,23 +45,40 @@
 <script lang="tsx">
 import { deepAssign, getPathValue } from "./utils";
 import { config as $c } from "./config";
-
+import { ElMessageBox, ElMessage } from "element-plus";
+// @ts-ignore
 import ITable from "./ITable.vue";
+// @ts-ignore
 import IForm from "./IForm.vue";
+// @ts-ignore
 import ISearch from "./ISearch.vue";
 import RenderCell from "./components/RenderCell";
+// @ts-ignore
 import ITableColFilter from "./components/ITableColFilter.vue";
 import type { CellItemType, ColumnType, LoadDataType } from "./type";
-import { PropType } from "vue";
+import { PropType, defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     name: "IPage",
+    emits: [
+        "resetFields",
+        "update:searchValue",
+        "searchSuccess",
+        "beforeSearch",
+        "searchFail",
+        "searchFinally",
+        "beforeSubmit",
+        "validationFailed",
+        "afterSubmit",
+        "delete-row",
+        "delete-error",
+        "tableHeightUpdate"
+    ],
     components: {
         RenderCell,
         ISearch,
         ITable,
         IForm,
-        // eslint-disable-next-line
         ITableColFilter
     },
     props: {
@@ -171,12 +140,12 @@ export default {
         },
         tableWrap: {
             type: String,
-            default: $c.get("class").tableWrap
+            default: () => $c.get("class").tableWrap
         },
-        tableFixHeight: {
-            type: Number,
-            default: 0
-        },
+        // tableFixHeight: {
+        //     type: Number,
+        //     default: 0
+        // },
         dialogProps: {
             type: Object,
             default: () => {
@@ -188,14 +157,14 @@ export default {
         },
         // 添加按钮
         addButton: {
-            type: [Object as PropType<CellItemType>, Boolean],
+            type: [Object,Boolean] as PropType<CellItemType|Boolean>,
             default: () => {
                 return {};
             }
         },
         // 工具条
         toolbarButtons: {
-            type: [Array as PropType<CellItemType[]>, Boolean],
+            type: [Array , Boolean] as PropType<CellItemType[]|Boolean>,
             default: () => {
                 return [];
             }
@@ -207,15 +176,15 @@ export default {
         },
         operationClass: {
             type: String,
-            default: $c.get("class").IPageOperation
+            default: () => $c.get("class").IPageOperation
         },
         paginationClass: {
             type: String,
-            default: $c.get("class").IPagePagination
+            default: () => $c.get("class").IPagePagination
         },
         // 行编辑按钮
         editButton: {
-            type: [Object as PropType<CellItemType>, Boolean],
+            type: [Object , Boolean] as PropType<CellItemType|Boolean>,
             default: () => {
                 return {};
             }
@@ -245,7 +214,7 @@ export default {
             // },
         },
         deleteButton: {
-            type: [Object as PropType<CellItemType>, Boolean],
+            type: [Object , Boolean] as PropType<CellItemType|Boolean>,
             default: () => {
                 return {};
             }
@@ -257,7 +226,7 @@ export default {
         },
         className: {
             type: String,
-            default: $c.get("class").IPageRoot
+            default: () => $c.get("class").IPageRoot
         }
     },
     data() {
@@ -283,7 +252,7 @@ export default {
                 ...$c.get("button"),
                 ...$c.get("addButton"),
                 on: {
-                    click: (_:any, loadData:LoadDataType) => {
+                    click: (_: any, loadData: LoadDataType) => {
                         this._openDialog_("add", loadData);
                     }
                 }
@@ -292,7 +261,7 @@ export default {
                 ...$c.get("button"),
                 ...$c.get("editButton"),
                 on: {
-                    click: (_:any, loadData:LoadDataType) => {
+                    click: (_: any, loadData: LoadDataType) => {
                         this._openDialog_("edit", loadData);
                     }
                 }
@@ -301,7 +270,7 @@ export default {
                 ...$c.get("button"),
                 ...$c.get("deleteButton"),
                 on: {
-                    click: (_:any, loadData:LoadDataType) => {
+                    click: (_: any, loadData: LoadDataType) => {
                         this.askDelete(loadData);
                     }
                 }
@@ -311,7 +280,7 @@ export default {
                     ...$c.get("toolbarButton"),
                     ...$c.get("refreshButton"),
                     on: {
-                        click: (_:any, loadData:LoadDataType) => {
+                        click: (_: any, loadData: LoadDataType) => {
                             const { $rcell } = loadData;
                             $rcell.$el.classList.add("refreshAnimation");
                             this.handleSearch().finally(() => {
@@ -346,7 +315,7 @@ export default {
         }
     },
     computed: {
-        operations() {
+        operations(): CellItemType[] {
             const operations = [];
             if (this.addButton && typeof this.addButton === "object") {
                 operations.push(
@@ -371,7 +340,7 @@ export default {
             });
             return operations;
         },
-        mergeColumns() {
+        mergeColumns(): ColumnType[] {
             const mergeColumns = this._getColumns(this.columns);
             // 默认数据操作区域
             if (this.showColumnButton) {
@@ -383,7 +352,7 @@ export default {
                     ...props_,
                     slots: {
                         /** 筛选可见字段功能 */
-                        header: (data:any, loadData:LoadDataType) => {
+                        header: (data: any, loadData: LoadDataType) => {
                             const className = "IPage_toolBar";
                             return (
                                 <div class={className}>
@@ -391,7 +360,7 @@ export default {
                                     {this.showColumnFilter ? (
                                         <ITableColFilter
                                             value={this.showColumnKeys}
-                                            onChangeFilter={val => {
+                                            onChangeFilter={(val:any) => {
                                                 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                                                 this.showColumnKeys = val;
                                             }}
@@ -403,10 +372,10 @@ export default {
                             );
                         }
                     },
-                    render: ({ row }:any) => {
+                    render: ({ row }: any) => {
                         const buttons = [];
-                        let editButtonConf = {};
-                        let deleteButtonConf = {};
+                        let editButtonConf:any = {};
+                        let deleteButtonConf:any = {};
                         if (this._hasButton(this.editButton)) {
                             editButtonConf = this._vColumnRenderCell_(
                                 [
@@ -435,7 +404,7 @@ export default {
                             ...this._vColumnRenderCell_(this.columnButtons, row)
                         );
                         // 排序
-                        buttons.sort((a, b) => {
+                        buttons.sort((a:any, b:any) => {
                             let sortA = a?.props?.item?.sort || 0;
                             let sortB = b?.props?.item?.sort || 0;
                             if (this._hasButton(this.editButton)) {
@@ -443,13 +412,13 @@ export default {
                                 if (
                                     sortA === 0 &&
                                     a.props.item.id ===
-                                        editButtonConf.props.item.id
+                                    editButtonConf.props.item.id
                                 )
                                     sortA = 1;
                                 if (
                                     sortB === 0 &&
                                     b.props.item.id ===
-                                        editButtonConf.props.item.id
+                                    editButtonConf.props.item.id
                                 )
                                     sortB = 1;
                             }
@@ -458,13 +427,13 @@ export default {
                                 if (
                                     sortA === 0 &&
                                     a.props.item.id ===
-                                        deleteButtonConf.props.item.id
+                                    deleteButtonConf.props.item.id
                                 )
                                     sortA = 2;
                                 if (
                                     sortB === 0 &&
                                     b.props.item.id ===
-                                        deleteButtonConf.props.item.id
+                                    deleteButtonConf.props.item.id
                                 )
                                     sortB = 2;
                             }
@@ -476,7 +445,7 @@ export default {
             }
             return mergeColumns;
         },
-        mergeDialogProps() {
+        mergeDialogProps(): any {
             return {
                 ...$c.get("dialogProps"),
                 ...this.dialogProps,
@@ -484,17 +453,17 @@ export default {
                 ...(this.dialogProps_ || {})
             };
         },
-        mergePaginationProps() {
+        mergePaginationProps(): any {
             const obj = deepAssign(
                 $c.get("paginationProps"),
                 this.paginationProps
             );
             return obj;
         },
-        realPageParams() {
+        realPageParams(): any {
             // 根据search.mode参数配置分页参数
             const searchOptions = $c.get("search");
-            let params = {};
+            let params:any = {};
             if (searchOptions.beforeFunc) {
                 params = searchOptions.beforeFunc(this.filterQData);
             } else if (searchOptions.mode === "page") {
@@ -509,7 +478,7 @@ export default {
         }
     },
     methods: {
-        _hasButton(buttonConf:CellItemType | boolean) {
+        _hasButton(buttonConf: CellItemType | Boolean) {
             if (typeof buttonConf === "boolean") {
                 return buttonConf;
             } else if (typeof buttonConf === "object") {
@@ -517,10 +486,10 @@ export default {
             }
             return false;
         },
-        _calculateDisplayableFields(columns:ColumnType[]) {
-            const showColumnKeys:string[] = [];
-            columns.forEach((item,idx) => {
-                if(!item.columnProps){
+        _calculateDisplayableFields(columns: ColumnType[]): string[] {
+            const showColumnKeys: string[] = [];
+            columns.forEach((item, idx) => {
+                if (!item.columnProps) {
                     item.columnProps = {}
                 }
                 if (!item.columnProps.prop) {
@@ -537,21 +506,22 @@ export default {
             });
             return showColumnKeys;
         },
-        _getColumns(columns:ColumnType[]) {
-            const _columns:ColumnType[] = [];
+        _getColumns(columns: ColumnType[]) {
+            const _columns: ColumnType[] = [];
             columns.forEach(item => {
-                const prop = item.columnProps.prop;
+                const prop:string = item.columnProps.prop;
                 if (item.children) {
                     item.children = this._getColumns(item.children);
                 }
                 _columns.push({
                     ...item,
+                    // @ts-ignore
                     show: this.showColumnKeys.includes(prop)
                 });
             });
             return _columns;
         },
-        _vColumnRenderCell_(allItems:CellItemType[], row:any) {
+        _vColumnRenderCell_(allItems: CellItemType[], row: any) {
             return allItems.map(item => {
                 return (
                     <RenderCell
@@ -564,18 +534,20 @@ export default {
             });
         },
         // 准备给外部使用的唤醒弹窗方法
-        openDialog(row:any, dialogProps:any) {
+        openDialog(row: any, dialogProps: any) {
             this.dialogProps_ = dialogProps || {};
             this.currentRow = row;
             this.showDialog = true;
         },
-        async _openDialog_(type:string, loadData:LoadDataType) {
+        async _openDialog_(type: string, loadData: LoadDataType) {
             this.dialogType = type;
             let openApi = null;
             if (type === "add") {
+                // @ts-ignore
                 this.dialogTitle = this.addButton?.dialogTitle || "新增";
                 openApi = this.befoceAddOpenFunc;
             } else if (type === "edit") {
+                // @ts-ignore
                 this.dialogTitle = this.editButton?.dialogTitle || "编辑";
                 openApi = this.befoceEditOpenFunc;
             }
@@ -585,8 +557,7 @@ export default {
                 try {
                     this.currentRow = await openApi(loadData);
                 } catch (error) {
-                    this.$message.error(error);
-                    console.log(error, "错误"); // eslint-disable-line
+                    console.log(error, "错误");
                 } finally {
                     this.formLoading = false;
                 }
@@ -595,25 +566,28 @@ export default {
                 this.showDialog = true;
             }
             this.$nextTick(() => {
+                // @ts-ignore
                 this.$refs.iform?.clearValidate();
             });
         },
-        pageChange(pageNo:number) {
+        pageChange(pageNo: number) {
             this.filterQData.pageNo = pageNo;
             this.handleSearch();
         },
-        handleSizeChange(pageSize:number) {
+        handleSizeChange(pageSize: number) {
             this.filterQData.pageSize = pageSize;
             this.filterQData.pageNo = 1;
             this.handleSearch();
         },
-        handleSearch(params:any) {
-            return this.$refs.isearch.handleSearch(params);
+        handleSearch(params: any = {}) {
+            // @ts-ignore
+            return this.$refs?.isearch?.handleSearch(params);
         },
-        _handleSearchNow(params:any) {
-            return this.$refs.isearch._handleSearchNow(params);
+        _handleSearchNow(params: any) {
+            // @ts-ignore
+            return this.$refs?.isearch?._handleSearchNow(params);
         },
-        searchSuccess(res:any) {
+        searchSuccess(res: any) {
             const keyPaths = $c.get("response");
             let data = [];
             let total = 0;
@@ -630,62 +604,67 @@ export default {
             this.total = +total;
             this.dataList = data;
             if (this.$refs.table) {
-                this.$refs.table.doLayout();
+                // @ts-ignore
+                this.$refs?.table?.doLayout();
             }
             this.$emit("searchSuccess", res);
         },
-        beforeSubmit(data:any) {
+        beforeSubmit(data: any) {
             this.$emit("beforeSubmit", data);
         },
-        validationFailed(data:any) {
+        validationFailed(data: any) {
             this.$emit("validationFailed", data);
         },
-        afterSubmit(data:any) {
+        afterSubmit(data: any) {
             this.handleSearch();
             this.showDialog = false;
             this.$emit("afterSubmit", data);
         },
-        askDelete(loadData:LoadDataType) {
+        async askDelete(loadData: LoadDataType) {
+            if(!this.deleteFunc)
             if (this.deleteFunc) {
-                this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
+                await ElMessageBox.confirm("此操作将永久删除该数据, 是否继续?", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
                     type: "warning"
-                }).then(() => {
-                    this.deleteFunc(loadData.data)
-                        .then(() => {
-                            this.$message({
-                                type: "success",
-                                message: "删除成功!"
-                            });
-                            this.$refs.isearch.handleSearch();
-                        })
-                        .catch(error => {
-                            this.$emit("delete-error",error)
-                        });
                 });
+                try{
+                    // @ts-ignore
+                    await this.deleteFunc(loadData.data)
+                    ElMessage({
+                        type: "success",
+                        message: "删除成功!"
+                    });
+                    // @ts-ignore
+                    this.$refs?.isearch?.handleSearch();
+                } catch (error) {
+                    this.$emit("delete-error", error)
+                }
             }
             this.$emit("delete-row", loadData);
         },
-        beforeSearch(params:any) {
+        beforeSearch(params: any) {
             this.dataList = [];
             this.dataLoading = true;
             this.$emit("beforeSearch", params);
         },
-        searchFail(data:any) {
+        searchFail(data: any) {
             this.$emit("searchFail", data);
         },
-        searchFinally(data:any) {
+        searchFinally(data: any) {
             this.$emit("searchFinally", data);
             this.dataLoading = false;
         },
         //设置表格高度
         tableHeightUpdate() {
+            // @ts-ignore
             if (this.resize) {
+                // @ts-ignore
                 this.resize = clearTimeout(this.resize);
             }
+            // @ts-ignore
             this.resize = setTimeout(() => {
-                //  获取外框的尺寸
+                // @ts-ignore //  获取外框的尺寸 
                 const tableBoxSize = this.$refs.tablewrap?.clientHeight || 0;
                 // 获取分页栏的尺寸
                 const paginationSize =
@@ -701,13 +680,15 @@ export default {
                 //更新布局
                 this.$nextTick(() => {
                     this.$emit("tableHeightUpdate", this.tableHeight);
+                    // @ts-ignore
                     this.$refs.table && this.$refs.table.reSize();
                 });
             }, 300);
         },
-        tableHeightEventSwitch(on) {
+        tableHeightEventSwitch(on:any) {
             // 防御一下在ssr环境中编译
-            if(typeof window==="undefined") return;
+            if (typeof window === "undefined") return;
+            // @ts-ignore
             window[["addEventListener", "removeEventListener"][on ? 0 : 1]](
                 "resize",
                 this.tableHeightUpdate,
@@ -726,9 +707,10 @@ export default {
         } else if (tableHeightMode === "data") {
             this.tableHeight = 0;
         }
+        // @ts-ignore
         this.showColumnKeys = this._calculateDisplayableFields(this.columns);
     }
-};
+});
 </script>
 
 <style lang="scss">
@@ -758,6 +740,7 @@ export default {
     min-height: 0;
     min-width: 0;
 }
+
 @keyframes refreshRotate {
     0% {
         -webkit-transform: rotate(0deg);
