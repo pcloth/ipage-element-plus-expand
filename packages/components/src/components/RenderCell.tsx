@@ -46,6 +46,9 @@ const cellProps = {
     },
     defaultSlot: {
         type: String
+    },
+    defaultSpan: {
+        type: Number
     }
 };
 
@@ -332,10 +335,13 @@ const makeDom = ($props, $rcell, $context) => {
             </el-form-item>
         );
     }
-    /** 添加列项目 */
-    if (isCol||span) {
-        if(span){
-            colProps.span = span;
+    /** 添加列项目
+     * 如果指定了span或者默认span，就添加列
+    */
+    const span_ = span||$props.defaultSpan
+    if (isCol||span_) {
+        if(span_){
+            colProps.span = span_;
         }
         dom = <el-col {...colProps}>{dom}</el-col>;
     }

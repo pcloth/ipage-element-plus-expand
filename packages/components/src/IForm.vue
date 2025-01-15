@@ -4,19 +4,9 @@
         <el-row>
             <template v-for="v in formItems" :key="v.id">
                 <RenderCell v-model="form[v.id]" :item="v" :allItems="formItems" :formData="form" :qData="qData"
-                    :isFormItem="true" defaultSlot="input" />
+                    :isFormItem="true" defaultSlot="input" :defaultSpan="12" />
             </template>
             <el-col class="ipage_iform_buttons" :span="24" v-if="canShowButton">
-                <!-- <RenderCell
-                    v-if="canShowSubmitButton"
-                    :item="mergeSubmitButton"
-                    :qData="qData"
-                />
-                <RenderCell
-                    v-if="canShowCancelButton"
-                    :item="mergeCancelButton"
-                    :qData="qData"
-                /> -->
                 <template v-for="btn in mergeActionButtons" :key="btn.id">
                     <RenderCell v-model="form[btn.id]" :item="btn" :formData="form" :qData="qData"
                         :allItems="expandButtons" defaultSlot="button" />
