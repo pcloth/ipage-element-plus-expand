@@ -228,7 +228,7 @@ export default defineComponent({
             type: String,
             default: () => $c.get("class").IPageRoot
         },
-        /** 是否在打开的时候重回表单 */
+        /** 是否在打开的时候重绘表单 */
         reloadForm: {
             type: Boolean,
             default: false
