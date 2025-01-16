@@ -2,6 +2,8 @@ import { defineConfig } from 'vitepress'
 import { sidebar } from './config/sidebar'
 import mdContainer from 'markdown-it-container'
 import createDemoContainer from './MdToVue/demo'
+import tooltip from './plugins/tooltip'
+import { ApiTableContainer } from './plugins/api-table'
 
 export default defineConfig({
     title: `ipage-element-plus-expand`,
@@ -12,7 +14,9 @@ export default defineConfig({
     ],
     markdown:{
         config: (md) => {
+            md.use(tooltip)
             md.use(mdContainer, 'demo', createDemoContainer(md))
+            md.use(ApiTableContainer)
         }
     },
     themeConfig: {

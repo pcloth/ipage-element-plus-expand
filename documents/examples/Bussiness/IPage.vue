@@ -8,6 +8,11 @@
         data(){
             return {
                 ipageProps:{
+                    tableOn:{
+                        rowClick:(_,row)=>{
+                            console.log('rowClick',row)
+                        }
+                    },
                     searchProps:{
                         queryFunc:this.queryFunc
                     },

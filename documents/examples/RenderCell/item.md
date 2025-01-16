@@ -2,7 +2,7 @@
 
 |属性|类型|说明|默认值|
 |--|--|--|--|
-|value|[String, Number, Array, Object, Boolean,Date]|v-model数据|`undefined`|
+|modelValue|^[enum]`'String' \| 'Number' \| 'Array' \| 'Object' \| 'Date'`|v-model数据|`undefined`|
 |item|object|渲染组件内容数据，下方有详细说明|`undefined`|
 |defaultSlot|string|`item`对象中如果没有`slot`值，将使用defaultSlot|`undefined`|
 |defaultProp|object|`item`对象中如果没有`props`defaultProp|`undefined`|
@@ -19,23 +19,23 @@
 |label|string|当isFormItem=true时候，表单标签|`undefined`|
 |tip|string|input的placeholder，span、button、link、checkbox的默认插槽|`undefined`|
 |slot|string|需要渲染的element-ui组件类型，默认去掉el字符，比如el-input，写为`input`|`undefined`|
-|options|[array,function,async function]|select、radio-group、checkbox-group子组件的options|[]|
+|options|^[enum]`'array' \| 'function' \| 'async function'`|select、radio-group、checkbox-group子组件的options|[]|
 |directives|array|自定义指令数据|[]|
 |debounce|boolen,number|v-model是否需要额外的防抖|`undefined`|
-|render|jsx function|当slot='render'的时候生效，直接渲染dom|无|
+|render|`jsx Function`|当slot='render'的时候生效，直接渲染dom|无|
 |slots|object|用于组件的插槽|{}|
 |props|object|传递给原生组件的props，如果其中有function类型，会自动添加loadData数据|{}|
 |on|object|传递给原生组件的on,用于接收组件的emit事件，会自动添加loadData数据|{}|
-|show|boolen\|function|是否显示本组件，类似v-show|true|
+|show|boolen\|Function|是否显示本组件，类似v-show|true|
 |isFormItem|boolen|是否在父级添加el-form-item组件|true|
 |formItemProps|object|如果isFormItem=true的时候，父级el-form-item组件的props参数|{}|
 |isCol|boolean|是否添加一个el-col组件在外层|false|
 |colProps|object|如果添加了el-col，给它的配置||
 |otherValueRange|Array\<string\>|比如date-pcker组件，如果指定了时间范围，将会获得一个array的value，你可以在这里配置它们映射的其他value，比如['start','end']，将会把['2021-01-01','2021-01-02']映射成\{start:'2021-01-01',end:'2021-01-02'\}||
 |valueWatch|Function|当值发生变化时，触发这个方法||
-|optionDom|Function|自定义options节点的渲染函数||
-|mask|string\|Array\<string\>\|Object|限定输入范围，详情可以查看`mask属性`||
-|...rest|any|其他属性，将传递给实际的组件|{}|
+|optionDom|`jsx Function`|自定义options节点的渲染函数||
+|mask|^[enmu]`'string' \| 'Array<string>' \| 'Object'`|限定输入范围，详情可以查看`mask属性`||
+|...rest|any|其他属性，将传递给实际的组件，推荐你还是应该放到上面的`props`里面，因为放在这里的方法不会被注入`loadData`|{}|
 
 ## mask 属性
 #### 方法一：传入字符串或者数组字符串，表示如下默认值：

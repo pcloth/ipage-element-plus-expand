@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="test">
         <RenderCell v-model="name" :item="item"/>
     </div>
     
@@ -22,6 +22,11 @@
                         }
                     }
                 }
+            }
+        },
+        methods:{
+            test(val,loadData){
+                console.log('test',val,loadData)
             }
         }
     }

@@ -253,6 +253,7 @@ export default defineComponent({
                 ...$c.get("addButton"),
                 on: {
                     click: (_: any, loadData: LoadDataType) => {
+                        _.stopPropagation();
                         this._openDialog_("add", loadData);
                     }
                 }
@@ -262,6 +263,7 @@ export default defineComponent({
                 ...$c.get("editButton"),
                 on: {
                     click: (_: any, loadData: LoadDataType) => {
+                        _.stopPropagation();
                         this._openDialog_("edit", loadData);
                     }
                 }
@@ -271,6 +273,7 @@ export default defineComponent({
                 ...$c.get("deleteButton"),
                 on: {
                     click: (_: any, loadData: LoadDataType) => {
+                        _.stopPropagation();
                         this.askDelete(loadData);
                     }
                 }
@@ -281,6 +284,7 @@ export default defineComponent({
                     ...$c.get("refreshButton"),
                     on: {
                         click: (_: any, loadData: LoadDataType) => {
+                            _.stopPropagation();
                             const { $rcell } = loadData;
                             $rcell.$el.classList.add("refreshAnimation");
                             this.handleSearch().finally(() => {

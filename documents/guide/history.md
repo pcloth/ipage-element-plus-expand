@@ -1,5 +1,9 @@
 ## 更新日志
 
+> 2025-01-16 版本号：0.0.11
+1. `addButton`,`editButton`,`deleteButton`三个按钮默认添加`e.stopPropagation()`阻止冒泡
+2. 完善更多的typescript类型
+
 > 2025-01-15 版本号：0.0.10
 1. IForm的渲染单元isCol默认打开，默认span=12，确保和旧版本逻辑一致
 2. select-more如果加载的时候被屏蔽了，会造成监听抛错，虽然不影响业务，但是依然防御一下。
