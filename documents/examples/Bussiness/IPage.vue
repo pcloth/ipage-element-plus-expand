@@ -8,6 +8,7 @@
         data(){
             return {
                 ipageProps:{
+                    reloadForm:true,
                     tableOn:{
                         rowClick:(_,row)=>{
                             console.log('rowClick',row)
@@ -77,6 +78,27 @@
                             props:{
                                 placeholder:"请输入姓名"
                             },
+                        },
+                        {
+                            id:'add',
+                            label:'地址',
+                            slot:'select-more',
+                            props:{
+                                service:(params)=>{
+                                    return new Promise((resolve, reject) => {
+                                        const records = []
+                                        for(let i=0;i<10;i++){
+                                            records.push({
+                                                label:'地址'+i,
+                                                value:i
+                                            })
+                                        }
+                                        setTimeout(()=>{
+                                            resolve({data:{records}})
+                                        },500)
+                                    })
+                                }
+                            }
                         },
                         {
                             id:'gender',

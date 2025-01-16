@@ -31,7 +31,7 @@
                 <el-skeleton :rows="formItems.length" animated v-if="formLoading" />
                 <IForm v-model="currentRow" :loading="formSubmitLoading" @beforeSubmit="beforeSubmit"
                     @validationFailed="validationFailed" @cancel="showDialog = false" @afterSubmit="afterSubmit"
-                    ref="iform" v-else-if="dialogType === 'edit' || dialogType === 'add'" v-bind="formProps"
+                    ref="iform" v-else-if="merageShowDialog" v-bind="formProps"
                     :formItems="formItems" :formRules="formRules" />
                 <slot name="dialog-more" :row="currentRow" />
             </slot>
@@ -227,6 +227,11 @@ export default defineComponent({
         className: {
             type: String,
             default: () => $c.get("class").IPageRoot
+        },
+        /** 是否在打开的时候重回表单 */
+        reloadForm: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -319,6 +324,13 @@ export default defineComponent({
         }
     },
     computed: {
+        merageShowDialog(){
+            const shome = this.dialogType === 'edit' || this.dialogType === 'add'
+            if(this.reloadForm){
+                return this.showDialog && shome;
+            }
+            return shome;
+        },
         operations(): CellItemType[] {
             const operations = [];
             if (this.addButton && typeof this.addButton === "object") {

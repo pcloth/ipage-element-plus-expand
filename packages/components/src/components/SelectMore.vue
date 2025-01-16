@@ -167,7 +167,7 @@ export default {
         this.init();
         this.listening();
     },
-    unmounted() {
+    beforeUnmount() {
         this.readMoreObserver?.disconnect();
     },
     methods: {
@@ -333,6 +333,10 @@ export default {
 };
 </script>
 <style lang="scss">
+.selectLoad {
+    // 减少出现Uncaught ResizeObserver loop completed with undelivered notifications.
+    overflow: hidden;
+}
 .selectLoad:after {
     position: relative;
     z-index: 1000;
