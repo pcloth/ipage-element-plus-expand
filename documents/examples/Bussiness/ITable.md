@@ -14,11 +14,11 @@ Bussiness/ITable
 :::
 
 
-## 属性
+## Attributes 属性
 |属性|类型|说明|默认值|
 |--|--|--|--|
 |data|array|传递给el-table的data|[]|
-|columns|array|渲染字段配置|[]|
+|columns|array|渲染字段配置，请查阅`columns 配置`|[]|
 |tableProps|object|传递给el-table的参数|配置项`tableProps`|
 |tableOn|object|传递给el-table的方法|配置项`tableOn`|
 |tableHeight|number,string|el-table的默认高度|配置项`tableHeight`=0|
@@ -35,7 +35,7 @@ Bussiness/ITable
 |slots|object|插槽内容|{}|
 |children|array|多级表头的子表头配置|无|
 
-## ref上的方法
+## Methods 方法
 |方法|说明|
 |--|--|
 |reDraw|手动重绘|

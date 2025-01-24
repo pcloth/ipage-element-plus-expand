@@ -25,7 +25,7 @@ Bussiness/ISearchButton
 :::
 
 
-## 属性
+## Attributes 属性
 
 |属性|类型|说明|默认值|
 |--|--|--|--|
@@ -46,7 +46,7 @@ Bussiness/ISearchButton
 |className|string|组件根节点的class类名，方便控制整体样式|配置项`class.ISearchRoot`|
 
 
-## 方法
+## Methods 方法
 |属性|参数|说明|
 |--|--|--|
 |changeParams|form,value,loadData|当输入单元发生change事件的时候触发，form是当前表单数据，value是当前变动数据，loadData是荷载数据|

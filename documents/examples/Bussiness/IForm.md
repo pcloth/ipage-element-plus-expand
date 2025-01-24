@@ -11,7 +11,7 @@ Bussiness/IForm
 :::
 
 
-## 属性
+## Attributes 属性
 
 |属性|类型|说明|默认值|
 |--|--|--|--|
@@ -41,7 +41,7 @@ Bussiness/IForm
 |--|--|--|--|
 |span|number|表单单元外部的el-col组件参数|24|
 
-## 事件
+## Events 事件
 |事件|说明|参数|
 |--|--|--|
 |changeForm|表单内容发生变动|formValue,item|

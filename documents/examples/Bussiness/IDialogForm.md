@@ -6,7 +6,7 @@ Bussiness/IDialogForm
 
 
 
-## 属性
+## Attributes 属性
 |属性|类型|说明|默认值|
 |--|--|--|--|
 |show|Boolean|是否显示弹窗，`v-model:show`|false|
@@ -16,7 +16,7 @@ Bussiness/IDialogForm
 |iFormProps|Object|给IForm组件的参数|{}|
 
 
-## slots 插槽
+## Slots 插槽
 |插槽名|说明|
 |--|--|
 |header|在表单头部的插槽|
