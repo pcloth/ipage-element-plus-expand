@@ -15,8 +15,8 @@ Bussiness/IPage
 |--------|------|--------|------|
 | searchItems | `Array<CellItemType>` | `() => []` | 搜索表单项配置数组 |
 | searchValue | `Object` | `() => ({})` | 搜索表单绑定值 |
-| searchProps | `Object` | `() => ({})` | 传递给 ISearch 组件的属性 |
-| formProps | `Object` | `() => ({})` | 传递给 IForm 组件的属性 |
+| searchProps | `Object` | `() => ({})` | 传递给 ISearch 组件的属性，请查询`ISearch组件文档` |
+| formProps | `Object` | `() => ({})` | 传递给 IForm 组件的属性，请查询`IForm组件文档` |
 | columns | `Array<ColumnType>` | `() => []` | 表格列配置数组 |
 | showColumnButton | `Boolean` | `true` | 是否显示列操作按钮 |
 | showColumnFilter | `Boolean` | `true` | 是否显示列隐藏控制器 |
@@ -27,7 +27,7 @@ Bussiness/IPage
 | tableOn | `Object` | `() => ({})` | ITable 事件监听器 |
 | tableSlots | `Object` | `() => ({})` | ITable 插槽配置 |
 | tableWrap | `String` | `$c.get("class").tableWrap` | 表格容器类名 |
-| dialogProps | `Object` | `{ appendToBody: true, title: "" }` | 弹窗属性配置 |
+| dialogProps | `Object` | `{ appendToBody: true, title: "" }` | 弹窗属性配置，请查看`el-dialog组件文档` |
 | addButton | `CellItemType\|Boolean` | `() => ({})` | 新增按钮配置 |
 | toolbarButtons | `Array<CellItemType>\|Boolean` | `() => []` | 工具栏按钮配置 |
 | operationButtons | `Array` | `() => []` | 操作区按钮配置 |
