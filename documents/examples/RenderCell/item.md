@@ -38,7 +38,7 @@
 |money|object|限定输入为金额格式，查看下方`money属性`，如果全局安装后，可以直接使用`v-ipage-money`指令| `{min: 0,precision: 2, max: Number.MAX_SAFE_INTEGER, complete: true}`
 |...rest|any|其他属性，将传递给实际的组件，推荐你还是应该放到上面的`props`里面，因为放在这里的方法不会被注入`loadData`|{}|
 
-## mask 属性
+## item.mask 属性
 #### 方法一：传入字符串或者数组字符串，表示如下默认值：
 ```
     mask:"##-###"
@@ -71,7 +71,7 @@
 它将只接收2个英文，并转换成大写
 :::
 
-## money 属性
+## item.money 属性
 |属性|类型|说明|默认值|
 |--|--|--|--|
 |min|number|允许输入的最小值，它如果是负数，则允许输入负数|0|
