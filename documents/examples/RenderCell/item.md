@@ -34,7 +34,8 @@
 |otherValueRange|Array\<string\>|比如date-pcker组件，如果指定了时间范围，将会获得一个array的value，你可以在这里配置它们映射的其他value，比如['start','end']，将会把['2021-01-01','2021-01-02']映射成\{start:'2021-01-01',end:'2021-01-02'\}||
 |valueWatch|Function|当值发生变化时，触发这个方法||
 |optionDom|`jsx Function`|自定义options节点的渲染函数||
-|mask|^[enmu]`'string' \| 'Array<string>' \| 'Object'`|限定输入范围，详情可以查看`mask属性`||
+|mask|^[enmu]`'string' \| 'Array<string>' \| 'Object'`|限定输入范围，详情可以查看`mask属性`，如果全局安装后，可以直接使用`v-ipage-mask`指令||
+|money|object|限定输入为金额格式，查看下方`money属性`，如果全局安装后，可以直接使用`v-ipage-money`指令| `{min: 0,precision: 2, max: Number.MAX_SAFE_INTEGER, complete: true}`
 |...rest|any|其他属性，将传递给实际的组件，推荐你还是应该放到上面的`props`里面，因为放在这里的方法不会被注入`loadData`|{}|
 
 ## mask 属性
@@ -69,6 +70,15 @@
 :::tip
 它将只接收2个英文，并转换成大写
 :::
+
+## money 属性
+|属性|类型|说明|默认值|
+|--|--|--|--|
+|min|number|允许输入的最小值，它如果是负数，则允许输入负数|0|
+|max|number|允许输入的最大值，它如果是负数，则只允许输入负数|`Number.MAX_SAFE_INTEGER`|
+|precision|number|小数位数|2|
+|complete|boolen|是否给小数位数添0补位，你如果在默认值的情况下输入0.5，失去焦点的时候将会变为0.50|true|
+
 
 ## loadData 荷载数据
 传递给组件方法的有如下数据：`item`、`data`、`qData`、`allItems`、`$rcell`

@@ -13,7 +13,8 @@ import { QuestionFilled } from "@element-plus/icons-vue";
 import RenderCell from "./RenderCell";
 import { config as $c } from "../config";
 import type { CellItemType, LoadDataType } from "../type";
-import vMask from "../mask/directive";
+import ipageMask from "../directives/mask/directive";
+import ipageMoney from "../directives/money/index";
 const cellProps = {
     modelValue: {
         type: [String, Number, Array, Object, Boolean]
@@ -129,6 +130,7 @@ const makeDom = ($props, $rcell, $context) => {
         _i_options = item.options, // 用户处理实际的options
         directives = [],
         mask,
+        money,
         debounce,
         valueWatch,
         slots = {},
@@ -253,7 +255,10 @@ const makeDom = ($props, $rcell, $context) => {
     };
     let dom = null;
     if (mask) {
-        directives.push({ name: "ve-mask", value: mask });
+        directives.push({ name: "ipage-mask", value: mask });
+    }
+    if (money){
+        directives.push({ name: "ipage-money", value: money });
     }
     /** 处理指令 */
     if (directives && directives.length) {
@@ -357,7 +362,7 @@ const makeDom = ($props, $rcell, $context) => {
 export default defineComponent({
     name: "RenderCell",
     props: cellProps,
-    directives: { veMask: vMask },
+    directives: { ipageMask, ipageMoney },
     setup(props, context) {
         // console.log(props.defaultProps, context, "RenderCell", this);
         const $rcell = getCurrentInstance()?.proxy;

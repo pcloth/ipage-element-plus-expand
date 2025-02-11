@@ -62,13 +62,22 @@ export default {
                     ele.setSelectionRange(position, position);
                 }, 0);
             }
+            // vue3
             if (
                 vnode &&
-                vnode.componentInstance &&
-                vnode.componentInstance.$emit
+                vnode.ctx &&
+                vnode.ctx.emit
             ) {
-                vnode.componentInstance.$emit("input", ele.value);
+                vnode.ctx.emit("update:modelValue", ele.value);
             }
+            // vue2
+            // if (
+            //     vnode &&
+            //     vnode.componentInstance &&
+            //     vnode.componentInstance.$emit
+            // ) {
+            //     vnode.componentInstance.$emit("input", ele.value);
+            // }
         }
     },
     updated(el, binding) {

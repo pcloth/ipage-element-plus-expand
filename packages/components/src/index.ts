@@ -15,7 +15,8 @@ import iDialogForm from "./IDialogForm.vue";
 import iTableColumn from "./components/ITableColumn.vue";
 import renderCell from "./components/RenderCell";
 import splitDownloadAndExport from "./components/SplitDownloadAndExport.vue";
-import veMask from "./mask/directive"
+import ipageMask from "./directives/mask/directive"
+import ipageMoney from "./directives/money/index"
 import selectMore from './components/SelectMore.vue';
 
 export const config = $config;
@@ -29,7 +30,7 @@ export const ITableColumn = iTableColumn;
 export const SplitDownloadAndExport = splitDownloadAndExport;
 export const SelectMore = selectMore;
 
-export const VeMask = veMask;
+export const IpageMask = ipageMask;
 
 const components:any = {
     IPage,
@@ -48,7 +49,9 @@ const install = function (Vue:any) {
         const component = components[key];
         Vue.component(component.name || key, component);
     });
-    Vue.directive("ve-mask", veMask);
+    // 注册指令
+    Vue.directive("ipage-mask", ipageMask);
+    Vue.directive("ipage-money", ipageMoney);
 };
 
 // 判断是否是直接引入文件，如果是，则自动安装组件
