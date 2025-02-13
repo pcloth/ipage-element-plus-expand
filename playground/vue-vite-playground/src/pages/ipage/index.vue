@@ -23,12 +23,6 @@ const searchItems = ref<CellItemType[]>([
         id: "name",
         slot:"input",
         label:"姓名"
-    },
-    {
-        id: "age",
-        slot:"input",
-        label:"年龄",
-        mask:"##"
     }
 ]);
 

@@ -5,6 +5,7 @@
         v-if="!hideSearch"
         :class="className"
         v-bind="mergeFormProps"
+        @submit.prevent="singleInputEnter"
     >
         <template v-for="v in searchItems" :key="v.id">
             <RenderCell
@@ -203,6 +204,13 @@ export default {
         className: {
             type: String,
             default: $c.get("class").ISearchRoot
+        },
+        /** 
+         * 是否单输入框回车搜索
+         */
+        singleInput: {
+            type: Boolean,
+            default: $c.get("search.singleInput")
         }
     },
     computed: {
@@ -405,7 +413,12 @@ export default {
             }
             this.$emit("changeParams", this.form);
             this.$emit("resetFields", this.form);
-        }
+        },
+        singleInputEnter() {
+            if(this.singleInput){
+                this.handleSearch();
+            }
+        },
     }
 };
 </script>

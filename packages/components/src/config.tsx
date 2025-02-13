@@ -52,7 +52,9 @@ export const config: IPageElementPlusExpandConfigType = {
              * @param {object} params 当前的搜索参数
              * @returns {object} 返回一个对象，分页需要的参数
              */
-            beforeFunc: null
+            beforeFunc: null,
+            /** 单个输入框回车后立即搜索 */
+            singleInput: false
         },
 
         /** 表格高度锁：仅在IPage组件中的ITable生效

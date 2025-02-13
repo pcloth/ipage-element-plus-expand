@@ -31,6 +31,7 @@ export const SplitDownloadAndExport = splitDownloadAndExport;
 export const SelectMore = selectMore;
 
 export const IpageMask = ipageMask;
+export const IpageMoney = ipageMoney;
 
 const components:any = {
     IPage,

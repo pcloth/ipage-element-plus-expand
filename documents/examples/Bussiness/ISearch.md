@@ -44,6 +44,7 @@ Bussiness/ISearchButton
 |autoQuery|boolean|加载组件时候是否自动查询|false|
 |allinMore|boolean|所有搜索项是否都放到更多搜索里，方便手机上处理|配置项`allinMore`|
 |className|string|组件根节点的class类名，方便控制整体样式|配置项`class.ISearchRoot`|
+|singleInput|boolean|单个输入框的时候回车是否直接触发搜索|false,配置项`search.singleInput`|
 
 
 ## Methods 方法
