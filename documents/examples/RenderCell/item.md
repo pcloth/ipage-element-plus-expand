@@ -39,6 +39,10 @@
 |...rest|any|其他属性，将传递给实际的组件，推荐你还是应该放到上面的`props`里面，因为放在这里的方法不会被注入`loadData`|{}|
 
 ## item.mask 属性
+
+> 此功能代码来自于[vue-the-mask](https://www.npmjs.com/package/vue-the-mask)
+
+
 #### 方法一：传入字符串或者数组字符串，表示如下默认值：
 ```
     mask:"##-###"

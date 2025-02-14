@@ -15,4 +15,8 @@ export default {
     "/examples/Bussiness/IDialogForm":"IDialogForm 弹窗表单",
     "/examples/Bussiness/ITable": "ITable 动态表格",
     "/examples/Bussiness/IPage": "IPage 组合页面",
+    "Config": "Config 全局配置",
+    "/examples/Config/index": "配置引用",
+    "/examples/Config/config": "全部配置参数说明",
+    "/examples/Config/searchConfig": "ISearch 配置参数",
 }
