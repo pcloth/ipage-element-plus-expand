@@ -18,6 +18,8 @@ import splitDownloadAndExport from "./components/SplitDownloadAndExport.vue";
 import ipageMask from "./directives/mask/directive"
 import ipageMoney from "./directives/money/index"
 import selectMore from './components/SelectMore.vue';
+import easyUpload from './components/EasyUpload/index.vue';
+import rangeSelect from './components/RangeSelect.vue';
 
 export const config = $config;
 export const IPage = ipage;
@@ -29,6 +31,8 @@ export const IDialogForm = iDialogForm;
 export const ITableColumn = iTableColumn;
 export const SplitDownloadAndExport = splitDownloadAndExport;
 export const SelectMore = selectMore;
+export const EasyUpload = easyUpload;
+export const RangeSelect = rangeSelect;
 
 export const IpageMask = ipageMask;
 export const IpageMoney = ipageMoney;
@@ -42,7 +46,9 @@ const components:any = {
     IDialogForm,
     ITableColumn,
     SelectMore,
-    SplitDownloadAndExport
+    SplitDownloadAndExport,
+    EasyUpload,
+    RangeSelect
 };
 
 const install = function (Vue:any) {
