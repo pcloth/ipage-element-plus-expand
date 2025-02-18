@@ -3,15 +3,19 @@
         <div class="range-item" 
         :style="mergeStyle"
         :class="{
-            'range-item-disabled': props.disabled || (props.limit && currentList.length >= props.limit && !isSelected(item)),
+            'range-item-disabled': isDisabled(item),
             'range-item-selected': isSelected(item),
-            'range-item-mid': isMideSelected(index)
+            'range-item-mid': isMid(index)
 
         }"
         @click.stop="selectItem(item)"
         v-for="(item, index) in props.options" :key="index">
             <slot name="item" :item="item">
                 <div>{{ item[props.valueProps.label] }}</div>
+            </slot>
+            <slot name="item-extra" :item="item">
+                <div class="range-name" v-if="isStart(index)">{{ props.rangeName[0] }}</div>
+                <div class="range-name" v-if="isEnd(index)">{{ props.rangeName[1] }}</div>
             </slot>
         </div>
     </div>
@@ -52,16 +56,25 @@ const props = defineProps({
      */
     mode: {
         type: String,
-        default: 'range'
+        default: 'picker'
     },
     limit: {
         type: Number,
-        default: 3
+        default: 0
     },
     /** 可选项 */
     options: {
         type: Array as () => any[],
         default: () => []
+    },
+    /** 禁止选择的列表 */
+    disabledValues: {
+        type: Array as () => string[],
+        default: () => []
+    },
+    rangeName:{
+        type:Array as ()=>string[],
+        default:()=>['开始','结束']
     }
 })
 const emit = defineEmits([
@@ -81,15 +94,57 @@ const currentKeyList = ref<any>([])
 const isSelected = (item:any)=>{
     return currentKeyList.value.includes(item[props.valueProps.value])
 }
+
+const isDisabled = (item:any)=>{
+    const status = (props.limit && currentList.value.length >= props.limit && !isSelected(item))
+    const hasDisabled = props.disabledValues.find((value:string)=>item[props.valueProps.value] === value)
+    return props.disabled || hasDisabled || status
+}
+
+const getRangeMinMaxIndex = ()=>{
+    const one = currentList.value[0]
+    const two = currentList.value[1]
+    const oneIndex = props.options.findIndex((item:any)=>item[props.valueProps.value] === one[props.valueProps.value])
+    const twoIndex = props.options.findIndex((item:any)=>item[props.valueProps.value] === two[props.valueProps.value])
+    const maxIndex = Math.max(oneIndex,twoIndex)
+    const minIndex = Math.min(oneIndex,twoIndex)
+    return {
+        maxIndex,
+        minIndex
+    }
+}
+const isStart = (index:number)=>{
+    let current = currentList.value[0]
+    if(props.mode==="range"){
+        if(currentList.value.length === 1){
+            current = currentList.value[0]
+            return index === props.options.findIndex((item:any)=>item[props.valueProps.value] === current[props.valueProps.value])
+        }else if(currentList.value.length === 2){
+            const {minIndex} = getRangeMinMaxIndex()
+            if(index === minIndex){
+                return true
+            }
+        }
+    }
+    return false
+}
+
+const isEnd = (index:number)=>{
+    if(props.mode==="range"){
+        if(currentList.value.length === 2){
+            const {maxIndex} = getRangeMinMaxIndex()
+            if(index === maxIndex){
+                return true
+            }
+        }
+    }
+    return false
+}
+
 // 是否是中间选中的
-const isMideSelected = (index:number)=>{
+const isMid = (index:number)=>{
     if(props.mode==="range" && currentKeyList.value.length === 2){
-        const one = currentList.value[0]
-        const two = currentList.value[1]
-        const oneIndex = props.options.findIndex((item:any)=>item[props.valueProps.value] === one[props.valueProps.value])
-        const twoIndex = props.options.findIndex((item:any)=>item[props.valueProps.value] === two[props.valueProps.value])
-        const maxIndex = Math.max(oneIndex,twoIndex)
-        const minIndex = Math.min(oneIndex,twoIndex)
+        const {minIndex,maxIndex} = getRangeMinMaxIndex()
         if(index>minIndex && index<maxIndex){
             return true
         }
@@ -129,7 +184,7 @@ watch(()=>currentList.value, ()=>{
 })
 
 const selectItem = (item:any)=>{
-    if(props.disabled) return
+    if(isDisabled(item)) return
     if(props.mode === 'picker'){
         const value = item[props.valueProps.value]
         if(isSelected(item)){
@@ -155,7 +210,6 @@ const selectItem = (item:any)=>{
             }
         }
     }
-    // putOutValue()
 }
 
 </script>
@@ -173,13 +227,14 @@ const selectItem = (item:any)=>{
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         &:hover {
             background-color: #f5f5f5;
         }
         &.range-item-disabled {
             cursor: not-allowed;
             background-color: #f0f0f0;
-            pointer-events: none;
+            // pointer-events: none;
         }
         &.range-item-selected {
             background-color: #409eff;
@@ -187,6 +242,11 @@ const selectItem = (item:any)=>{
         }
         &.range-item-mid {
             background-color: #cde4fb;
+        }
+
+        .range-name {
+            font-size: 12px;
+            color: #eee;
         }
     }
 }

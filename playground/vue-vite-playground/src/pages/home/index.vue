@@ -134,7 +134,7 @@ const rangeOptions = ref([
         label:"23点"
     }
 ])
-const rangeValue = ref(['0','4'])
+const rangeValue = ref([])
 </script>
 
 <template>
@@ -153,7 +153,7 @@ const rangeValue = ref(['0','4'])
     <el-button @click="doDisabled">切换disabled {{ disabled }}</el-button>
     <el-button @click="changeMode">切换模式 {{ mode }}</el-button>
     
-    <RangeSelect v-model="rangeValue" :options="rangeOptions"/>
+    <RangeSelect :disabledValues="['0']" v-model="rangeValue" :options="rangeOptions"/>
   </div>
 </template>
 
