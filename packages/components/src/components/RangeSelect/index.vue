@@ -1,46 +1,13 @@
 <template>
     <div class="range-select">
-        <!-- <slot>
-            <div class="range-item" 
-                :style="mergeStyle"
-                :class="{
-                    'range-item-disabled': isDisabled(item),
-                    'range-item-selected': isSelected(item),
-                    'range-item-mid': isMid(index)
-
-                }"
-                @click.stop="selectItem(item)"></div>
-        </slot> -->
-        <div
-            class="range-item"
-            :style="mergeStyle"
-            :class="{
-                'range-item-disabled': isDisabled(item),
-                'range-item-selected': isSelected(item),
-                'range-item-mid': isMid(index)
-            }"
-            @click.stop="selectItem(item)"
-            v-for="(item, index) in props.options"
-            :key="index"
-        >
-            <slot name="item" :item="item">
-                <div>{{ item[props.valueProps.label] }}</div>
-            </slot>
-            <slot name="item-extra" :item="item">
-                <div class="range-name" v-if="isStart(index)">
-                    {{ props.rangeName[0] }}
-                </div>
-                <div class="range-name" v-if="isEnd(index)">
-                    {{ props.rangeName[1] }}
-                </div>
-            </slot>
-        </div>
+        <slot>
+        </slot>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from "vue";
-import RangeSelectItem from "./RangeSelectItem.vue";
+import { ref, watch, computed, onMounted, provide } from "vue";
+
 const props = defineProps({
     modelValue: {
         type: Array,
@@ -49,7 +16,7 @@ const props = defineProps({
     /** 直接采用item作为value */
     valueIsItem: {
         type: Boolean,
-        default: false
+        default: true
     },
     valueProps: {
         type: Object,
@@ -76,6 +43,18 @@ const props = defineProps({
         type: String,
         default: "picker"
     },
+    // 强制排序，开始必须小于结束
+    sort: {
+        type: Boolean,
+        default: false
+    },
+    /**
+     * 是否允许开始和结束相同
+     */
+    allowsStartEndSame: {
+        type: Boolean,
+        default: true
+    },
     limit: {
         type: Number,
         default: 0
@@ -95,7 +74,7 @@ const props = defineProps({
         default: () => ["开始", "结束"]
     }
 });
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue","change"]);
 
 const mergeStyle = computed(() => {
     return {
@@ -119,17 +98,17 @@ const isDisabled = (item: any) => {
     const hasDisabled = props.disabledValues.find(
         (value: string) => item[props.valueProps.value] === value
     );
-    return props.disabled || hasDisabled || status;
+    return props.disabled || hasDisabled || status || item.disabled;
 };
 
 const getRangeMinMaxIndex = () => {
     const one = currentList.value[0];
     const two = currentList.value[1];
-    const oneIndex = props.options.findIndex(
+    const oneIndex = children.value.findIndex(
         (item: any) =>
             item[props.valueProps.value] === one[props.valueProps.value]
     );
-    const twoIndex = props.options.findIndex(
+    const twoIndex = children.value.findIndex(
         (item: any) =>
             item[props.valueProps.value] === two[props.valueProps.value]
     );
@@ -143,17 +122,18 @@ const getRangeMinMaxIndex = () => {
 const isStart = (index: number) => {
     let current = currentList.value[0];
     if (props.mode === "range") {
-        if (currentList.value.length === 1) {
+        if(!props.sort&&currentList.value.length){
             current = currentList.value[0];
             return (
                 index ===
-                props.options.findIndex(
+                children.value.findIndex(
                     (item: any) =>
                         item[props.valueProps.value] ===
                         current[props.valueProps.value]
                 )
             );
-        } else if (currentList.value.length === 2) {
+        }
+        if (props.sort && currentList.value.length >= 1) {
             const { minIndex } = getRangeMinMaxIndex();
             if (index === minIndex) {
                 return true;
@@ -166,9 +146,19 @@ const isStart = (index: number) => {
 const isEnd = (index: number) => {
     if (props.mode === "range") {
         if (currentList.value.length === 2) {
-            const { maxIndex } = getRangeMinMaxIndex();
-            if (index === maxIndex) {
-                return true;
+            if(props.sort){
+                const { maxIndex } = getRangeMinMaxIndex();
+                return index === maxIndex;
+            }else{
+                const endItem = currentList.value[1]
+                return (
+                    index ===
+                    children.value.findIndex(
+                        (item: any) =>
+                            item[props.valueProps.value] ===
+                            endItem[props.valueProps.value]
+                    )
+                );
             }
         }
     }
@@ -176,9 +166,12 @@ const isEnd = (index: number) => {
 };
 
 // 是否是中间选中的
-const isMid = (index: number) => {
+const isMid = (item:any) => {
     if (props.mode === "range" && currentKeyList.value.length === 2) {
         const { minIndex, maxIndex } = getRangeMinMaxIndex();
+        const index = children.value.findIndex(
+            (i: any) => i[props.valueProps.value] === item[props.valueProps.value]
+        );
         if (index > minIndex && index < maxIndex) {
             return true;
         }
@@ -194,9 +187,14 @@ const initValue = () => {
         currentList.value = props.modelValue;
     } else {
         currentKeyList.value = props.modelValue;
-        currentList.value = props.options.filter((item: any) =>
-            currentKeyList.value.includes(item[props.valueProps.value])
-        );
+        const arr:any = [];
+        currentKeyList.value.forEach((key: any) => {
+            const item = children.value.find(
+                (item: any) => item[props.valueProps.value] === key
+            );
+            arr.push(item);
+        });
+        currentList.value = arr;
     }
 };
 
@@ -208,12 +206,12 @@ const putOutValue = () => {
     let arr = [];
     if (props.valueIsItem) {
         arr = JSON.parse(JSON.stringify(currentList.value));
-        arr.sort((a: any, b: any) => {
-            const startIndex = props.options.findIndex(
+        props.sort && arr.sort((a: any, b: any) => {
+            const startIndex = children.value.findIndex(
                 (item: any) =>
                     item[props.valueProps.value] === a[props.valueProps.value]
             );
-            const endIndex = props.options.findIndex(
+            const endIndex = children.value.findIndex(
                 (item: any) =>
                     item[props.valueProps.value] === b[props.valueProps.value]
             );
@@ -221,18 +219,18 @@ const putOutValue = () => {
         });
     } else {
         arr = JSON.parse(JSON.stringify(currentKeyList.value));
-        arr.sort((a: any, b: any) => {
-            const startIndex = props.options.findIndex(
+        props.sort && arr.sort((a: any, b: any) => {
+            const startIndex = children.value.findIndex(
                 (item: any) => item[props.valueProps.value] === a
             );
-            const endIndex = props.options.findIndex(
+            const endIndex = children.value.findIndex(
                 (item: any) => item[props.valueProps.value] === b
             );
             return startIndex - endIndex;
         });
     }
-    console.log("putOutValue", arr);
     emit("update:modelValue", arr);
+    emit("change", arr);
 };
 
 watch(
@@ -241,6 +239,8 @@ watch(
         initValue();
     }
 );
+
+
 
 // watch(
 //     () => currentList.value,
@@ -258,7 +258,7 @@ const selectItem = (item: any) => {
             currentKeyList.value = currentKeyList.value.filter(
                 (key: any) => key !== value
             );
-            currentList.value = props.options.filter((item: any) =>
+            currentList.value = children.value.filter((item: any) =>
                 currentKeyList.value.includes(item[props.valueProps.value])
             );
         } else {
@@ -271,11 +271,11 @@ const selectItem = (item: any) => {
             currentKeyList.value = [];
             currentList.value = [];
         } else {
-            if (isSelected(item)) {
+            if (isSelected(item) && !props.allowsStartEndSame) {
                 currentKeyList.value = currentKeyList.value.filter(
                     (key: any) => key !== item[props.valueProps.value]
                 );
-                currentList.value = props.options.filter((item: any) =>
+                currentList.value = children.value.filter((item: any) =>
                     currentKeyList.value.includes(item[props.valueProps.value])
                 );
             } else {
@@ -286,9 +286,59 @@ const selectItem = (item: any) => {
     }
     putOutValue();
 };
+
+const children = ref<any>([]);
+const childrenMaps = ref<any>({});
+const accpetChild = (item,index)=>{
+    childrenMaps.value[index] = item;
+    const indexList = Object.keys(childrenMaps.value)
+    children.value = indexList.map(key=>childrenMaps.value[key])
+}
+
+provide("func", {
+    isDisabled,
+    isSelected,
+    isMid,
+    isStart,
+    isEnd,
+    selectItem,
+    mergeStyle,
+    rangeName: props.rangeName,
+    emitParent:(name:string, ...args:any[])=>{
+        let func = null;
+        switch(name){
+            case "isDisabled":
+                func = isDisabled
+                break;
+            case "isSelected":
+                func = isSelected
+                break;
+            case "isMid":
+                func = isMid
+                break;
+            case "isStart":
+                func = isStart
+                break;
+            case "isEnd":
+                func = isEnd
+                break;
+            case "selectItem":
+                func = selectItem
+                break;
+            case "accpetChild":
+                func = accpetChild
+                break;
+            default:
+                break;
+        }
+        if(func){
+            return func(...args)
+        }
+    }
+});
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .range-select {
     display: flex;
     flex-wrap: wrap;

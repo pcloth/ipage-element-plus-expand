@@ -131,7 +131,8 @@ const rangeOptions = ref([
     },
     {
         value:"23",
-        label:"23点"
+        label:"23点",
+        disabled:true
     }
 ])
 const rangeValue = ref([])
@@ -139,10 +140,10 @@ const item = {
     id:'value',
     slot:'range-select',
     props:{
-        options:rangeOptions.value,
+        // options:rangeOptions.value,
         mode:'range',
     },
-    // options:rangeOptions.value,
+    options:rangeOptions.value,
     
 }
 </script>
