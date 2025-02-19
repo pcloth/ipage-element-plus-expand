@@ -135,6 +135,16 @@ const rangeOptions = ref([
     }
 ])
 const rangeValue = ref([])
+const item = {
+    id:'value',
+    slot:'range-select',
+    props:{
+        options:rangeOptions.value,
+        mode:'range',
+    },
+    // options:rangeOptions.value,
+    
+}
 </script>
 
 <template>
@@ -152,8 +162,8 @@ const rangeValue = ref([])
     </div>
     <el-button @click="doDisabled">切换disabled {{ disabled }}</el-button>
     <el-button @click="changeMode">切换模式 {{ mode }}</el-button>
-    
-    <RangeSelect :disabledValues="['0']" v-model="rangeValue" :options="rangeOptions"/>
+    <RenderCell v-model="rangeValue" :item="item"/>
+    <!-- <RangeSelect :disabledValues="['0']" v-model="rangeValue" :options="rangeOptions"/> -->
   </div>
 </template>
 

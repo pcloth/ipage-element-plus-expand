@@ -1,5 +1,7 @@
 import SelectMore from "./SelectMore.vue";
 import SplitDownloadAndExport from "./SplitDownloadAndExport.vue";
+import RangeSelect from "./RangeSelect/index.vue";
+import RangeSelectItem from "./RangeSelect/RangeSelectItem.vue";
 import Renderer from "./Renderer.vue";
 import type { ElementConfigType } from "../type.d";
 export const ElementConfig: ElementConfigType = {
@@ -178,5 +180,9 @@ export const ElementConfig: ElementConfigType = {
     },
     export: {
         dom: () => <SplitDownloadAndExport />
-    }
+    },
+    "range-select":{
+        dom: () => <RangeSelect />,
+        optionDom: () => <RangeSelectItem/>
+    },
 };

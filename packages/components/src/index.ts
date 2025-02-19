@@ -19,7 +19,7 @@ import ipageMask from "./directives/mask/directive"
 import ipageMoney from "./directives/money/index"
 import selectMore from './components/SelectMore.vue';
 import easyUpload from './components/EasyUpload/index.vue';
-import rangeSelect from './components/RangeSelect.vue';
+import rangeSelect from './components/RangeSelect/index.vue';
 
 export const config = $config;
 export const IPage = ipage;

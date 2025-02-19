@@ -223,12 +223,18 @@ const makeDom = ($props, $rcell, $context) => {
             if (!Array.isArray(item._i_options)) {
                 return [];
             }
-            return item._i_options.map((row: any) => {
+            return item._i_options.map((row: any, index:number) => {
                 // 如果外部传入了optionDom，就使用外部的，否则使用默认的
                 const _otions_ = optionDom
-                    ? optionDom(loadData, row)
-                    : domConfig.optionDom(loadData, row);
-                _otions_.props = row;
+                    ? optionDom(loadData, row, index)
+                    : domConfig.optionDom(loadData, row, index);
+                _otions_.props = {
+                    /** 这里加入了 */
+                    _item:row,
+                    _index:index,
+                    ...row
+                };
+                // console.log(_otions_, "optionDom", row);
                 return _otions_;
             });
         };

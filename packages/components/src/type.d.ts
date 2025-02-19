@@ -105,7 +105,7 @@ export type ColumnType = {
 export type ElementConfigType = {
     [key: string]: {
         dom: (loadData?: any) => JSX.Element;
-        optionDom?: (loadData: any, item?: any) => JSX.Element;
+        optionDom?: (loadData: any, item?: any, index?:number) => JSX.Element;
         tipIsDefault?: boolean;
         debounce?: boolean;
     };
