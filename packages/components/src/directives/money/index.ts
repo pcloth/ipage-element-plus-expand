@@ -49,7 +49,6 @@ const buildDynamicNumberRegex = (min:number|undefined, max:number|undefined, pre
         decimal = `(\\.\\d{0,${precision}})?`;
     }
     const regStr = `${sign}${integer}${decimal}`;
-    console.log(regStr, 'regStr');
     // 组合正则表达式
     return new RegExp(regStr);
 }

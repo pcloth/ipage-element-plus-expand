@@ -1,10 +1,12 @@
+# 分页下拉选择器
+
 ## 例子
 :::tip
 业务中常见的场景是当一个下拉框需要从接口获取，然后列表可能会很长的情况下，需要这种查询后可以分页的情况，分页将会出现在下拉的最底部
 :::
 
 :::demo 
-RenderCell/selectMore
+RenderCellExtend/selectMore
 :::
 
 ## Attributes 属性

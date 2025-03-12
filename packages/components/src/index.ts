@@ -20,6 +20,7 @@ import ipageMoney from "./directives/money/index"
 import selectMore from './components/SelectMore.vue';
 import easyUpload from './components/EasyUpload/index.vue';
 import rangeSelect from './components/RangeSelect/index.vue';
+import rangeSelectItem from './components/RangeSelect/RangeSelectItem.vue';
 
 export const config = $config;
 export const IPage = ipage;
@@ -33,6 +34,8 @@ export const SplitDownloadAndExport = splitDownloadAndExport;
 export const SelectMore = selectMore;
 export const EasyUpload = easyUpload;
 export const RangeSelect = rangeSelect;
+export const RangeSelectItem = rangeSelectItem;
+
 
 export const IpageMask = ipageMask;
 export const IpageMoney = ipageMoney;
@@ -48,7 +51,8 @@ const components:any = {
     SelectMore,
     SplitDownloadAndExport,
     EasyUpload,
-    RangeSelect
+    RangeSelect,
+    RangeSelectItem
 };
 
 const install = function (Vue:any) {

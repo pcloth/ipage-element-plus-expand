@@ -1,7 +1,6 @@
 <template>
     <div class="range-select">
-        <slot>
-        </slot>
+        <slot />
     </div>
 </template>
 
@@ -16,7 +15,7 @@ const props = defineProps({
     /** 直接采用item作为value */
     valueIsItem: {
         type: Boolean,
-        default: true
+        default: false
     },
     valueProps: {
         type: Object,
@@ -74,12 +73,12 @@ const props = defineProps({
         default: () => ["开始", "结束"]
     }
 });
-const emit = defineEmits(["update:modelValue","change"]);
+const emit = defineEmits(["update:modelValue", "change"]);
 
 const mergeStyle = computed(() => {
     return {
-        width: "50px",
-        height: "30px",
+        width: "72px",
+        height: "72px",
         ...props.itemStyle
     };
 });
@@ -122,7 +121,7 @@ const getRangeMinMaxIndex = () => {
 const isStart = (index: number) => {
     let current = currentList.value[0];
     if (props.mode === "range") {
-        if(!props.sort&&currentList.value.length){
+        if (!props.sort && currentList.value.length) {
             current = currentList.value[0];
             return (
                 index ===
@@ -146,11 +145,11 @@ const isStart = (index: number) => {
 const isEnd = (index: number) => {
     if (props.mode === "range") {
         if (currentList.value.length === 2) {
-            if(props.sort){
+            if (props.sort) {
                 const { maxIndex } = getRangeMinMaxIndex();
                 return index === maxIndex;
-            }else{
-                const endItem = currentList.value[1]
+            } else {
+                const endItem = currentList.value[1];
                 return (
                     index ===
                     children.value.findIndex(
@@ -166,11 +165,12 @@ const isEnd = (index: number) => {
 };
 
 // 是否是中间选中的
-const isMid = (item:any) => {
+const isMid = (item: any) => {
     if (props.mode === "range" && currentKeyList.value.length === 2) {
         const { minIndex, maxIndex } = getRangeMinMaxIndex();
         const index = children.value.findIndex(
-            (i: any) => i[props.valueProps.value] === item[props.valueProps.value]
+            (i: any) =>
+                i[props.valueProps.value] === item[props.valueProps.value]
         );
         if (index > minIndex && index < maxIndex) {
             return true;
@@ -187,7 +187,7 @@ const initValue = () => {
         currentList.value = props.modelValue;
     } else {
         currentKeyList.value = props.modelValue;
-        const arr:any = [];
+        const arr: any = [];
         currentKeyList.value.forEach((key: any) => {
             const item = children.value.find(
                 (item: any) => item[props.valueProps.value] === key
@@ -206,28 +206,32 @@ const putOutValue = () => {
     let arr = [];
     if (props.valueIsItem) {
         arr = JSON.parse(JSON.stringify(currentList.value));
-        props.sort && arr.sort((a: any, b: any) => {
-            const startIndex = children.value.findIndex(
-                (item: any) =>
-                    item[props.valueProps.value] === a[props.valueProps.value]
-            );
-            const endIndex = children.value.findIndex(
-                (item: any) =>
-                    item[props.valueProps.value] === b[props.valueProps.value]
-            );
-            return startIndex - endIndex;
-        });
+        props.sort &&
+            arr.sort((a: any, b: any) => {
+                const startIndex = children.value.findIndex(
+                    (item: any) =>
+                        item[props.valueProps.value] ===
+                        a[props.valueProps.value]
+                );
+                const endIndex = children.value.findIndex(
+                    (item: any) =>
+                        item[props.valueProps.value] ===
+                        b[props.valueProps.value]
+                );
+                return startIndex - endIndex;
+            });
     } else {
         arr = JSON.parse(JSON.stringify(currentKeyList.value));
-        props.sort && arr.sort((a: any, b: any) => {
-            const startIndex = children.value.findIndex(
-                (item: any) => item[props.valueProps.value] === a
-            );
-            const endIndex = children.value.findIndex(
-                (item: any) => item[props.valueProps.value] === b
-            );
-            return startIndex - endIndex;
-        });
+        props.sort &&
+            arr.sort((a: any, b: any) => {
+                const startIndex = children.value.findIndex(
+                    (item: any) => item[props.valueProps.value] === a
+                );
+                const endIndex = children.value.findIndex(
+                    (item: any) => item[props.valueProps.value] === b
+                );
+                return startIndex - endIndex;
+            });
     }
     emit("update:modelValue", arr);
     emit("change", arr);
@@ -239,16 +243,6 @@ watch(
         initValue();
     }
 );
-
-
-
-// watch(
-//     () => currentList.value,
-//     () => {
-//         console.log("watch currentList", currentList.value);
-//         putOutValue();
-//     }
-// );
 
 const selectItem = (item: any) => {
     if (isDisabled(item)) return;
@@ -289,11 +283,11 @@ const selectItem = (item: any) => {
 
 const children = ref<any>([]);
 const childrenMaps = ref<any>({});
-const accpetChild = (item,index)=>{
+const accpetChild = (item: any, index: any) => {
     childrenMaps.value[index] = item;
-    const indexList = Object.keys(childrenMaps.value)
-    children.value = indexList.map(key=>childrenMaps.value[key])
-}
+    const indexList = Object.keys(childrenMaps.value);
+    children.value = indexList.map(key => childrenMaps.value[key]);
+};
 
 provide("func", {
     isDisabled,
@@ -302,37 +296,37 @@ provide("func", {
     isStart,
     isEnd,
     selectItem,
-    mergeStyle,
+    mergeStyle: mergeStyle.value,
     rangeName: props.rangeName,
-    emitParent:(name:string, ...args:any[])=>{
+    emitParent: (name: string, ...args: any[]) => {
         let func = null;
-        switch(name){
+        switch (name) {
             case "isDisabled":
-                func = isDisabled
+                func = isDisabled;
                 break;
             case "isSelected":
-                func = isSelected
+                func = isSelected;
                 break;
             case "isMid":
-                func = isMid
+                func = isMid;
                 break;
             case "isStart":
-                func = isStart
+                func = isStart;
                 break;
             case "isEnd":
-                func = isEnd
+                func = isEnd;
                 break;
             case "selectItem":
-                func = selectItem
+                func = selectItem;
                 break;
             case "accpetChild":
-                func = accpetChild
+                func = accpetChild;
                 break;
             default:
                 break;
         }
-        if(func){
-            return func(...args)
+        if (func) {
+            return func(...args);
         }
     }
 });
@@ -348,11 +342,14 @@ provide("func", {
         padding: 10px;
         border: 1px solid #f0f0f0;
         border-radius: 4px;
+        padding: 4px;
         cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        line-height: 1.5;
+        box-sizing: border-box;
 
         &:hover {
             background-color: #f5f5f5;

@@ -1,7 +1,7 @@
 <template>
     <div :class="props.uploadClass">
         <slot :fileList="fileList" name="default">
-            <template v-for="file,idx in fileList" :key="file.uuid">
+            <template v-for="file, idx in fileList" :key="file.uuid">
                 <div class="easy-upload-review-item-outside">
                     <div :style="mergeReviewItemStyle" :class="mergeReviewClass(file)">
                         <!-- 如果是template模式下，如果没有图片，显示上传按钮 -->
@@ -13,65 +13,77 @@
                                 </div>
                             </slot>
                         </template>
-                        <template v-else-if="props.disabled && props.mode === 'template' && !file[props.valueProps.url]">
-                            <div class="upload-no-data">{{props.noDataText}}</div>
+                        <template
+                            v-else-if="props.disabled && props.mode === 'template' && !file[props.valueProps.url]">
+                            <div class="upload-no-data">{{ props.noDataText }}</div>
                         </template>
                         <img v-else-if="_getFileType(file) === 'img'" class="review-image"
                             :src="file[props.valueProps.url]" alt="" />
                         <video v-else-if="_getFileType(file) === 'video'" class="review-image"
-                            :poster="file[props.valueProps.poster]" 
-                            :controls="file[props.valueProps.controls]"
+                            :poster="file[props.valueProps.poster]" :controls="file[props.valueProps.controls]"
                             :src="file[props.valueProps.url]"></video>
                         <div v-else class="review-image">
                             {{ getFileSuffix(file[props.valueProps.url]) }}
                         </div>
                         <div class="easy-upload-review-item-mask">
-                            <img @click.stop="viewImage(file)" title="预览" v-if="['img', 'video'].includes(_getFileType(file))"
+                            <img @click.stop="viewImage(file)" title="预览"
+                                v-if="['img', 'video'].includes(_getFileType(file))"
                                 class="easy-upload-review-item-mask-btn-icon" src="./images/view-fill.png"></img>
-                            <img @click.stop="downloadFile(file)" title="下载" v-else class="easy-upload-review-item-mask-btn-icon"
-                                src="./images/download.png"></img>
-                            <img @click.stop="remoteFile(file,idx)" v-if="!props.disabled" title="删除" class="easy-upload-review-item-mask-btn-icon"
-                                src="./images/delete-fill.png"></img>
+                            <img @click.stop="downloadFile(file)" title="下载" v-else
+                                class="easy-upload-review-item-mask-btn-icon" src="./images/download.png"></img>
+                            <img @click.stop="remoteFile(file, idx)" v-if="!props.disabled" title="删除"
+                                class="easy-upload-review-item-mask-btn-icon" src="./images/delete-fill.png"></img>
                         </div>
 
                         <div class="easy-upload-review-item-progress">
                             <!-- 上传进度 -->
                         </div>
+
                     </div>
                     <slot name="name" :file="file">
-                        <div v-if="props.showItemName" class="easy-upload-review-item-title">{{ file.name }}</div>
+                        <div v-if="props.showItemName && !file.error" class="easy-upload-review-item-title">{{ file.name
+                        }}</div>
                     </slot>
-                </div>
-            </template>
-            <template v-if="(props.disabled || props.mode==='template') && fileList.length === 0">
-                <div class="easy-upload-review-item-outside">
-                    <div :style="mergeReviewItemStyle" :class="mergeReviewClass({})">
-                        <div class="upload-no-data">{{props.noDataText}}</div>
+                    <div v-if="file?.status === 'error'" class="easy-upload-review-item-error">
+                        <!-- 上传失败 -->
+                        {{ file.error }}
                     </div>
                 </div>
-                
+            </template>
+            <template v-if="(props.disabled || props.mode === 'template') && fileList.length === 0">
+                <div class="easy-upload-review-item-outside">
+                    <div :style="mergeReviewItemStyle" :class="mergeReviewClass({})">
+                        <div class="upload-no-data">{{ props.noDataText }}</div>
+                    </div>
+                </div>
+
             </template>
         </slot>
         <slot v-if="showUploadButton" name="upload-button" :upload="hanldeClickUpload" :file="null">
             <div class="easy-upload-review-item-outside">
-                <div :class="props.uploadButtonClass" :style="mergeReviewItemStyle" @click.stop="hanldeClickUpload()">
-                    + {{props.uploadButtonText}}
+                <div :class="mergeUploadButtonClass(currentItem)" :style="mergeReviewItemStyle"
+                    @click.stop="hanldeClickUpload()">
+                    + {{ props.uploadButtonText }}
+
+                </div>
+                <div v-if="currentItem?.status === 'error'" class="easy-upload-review-item-error">
+                    {{ currentItem?.error }}
                 </div>
             </div>
         </slot>
-
-        <ReviewBox :zIndex="props.zIndex" v-model:show="showReviewBox" :src="currentSrc" :isVideo="currentSrcIsVideo"/>
+        <ReviewBox :zIndex="props.zIndex" v-model:show="showReviewBox" :src="currentSrc" :isVideo="currentSrcIsVideo" />
     </div>
 </template>
 <script setup lang="tsx">
 import { defineProps, ref, computed, onMounted } from 'vue'
 import props_ from './props'
-import { 
-    promisify, 
+import {
+    promisify,
     imageTypes,
     videoTypes,
     createAccept,
-    getUuid, getName, fileType, testIsBase64, getFileSuffix } from './utils'
+    getUuid, getName, fileType, testIsBase64, getFileSuffix
+} from './utils'
 import ReviewBox from './reviewBox.vue'
 const _getFileType = (item: any) => {
     return fileType(item[props.valueProps.url] || "")
@@ -128,10 +140,10 @@ const getModelValue = () => {
     }
     arr = arr.map((item: any) => {
         if (typeof item === 'object') {
-            if(!item.uuid) item.uuid = getUuid(12, 17);
-            if(!item.name) item.name = getName(item[props.valueProps.url]);
-            if(!item.status) item.status = "success";
-            if(!item.type) item.type = fileType(item[props.valueProps.url]);
+            if (!item.uuid) item.uuid = getUuid(12, 17);
+            if (!item.name) item.name = getName(item[props.valueProps.url]);
+            if (!item.status) item.status = "success";
+            if (!item.type) item.type = fileType(item[props.valueProps.url]);
             return item
         }
         const obj = fileList.value.find((it: any) => it[props.valueProps.url] === item);
@@ -193,6 +205,15 @@ const mergeReviewClass = computed((file: any) => {
             'easy-upload-review-item-disabled': props.disabled,
             'easy-upload-review-item-template': props.mode === 'template',
             'is-upload': props.mode === 'template' && !file[props.valueProps.url],
+            'is-error': file.status === 'error',
+        }]
+    }
+});
+
+const mergeUploadButtonClass = computed((file: any) => {
+    return (file: any) => {
+        return [props.uploadButtonClass, 'template-upload', {
+            'is-error': file?.status === 'error',
         }]
     }
 });
@@ -217,39 +238,101 @@ const showUploadButton = computed(() => {
         // 模板模式下，不显示最后的上传按钮
         status = false
     }
-    console.log('showUploadButton', status, props.limit, fileList.value.length)
     return status
 })
-const currentTemplate = ref<any>(null)
+
+// 当前正在操作的文件
+const currentItem = ref<any>(null)
+/**
+ * 
+ * status:  
+ * load = 加载文件
+ * waitUpload = 等待上传(同时选中多个的时候，只有一个文件在上传)
+ * croping = 裁剪中
+ * croped = 裁剪完成
+ * uploading = 上传中
+ * success = 上传成功
+ * error = 各种失败
+ */
+const createNewItem = (params:any = {}):FileType => {
+    return {
+        uuid: getUuid(12, 17),
+        name: params.name || '',
+        [props.valueProps.url]: params.url || '',
+        status: params.status || '',
+        accept: params.accept || props.accept,
+        error: params.error || ''
+    }
+}
 const hanldeClickUpload = (item: any = null) => {
     // 如果是模板模式下，上传后替换当前模板的图片
     if (props.disabled) return;
+    if (props.mode === 'template' && !item) {
+        throw new Error('模板模式下，必须传入item')
+    }
+    currentItem.value = item ? item : createNewItem()
+    currentItem.value.status = 'load'
     let accept = props.accept;
-    
-    if(props.mode==='template'){
-        currentTemplate.value = item
-        if(item){
-            if(item[props.valueProps.accept]){
-                accept = item[props.valueProps.accept]
-            }else if(item[props.valueProps.type]){
-                const type = item[props.valueProps.type]
-                if(type === 'img'){
-                    accept = createAccept(imageTypes)
-                }else if(type === 'video'){
-                    accept = createAccept(videoTypes)
-                }
+    if (props.mode === 'template') {
+        if (item[props.valueProps.accept]) {
+            accept = item[props.valueProps.accept]
+        } else if (item[props.valueProps.type]) {
+            const type = item[props.valueProps.type]
+            if (type === 'img') {
+                accept = createAccept(imageTypes)
+            } else if (type === 'video') {
+                accept = createAccept(videoTypes)
+            } else {
+                accept = "*.*"
             }
         }
-    }else{
-        currentTemplate.value = null
     }
-    console.log("clickUpload", accept);
+    currentItem.value.accept = accept
     // 打开文件选择框
     const input = document.createElement("input");
     input.type = "file";
     input.accept = accept;
     input.multiple = false;
+    input.onchange = inputOnChange;
     input.click();
+};
+
+const inputOnChange = async (e: any) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    console.log('openfile', file)
+
+
+    emits("openfile", file);
+    // @ts-ignore // 上传前检查
+    const _beforeUpload = props.beforeUpload ? props.beforeUpload : () => Promise.resolve(true)
+    await promisify(_beforeUpload, file)
+    if (!beforeUpload(file, currentItem)) {
+        return
+    }
+
+    const type = fileType(file.name);
+    console.log('准备上传', file,currentItem.value)
+};
+
+const beforeUpload = (file: any, templateItem: any) => {
+    const sizeMb = file.size / 1024 / 1024;
+    let status = true;
+    let limitSizeMb = props.size;
+    if (templateItem.value && templateItem.value[props.valueProps.size]) {
+        limitSizeMb = templateItem.value[props.valueProps.size];
+    }
+    if (limitSizeMb && sizeMb > limitSizeMb) {
+        templateItem.value.status = "error";
+        templateItem.value.error = "文件大小超限";
+        emits("file-error", {
+            type: "size",
+            file,
+            limitSizeMb
+        });
+        status = false;
+    }
+    return status;
 };
 
 const showReviewBox = ref(false)
@@ -275,20 +358,20 @@ const downloadFile = (file: any) => {
 
 const remoteFile = async (file: any, idx: number) => {
     // 删除文件
-    if(props.disabled) return;
-    if(props.beforeRemove){
-        const status = await promisify(props.beforeRemove, file,idx)
-        if(!status) return;
+    if (props.disabled) return;
+    if (props.beforeRemove) {
+        const status = await promisify(props.beforeRemove, file, idx)
+        if (!status) return;
     }
-    if(props.mode==='template') {
-        file[props.valueProps.url]=''
-    }else if(props.mode==='append'){
+    if (props.mode === 'template') {
+        file[props.valueProps.url] = ''
+    } else if (props.mode === 'append') {
         fileList.value.splice(idx, 1);
-    }else{
+    } else {
         throw new Error('mode配置错误')
     }
     outPutValue();
-    emits("delete-file", file,idx);
+    emits("delete-file", file, idx);
 };
 
 </script>

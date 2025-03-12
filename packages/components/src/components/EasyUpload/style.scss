@@ -63,6 +63,18 @@
             }
         }
 
+        &.is-error {
+            box-shadow: inset 0 0 0 1px #F56C6C;
+        }
+
+        &-error {
+            position: absolute;
+            color: #F56C6C;
+            bottom: 0;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
         &--upload {
             font-size: 14px;
             width: 100%;

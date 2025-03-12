@@ -48,6 +48,8 @@ export default {
             accept: 'accept', // 允许上传的文件类型，如果有它，优先使用它
             poster: 'poster', // 视频封面，只有type为video的时候有效
             controls: 'controls', // 视频在列表上是否显示控制条，只有type为video的时候有效
+            size: 'size', // 文件大小
+            duration: 'duration', // 视频时长，只有type为video的时候有效
         })
     },
     /** 是否禁用组件响应 */
@@ -59,6 +61,11 @@ export default {
      * 0: 无限制
      */
     limit: {
+        type: Number,
+        default: 0
+    },
+    /** 文件尺寸限制，MB */
+    size: {
         type: Number,
         default: 0
     },

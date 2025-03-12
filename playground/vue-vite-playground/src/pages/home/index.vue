@@ -3,7 +3,10 @@ import { ref } from 'vue'
 const images = ref([
     {
         url: "https://fakeimg.pl/250x100?text=Hello1.pdf",
-        name: "Hello1.jpg"
+        name: "Hello1.jpg",
+        accept: ".pdf,.jpg",
+        // type: "file",
+        // size:0.1
     },
     {
         url: "http://192.168.2.236:81/v1/file/20250114/2025011419575000001959.jpg",
@@ -28,7 +31,7 @@ const changeMode = () => {
 
 const beforeRemove = (file: any, idx: number) => {
     console.log('beforeRemove', file, idx)
-    return false;
+    return true;
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             reject(false)
@@ -152,7 +155,7 @@ const item = {
   <div class="home">
     
     <div>
-        <EasyUpload :beforeRemove="beforeRemove" :mode="mode" :disabled="disabled"  v-model="images" :limit="0">
+        <EasyUpload  :beforeRemove="beforeRemove" :mode="mode" :disabled="disabled"  v-model="images" :limit="0">
             <!-- <template v-slot:upload-button="{upload}">
                 <el-button @click="upload">上传</el-button>
             </template> -->
@@ -163,7 +166,7 @@ const item = {
     </div>
     <el-button @click="doDisabled">切换disabled {{ disabled }}</el-button>
     <el-button @click="changeMode">切换模式 {{ mode }}</el-button>
-    <RenderCell v-model="rangeValue" :item="item"/>
+    <!-- <RenderCell v-model="rangeValue" :item="item"/> -->
     <!-- <RangeSelect :disabledValues="['0']" v-model="rangeValue" :options="rangeOptions"/> -->
   </div>
 </template>

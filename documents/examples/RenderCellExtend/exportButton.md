@@ -1,3 +1,5 @@
+# 前端导出
+
 ## 例子
 :::tip
 业务中，如果需要前端做表单导出，就可以使用这个组件，它会根据分页情况，获取全部的数据并导出成为excel文件。
@@ -5,7 +7,7 @@
 :::
 
 :::demo 
-RenderCell/exportButton
+RenderCellExtend/exportButton
 :::
 
 
