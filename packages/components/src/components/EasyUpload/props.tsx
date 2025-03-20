@@ -4,11 +4,79 @@ import { imageTypes, createAccept } from './utils';
 export default {
     /** 上传模式
      * append: 追加模式，每次上传都会追加到原有的文件列表中
-     * template: 模板模式，每次上传都会替换原有的文件列表
+     * template: 模板模式，每次上传都会替换原有的文件列表（模板模式里面可以控制每个文件的类型和尺寸限制）
      */
     mode: {
         type: String,
         default: 'append'
+    },
+    /**
+     * 是否允许缩放
+     */
+    useZoom:{
+        type: Boolean,
+        default: true
+    },
+    /**
+     * forceZoom: 是否强制缩放，如果为true，会强制缩放到zoomLimit的限制
+     * useZoom为false的时候，forceZoom无效
+     */
+    forceZoom:{
+        type: Boolean,
+        default: true
+    },
+    /** 
+     * 缩放限制，如果只传一个值，表示按它优先缩放，另一个值会按比例缩放
+     * 如果两个值都传，表示按他们的最大值缩放
+     * width: 宽度限制
+     * height: 高度限制
+     */
+    zoomLimit:{
+        type: Object,
+        default: ()=>({
+            width:400,
+        })
+    },
+    /**
+     * 是否使用水印
+     */
+    useWatermark:{
+        type: Boolean,
+        default: true
+    },
+    /**
+     * 水印配置： 参考watermarkjs
+     * @param {target} canvas 水印目标画板 方便自己写水印
+     * @param {String} text 水印文字
+     * @param {Object} watermark watermarkjs对象
+     * @returns {Object} 返回canvas对象 或者 watermark.text.lowerLeft等方法的返回值
+     */
+    watermarkFunc:{
+        type: Function
+    },
+    /** 
+     * 水印文字：默认会根据文件名生成水印文字平铺在图片上
+     * 如果设置了watermarkText，会使用watermarkText作为水印文字
+     * 如果设置了useWatermark为false，会忽略watermarkText
+     * 如果配置了watermarkFunc，会忽略watermarkText
+     */
+    watermarkText:{
+        type: String,
+        default: 'watermark'
+    },
+    /** 
+     * 允许修改水印文字: 必须要允许剪裁的时候生效，会让用户输入水印文字
+     */
+    allowChangeWatermarkTextText:{
+        type: Boolean,
+        default: false
+    },
+    /**
+     * 是否允许手动裁剪: 如果为true，那缩放和水印都在裁剪时候体现
+     */
+    useCropper:{
+        type: Boolean,
+        default: true
     },
     modelValue: {
         type: [String, Array],
@@ -48,7 +116,8 @@ export default {
             accept: 'accept', // 允许上传的文件类型，如果有它，优先使用它
             poster: 'poster', // 视频封面，只有type为video的时候有效
             controls: 'controls', // 视频在列表上是否显示控制条，只有type为video的时候有效
-            size: 'size', // 文件大小
+            size: 'size', // 文件最大大小
+            minSize: 'minSize', // 文件最小尺寸
             duration: 'duration', // 视频时长，只有type为video的时候有效
         })
     },
@@ -66,6 +135,13 @@ export default {
     },
     /** 文件尺寸限制，MB */
     size: {
+        type: Number,
+        default: 0
+    },
+    /** 文件最小尺寸限制，MB
+     * 0: 无限制
+     */
+    minSize: {
         type: Number,
         default: 0
     },
@@ -92,13 +168,13 @@ export default {
         type: String,
         default: 'easy-upload-review-item'
     },
-    /** 文件项目宽度 */
+    /** 陈列区，单box宽度 */
     itemWidth: {
         type: [Number,String],
         default: 100
     },
     /**
-     * 文件项目高度
+     * 陈列区，单box高度
      */
     itemHeight: {
         type: [Number,String],

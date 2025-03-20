@@ -26,6 +26,8 @@
     "dependencies": {
         "js-export-excel": "^1.1.4",
         "jszip": "^3.10.1",
-        "vue-the-mask": "^0.11.1"
+        "vue-the-mask": "^0.11.1",
+        "cropperjs": "^1.6.2",
+        "watermarkjs": "^2.1.1"
     }
 }

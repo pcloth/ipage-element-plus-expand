@@ -10,10 +10,12 @@
  * error = 各种失败
  */
 type FileType = {
-    uuid: string;
-    name: string;
+    uuid: string; // 文件唯一标识
+    name: string; // 文件名
     status: 'load' | 'waitUpload' | 'croping' | 'croped' | 'uploading' | 'success' | 'error';
-    error?: string;
-    appect?: string;
+    error?: string; // 错误信息
+    appect?: string; // 文件后缀
+    originSize?: number; // 文件原始大小
+    size?: number; // 文件大小
     [key: string]: any;    
 }

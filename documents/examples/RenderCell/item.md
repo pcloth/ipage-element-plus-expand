@@ -29,13 +29,14 @@
 |show|boolen\|Function|是否显示本组件，类似v-show|true|
 |isFormItem|boolen|是否在父级添加el-form-item组件|true|
 |formItemProps|object|如果isFormItem=true的时候，父级el-form-item组件的props参数|{}|
+|formItemProps.tip|string|在label的后面添加一个提示图标，鼠标移动上去后会显示字符串内容||
 |isCol|boolean|是否添加一个el-col组件在外层|false|
 |colProps|object|如果添加了el-col，给它的配置||
 |otherValueRange|Array\<string\>|比如date-pcker组件，如果指定了时间范围，将会获得一个array的value，你可以在这里配置它们映射的其他value，比如['start','end']，将会把['2021-01-01','2021-01-02']映射成\{start:'2021-01-01',end:'2021-01-02'\}||
 |valueWatch|Function|当值发生变化时，触发这个方法||
 |optionDom|`jsx Function`|自定义options节点的渲染函数||
-|mask|^[enmu]`'string' \| 'Array<string>' \| 'Object'`|限定输入范围，详情可以查看`mask属性`，如果全局安装后，可以直接使用`v-ipage-mask`指令||
-|money|object|限定输入为金额格式，查看下方`money属性`，如果全局安装后，可以直接使用`v-ipage-money`指令| `{min: 0,precision: 2, max: Number.MAX_SAFE_INTEGER, complete: true}`
+|mask|^[enmu]`'string' \| 'Array<string>' \| 'Object'`|限定输入范围，详情可以查看`mask属性`，如果全局安装后，可以直接使用`v-ipage-mask`指令，只有slot="input"可用||
+|money|object|限定输入为金额格式，查看下方`money属性`，如果全局安装后，可以直接使用`v-ipage-money`指令，只有slot="input"可用| `{min: 0,precision: 2, max: Number.MAX_SAFE_INTEGER, complete: true}`
 |...rest|any|其他属性，将传递给实际的组件，推荐你还是应该放到上面的`props`里面，因为放在这里的方法不会被注入`loadData`|{}|
 
 ## item.mask 属性

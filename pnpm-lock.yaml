@@ -300,6 +300,9 @@ importers:
 
   packages/components:
     dependencies:
+      cropperjs:
+        specifier: ^1.6.2
+        version: 1.6.2
       js-export-excel:
         specifier: ^1.1.4
         version: 1.1.4
@@ -309,6 +312,9 @@ importers:
       vue-the-mask:
         specifier: ^0.11.1
         version: 0.11.1
+      watermarkjs:
+        specifier: ^2.1.1
+        version: 2.1.1
     devDependencies:
       '@element-plus/icons-vue':
         specifier: ^2.3.1
@@ -3421,6 +3427,9 @@ packages:
     resolution: {integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==}
     engines: {node: '>=0.8'}
     hasBin: true
+
+  cropperjs@1.6.2:
+    resolution: {integrity: sha512-nhymn9GdnV3CqiEHJVai54TULFAE3VshJTXSqSJKa8yXAKyBKDWdhHarnlIPrshJ0WMFTGuFvG02YjLXfPiuOA==}
 
   cross-spawn@6.0.6:
     resolution: {integrity: sha512-VqCUuhcd1iB+dsv8gxPttb5iZh/D0iubSP21g36KXdEuf6I5JiioesUVjpCdHV9MZRUfVFlvwtIUyPfxo5trtw==}
@@ -7502,6 +7511,9 @@ packages:
       typescript:
         optional: true
 
+  watermarkjs@2.1.1:
+    resolution: {integrity: sha512-HDabpga8Fz5d61Z7gBkKO2cDsfViAU/mO5qIoWmDX92wJZLb7Dv4L+CwoHAqS4XkqWcYVGy/AF035BD1EN3v/g==}
+
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
 
@@ -11238,6 +11250,8 @@ snapshots:
   core-util-is@1.0.3: {}
 
   crc-32@1.2.2: {}
+
+  cropperjs@1.6.2: {}
 
   cross-spawn@6.0.6:
     dependencies:
@@ -15953,6 +15967,8 @@ snapshots:
       '@vue/shared': 3.5.13
     optionalDependencies:
       typescript: 5.5.4
+
+  watermarkjs@2.1.1: {}
 
   wcwidth@1.0.1:
     dependencies:

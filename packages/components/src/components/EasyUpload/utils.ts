@@ -1,3 +1,5 @@
+import watermark from "watermarkjs";
+
 /** 生成uuid */
 export const getUuid = (len: number, radix: number) => {
     const chars =
@@ -35,13 +37,13 @@ export const testIsBase64 = (fileStr: string) => {
     return /^data:image/.test(fileStr);
 };
 
-export const getFileSuffix = (src:string)=>{
+export const getFileSuffix = (src: string) => {
     const isBase64 = testIsBase64(src)
-    if(isBase64){
+    if (isBase64) {
         return 'BASE64'
     }
     // 根据文件后缀判断文件类型
-    const suffix = src.split('.').pop()||""
+    const suffix = src.split('.').pop() || ""
     return suffix.toUpperCase()
 }
 
@@ -49,29 +51,29 @@ export const getFileSuffix = (src:string)=>{
 export const imageTypes = ['PNG', 'JPG', 'JPEG']
 export const videoTypes = ['MP4', 'AVI']
 
-export const createAccept = (types:string[])=>{
-    console.log(types.map(item=>`.${item.toLowerCase()}`).join(','))
-    return types.map(item=>`.${item.toLowerCase()}`).join(',')
+export const createAccept = (types: string[]) => {
+    console.log(types.map(item => `.${item.toLowerCase()}`).join(','))
+    return types.map(item => `.${item.toLowerCase()}`).join(',')
 }
 
-export const fileType = (src:string)=>{
+export const fileType = (src: string) => {
     const isBase64 = testIsBase64(src)
-    if(isBase64){
+    if (isBase64) {
         return 'img'
     }
     // 根据文件后缀判断文件类型
     const suffix = getFileSuffix(src)
-    
-    if(imageTypes.includes(suffix)){
+
+    if (imageTypes.includes(suffix)) {
         return 'img'
     }
-    if(videoTypes.includes(suffix)){
+    if (videoTypes.includes(suffix)) {
         return 'video'
     }
     return 'file'
 }
 
-export const getName = (item:any) => {
+export const getName = (item: any) => {
     if (typeof item === "string") {
         // 是一个url或者base64图片
         if (item.indexOf("base64") !== -1) {
@@ -116,3 +118,117 @@ export const promisify = (fn: Function, ...args: any[]) => {
         }
     });
 };
+
+
+const createMultipleWatermarks = function (target: any,waterText: string, watermark: any) {
+    const context = target.getContext("2d");
+    const text = waterText;
+    // Set watermark style
+    context.globalAlpha = 0.5;
+    context.fillStyle = "#fff";
+    context.font = "36px 微软雅黑";
+
+    // Rotate the canvas for diagonal watermarks
+    context.rotate((-38 * Math.PI) / 180);
+
+    // Calculate text width and height
+    const metrics = context.measureText(text);
+    const textWidth = metrics.width;
+    const textHeight = 48; // Approximate height based on font size
+    // 间隔文字用文字长度*空格数
+    let spaceString = "";
+    for (let i = 0; i < text.length; i++) {
+        spaceString += " ";
+    }
+
+    // Calculate the diagonal length of the canvas (to cover entire image)
+    const diagonalLength = Math.sqrt(
+        Math.pow(target.width, 2) + Math.pow(target.height, 2)
+    );
+
+    // Calculate spacing between watermark lines
+    const lineSpacing = textHeight * 5; // Adjust this value to control spacing
+
+    // Calculate how many lines needed to cover the canvas
+    const numLines = Math.ceil(diagonalLength / lineSpacing) * 2;
+
+    // Calculate starting position (left of the rotated canvas)
+    const startX = -diagonalLength;
+    const startY = -diagonalLength / 2;
+
+    // Draw watermark lines
+    for (let i = 0; i < numLines; i++) {
+        const y = startY + i * lineSpacing;
+        const repeatsNeeded = Math.ceil((diagonalLength * 2) / textWidth);
+        let lineText = "";
+        for (let j = 0; j < repeatsNeeded; j++) {
+            lineText += text + spaceString;
+        }
+        context.fillText(lineText, startX, y);
+    }
+
+    return target;
+};
+
+/** 
+ * 生成水印
+ */
+export const makeWatermark = (file: any, text = "", func: Function | null = null) => {
+    if (!func) {
+        func = createMultipleWatermarks
+    }
+    const outFunc = (target: any) => {
+        const obj =  func(target, text, watermark);
+        if(typeof obj === 'function'){
+            return obj(target);
+        }
+        return obj;
+    }
+    return watermark([file]).blob(outFunc)
+};
+
+
+/**
+ * 缩放图片
+ * @param {String|Blob} src 图片地址
+ * @param {Object} zoomLimit 缩放配置
+ * @param {Number} zoomLimit.width 宽度限制
+ * @param {Number} zoomLimit.height 高度限制
+ * @returns {Promise} 返回一个promise
+ */
+export const zoomImage = (src: string|Blob, zoomLimit: { width: number; height: number }) => {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        if(typeof src === 'string'){
+            img.src = src;
+        }else{
+            // 它是一个blob
+            console.log(src,'in zoomImage')
+            img.src = URL.createObjectURL(src);
+        }
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+            const { width, height } = img;
+            const { width: limitWidth, height: limitHeight } = zoomLimit;
+            let scale = 1;
+            if (limitWidth && limitHeight) {
+                scale = Math.min(limitWidth / width, limitHeight / height);
+            } else if (limitWidth) {
+                scale = limitWidth / width;
+            } else if (limitHeight) {
+                scale = limitHeight / height;
+            }
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+            context.drawImage(img, 0, 0, width, height, 0, 0, width * scale, height * scale);
+            canvas.toBlob((blob) => {
+                resolve(blob);
+            });
+        };
+        img.onerror = (e) => {
+            console.error(e,'图片加载失败');
+            reject(e);
+        };
+    });
+}
