@@ -11,7 +11,11 @@
             <div class="easy-upload-reviewbig-content-close" @click="closeBigReview">
                 <img src="./images/close.png" alt="">
             </div>
-            <div class="easy-upload-reviewbig-content-image">
+            <div class="easy-upload-reviewbig-content-image"
+            :style="{
+                height: props.height
+            }"
+            >
                 <video class="video-review" v-if="props.isVideo" :src="props.src" controls></video>
                 <img class="image-review" v-else :src="props.src" alt="">
             </div>
@@ -40,7 +44,7 @@ const props = defineProps({
     },
     height: {
         type: String,
-        default: '500px'
+        default: '550px'
     },
     zIndex: {
         type: Number,
@@ -56,5 +60,4 @@ const closeBigReview = () => {
 </script>
 
 <style lang="scss">
-
 </style>

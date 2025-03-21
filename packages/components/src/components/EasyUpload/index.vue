@@ -76,6 +76,7 @@
         <ReviewBox :zIndex="props.zIndex" v-model:show="showReviewBox" :src="currentSrc" :isVideo="currentSrcIsVideo" />
         <Cropper @cancel="cancelUpload" v-model:show="showCropper" :zIndex="props.zIndex" :src="currentSrc"
             :src-item="currentItem" :useWatermark="props.useWatermark" :quality="props.quality" :useZoom="props.useZoom"
+            :forceZoom="props.forceZoom"
             :zoomLimit="props.zoomLimit" :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
             :allowChangeWatermarkTextText="props.allowChangeWatermarkTextText" @cropped="onCropped" />
     </div>

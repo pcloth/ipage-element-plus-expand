@@ -21,19 +21,23 @@
                 <div class="easy-upload-zoom-toolbox" v-if="props.useZoom">
                     <div class="easy-upload-cropper-toolbar">
                         <div class="zoom-toolbox-row">
-                            <el-checkbox @change="changeLockZoom($event, 'width')"
+                            <el-checkbox 
+                            :disabled="_parentLockSize"
+                            @change="changeLockZoom($event, 'width')"
                                 v-model="isLockSizeOutWidth">按宽度缩放</el-checkbox>
                             <el-input v-model="currentWidth" size="small" :input-style="{ textAlign: 'right' }"
-                                :disabled="!isLockSizeOutWidth" @change="setZoomSize($event, 'width')">
+                                :disabled="!isLockSizeOutWidth||_parentLockSize" @change="setZoomSize($event, 'width')">
                                 <template #prefix>宽度:</template>
                                 <template #append> 像素 </template>
                             </el-input>
                         </div>
                         <div class="zoom-toolbox-row">
-                            <el-checkbox v-model="isLockSizeOutHeight"
+                            <el-checkbox 
+                            :disabled="_parentLockSize"
+                            v-model="isLockSizeOutHeight"
                                 @change="changeLockZoom($event, 'height')">按高度缩放</el-checkbox>
                             <el-input v-model="currentHeight" size="small" :input-style="{ textAlign: 'right' }"
-                                @change="setZoomSize($event, 'height')" :disabled="!isLockSizeOutHeight">
+                                @change="setZoomSize($event, 'height')" :disabled="!isLockSizeOutHeight||_parentLockSize">
                                 <template #prefix>宽度:</template>
                                 <template #append> 像素 </template>
                             </el-input>
@@ -63,6 +67,7 @@ import { ref, onMounted, nextTick, watch, computed, PropType } from 'vue';
 import VueCropper from './vueCropperjs';
 import type { Options } from "./vueCropperjs"
 import { makeWatermark, zoomImage,debounce, getFileFormatToCanvasType } from "./utils";
+import { el } from 'element-plus/es/locale';
 
 const refCropper = ref<any>(null);
 const emit = defineEmits([
@@ -147,6 +152,13 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
+    forceZoom: {
+        type: Boolean,
+        default: false
+    },
+    zoomLimit: {
+        type: Object
+    },
     /**
      * 剪裁比例列表
      */
@@ -204,6 +216,16 @@ const changeWatermarkText = () => {
     onCropperInfo({ detail: previewInfo.value });
 }
 
+const _parentLockSize = computed(() => {
+    return props.forceZoom && props.zoomLimit;
+})
+
+/** 高宽都用像素锁定 */
+const _parentLockSizeWidthHeight = computed(() => {
+    return props.forceZoom && props.zoomLimit && props.zoomLimit.width && props.zoomLimit.height;
+})
+
+
 const _mergeContentStyle = computed(() => {
     return {
         width: '700px',
@@ -218,6 +240,7 @@ const currentRatio = ref(0);
 watch(() => props.src, (val) => {
     currentSrc.value = val;
 })
+
 const _mergeRatioList = computed<any>(() => {
     const arr = [
         { label: "自由剪裁", value: 0 },
@@ -225,6 +248,22 @@ const _mergeRatioList = computed<any>(() => {
     ];
     if (props.noCutIsAllowed) {
         arr.unshift({ label: "不剪裁", value: -1 });
+    }
+    if(_parentLockSizeWidthHeight.value){
+        let w = props.zoomLimit.width;
+        let h = props.zoomLimit.height;
+        let ratio = 0;
+        if(w && h){
+            // 如果两个都有，强制比例
+            ratio = +(w / h).toFixed(2);
+        }else if(w){
+            ratio = w / h;
+        }else if(h){
+            ratio = h / w;
+        } else {
+            throw new Error("强制比例必须设置宽度、高度");
+        }
+        arr.unshift({ label: "强制比例", value: ratio });
     }
     return arr;
 });
@@ -290,9 +329,44 @@ const _onCropperInfo = async (e: any) => {
     data.y = Math.ceil(data.y);
     previewInfo.value = data; //JSON.parse(JSON.stringify(data));
     let canvas = refCropper.value.cropper.getCroppedCanvas();
-    // 记录图片原始大小
-    currentHeight.value = canvas.height;
-    currentWidth.value = canvas.width;
+    if(_parentLockSize.value){
+        if(props.zoomLimit){
+            let w = props.zoomLimit.width;
+            let h = props.zoomLimit.height;
+            let ratio = 0;
+            if(w && h){
+                // 如果两个都有，强制比例
+                ratio = +(w / h).toFixed(2);
+                console.log("changeCurrentRatio", ratio, currentRatio.value);
+                if(currentRatio.value!== ratio){
+                    currentRatio.value = ratio;
+                    console.log("changeCurrentRatio", ratio);
+                    changeCurrentRatio(ratio);
+                    // const cropper = refCropper.value.cropper;
+                    // cropper.setAspectRatio(ratio);
+                }
+                currentWidth.value = w;
+                currentHeight.value = h;
+                isLockSizeOutWidth.value = true;
+                isLockSizeOutHeight.value = true;
+                // changeCurrentRatio(ratio);
+            }else if(w){
+                ratio = w / data.width;
+                currentWidth.value = w;
+                currentHeight.value = Math.ceil(data.height * ratio);
+                isLockSizeOutWidth.value = true;
+            }else if(h){
+                ratio = h / data.height;
+                currentHeight.value = h;
+                currentWidth.value = Math.ceil(data.width * ratio);
+                isLockSizeOutHeight.value = true;
+            }
+        }
+    }else{
+        currentHeight.value = canvas.height;
+        currentWidth.value = canvas.width;
+    }
+    
 
     canvas.style.objectFit = "contain";
     canvas.style.maxWidth = "100%";
@@ -365,6 +439,7 @@ const changeCurrentRatio = async (value: any) => {
             height: currentHeight.value
         };
     } else {
+        value = +value.toFixed(2);
         const obj = cropper.getCropBoxData();
         currentHeight.value = obj.height;
         currentWidth.value = obj.width;
