@@ -38,6 +38,22 @@ export default {
         })
     },
     /**
+     * 缩放质量
+     * 0-1之间的数字，表示图片质量
+     */
+    quality:{
+        type: Number,
+        default: 0.92
+    },
+    /**
+     * 转换图片后缀, 默认不转换
+     * 如果设置了convertExt，会转换成convertExt的后缀：只支持jpg、webp、png
+     */
+    convertExt:{
+        type: String,
+        // default: 'webp'
+    },
+    /**
      * 是否使用水印
      */
     useWatermark:{
@@ -69,7 +85,7 @@ export default {
      */
     allowChangeWatermarkTextText:{
         type: Boolean,
-        default: false
+        default: true
     },
     /**
      * 是否允许手动裁剪: 如果为true，那缩放和水印都在裁剪时候体现
@@ -198,5 +214,39 @@ export default {
      */
     beforeRemove: {
         type: Function,
+    },
+    /** 上传url，如果使用这个，将使用内置上传fetch调用 */
+    action: {
+        type: String,
+        default: 'http://127.0.0.1:5000/upload'
+    },
+    /**
+     * 内置上传fetch调用的headers
+     */
+    headers: {
+        type: Object,
+        default: () => ({})
+    },
+    /**
+     * 内置上传fetch调用的附加data
+     */
+    data: {
+        type: Object,
+        default: () => ({})
+    },
+    /** 
+     * 上传完成后，返回的数据里，文件路径的key，支持.分割
+     */
+    responseSrcPath: {
+        type: String,
+        default: 'data.linkPath'
+    },
+    /** 
+     * 你自己封装上传接口，可以使用这个函数
+     * @param {File} file 
+     */
+    uploadFunc: {
+        type: Function,
+        default: null
     },
 };

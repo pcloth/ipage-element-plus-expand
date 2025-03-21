@@ -2,10 +2,10 @@
     <div class="easy-upload-cropper" v-if="props.show">
         <div class="easy-upload-cropper-mask" :style="{
             zIndex: props.zIndex
-        }" @click="closeCropper" />
+        }" @click="onCancelCropper" />
 
         <div class="easy-upload-cropper-content" :style="_mergeContentStyle">
-            <div class="easy-upload-cropper-content-close" @click="closeCropper">
+            <div class="easy-upload-cropper-content-close" @click="onCancelCropper">
                 x
             </div>
             <VueCropper v-if="props.show" ref="refCropper" :src="currentSrc" @crop-end="onCropEnd" @crop="onCropperInfo"
@@ -13,7 +13,7 @@
             <div class="easy-upload-cropper-toolbar" v-if="props.showRatioController">
                 <el-radio-group v-model="currentRatio" @change="changeCurrentRatio">
                     <el-radio-button :value="item.value" v-for="item in _mergeRatioList" :key="item.value">{{ item.label
-                    }}</el-radio-button>
+                        }}</el-radio-button>
                 </el-radio-group>
             </div>
             <div class="easy-upload-cropper-toolbar preview-box">
@@ -38,12 +38,19 @@
                                 <template #append> 像素 </template>
                             </el-input>
                         </div>
+                        <div class="zoom-toolbox-row" v-if="props.useWatermark">
+                            <el-checkbox @change="changeWatermarkText()" :disabled="!props.allowChangeWatermarkTextText" v-model="_useWatermark">使用水印</el-checkbox>
+                            <el-input v-model="_watermarkText" size="small" :input-style="{ textAlign: 'right' }"
+                                :disabled="!props.allowChangeWatermarkTextText||!_useWatermark" 
+                                @change="changeWatermarkText"
+                                >
+                            </el-input>
+                        </div>
                     </div>
                     <div class="zoom-toolbox-row easy-upload-cropper-buttons">
                         <el-button @click="onCancelCropper">取消</el-button>
                         <el-button type="primary" @click="onCropper">确定</el-button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -55,16 +62,22 @@
 import { ref, onMounted, nextTick, watch, computed, PropType } from 'vue';
 import VueCropper from './vueCropperjs';
 import type { Options } from "./vueCropperjs"
+import { makeWatermark, zoomImage,debounce, getFileFormatToCanvasType } from "./utils";
 
 const refCropper = ref<any>(null);
 const emit = defineEmits([
     'update:show',
-    'cropped'
+    'cropped',
+    'update:watermarkText',
+    'cancel'
 ])
 const props = defineProps({
     src: {
         type: String,
         default: ''
+    },
+    quality: {
+        type: Number
     },
     /** 
      * 图片信息
@@ -152,7 +165,7 @@ const props = defineProps({
     /**
      * 是否使用水印
      */
-     useWatermark:{
+    useWatermark: {
         type: Boolean,
         default: true
     },
@@ -163,7 +176,7 @@ const props = defineProps({
      * @param {Object} watermark watermarkjs对象
      * @returns {Object} 返回canvas对象 或者 watermark.text.lowerLeft等方法的返回值
      */
-    watermarkFunc:{
+    watermarkFunc: {
         type: Function
     },
     /** 
@@ -172,18 +185,24 @@ const props = defineProps({
      * 如果设置了useWatermark为false，会忽略watermarkText
      * 如果配置了watermarkFunc，会忽略watermarkText
      */
-    watermarkText:{
+    watermarkText: {
         type: String,
         default: ''
     },
     /** 
      * 允许修改水印文字: 必须要允许剪裁的时候生效，会让用户输入水印文字
      */
-    allowChangeWatermarkTextText:{
+    allowChangeWatermarkTextText: {
         type: Boolean,
         default: false
     },
 })
+
+const _watermarkText = ref(props.watermarkText);
+const _useWatermark = ref(props.useWatermark);
+const changeWatermarkText = () => {
+    onCropperInfo({ detail: previewInfo.value });
+}
 
 const _mergeContentStyle = computed(() => {
     return {
@@ -196,7 +215,6 @@ const _mergeContentStyle = computed(() => {
 
 const currentSrc = ref(props.src);
 const currentRatio = ref(0);
-const showReCropper = ref(true);
 watch(() => props.src, (val) => {
     currentSrc.value = val;
 })
@@ -250,7 +268,17 @@ const onCropEnd = (e: any) => {
         currentRatio.value = ratio;
     }
 };
-const onCropperInfo = (e: any) => {
+
+const canvasToBlob = (canvas: any, type:any=undefined, quality=1) => {
+    return new Promise((resolve, reject) => {
+        canvas.toBlob((blob: any) => {
+            resolve(blob);
+        }, type, quality);
+    });
+};
+
+
+const _onCropperInfo = async (e: any) => {
     if (!e.detail.width || _clipping.value) {
         return;
     }
@@ -261,7 +289,7 @@ const onCropperInfo = (e: any) => {
     data.x = Math.ceil(data.x);
     data.y = Math.ceil(data.y);
     previewInfo.value = data; //JSON.parse(JSON.stringify(data));
-    const canvas = refCropper.value.cropper.getCroppedCanvas();
+    let canvas = refCropper.value.cropper.getCroppedCanvas();
     // 记录图片原始大小
     currentHeight.value = canvas.height;
     currentWidth.value = canvas.width;
@@ -269,9 +297,27 @@ const onCropperInfo = (e: any) => {
     canvas.style.objectFit = "contain";
     canvas.style.maxWidth = "100%";
     canvas.style.maxHeight = "100%";
-    previewCanvasRef.value.innerHTML = "";
-    previewCanvasRef.value.appendChild(canvas);
+
+    if (_useWatermark.value) {
+        const watermarkText = _watermarkText.value;
+        const imgBolb = await canvasToBlob(canvas);
+        const bolb = await makeWatermark(imgBolb, watermarkText, props.watermarkFunc);
+        // 把bolb 绘制到canvas上
+        const img = new Image();
+        img.src = URL.createObjectURL(bolb);
+        img.onload = () => {
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        previewCanvasRef.value.innerHTML = "";
+        previewCanvasRef.value.appendChild(canvas);
+    }else{
+        previewCanvasRef.value.innerHTML = "";
+        previewCanvasRef.value.appendChild(canvas);
+    }
 };
+
+const onCropperInfo = debounce(_onCropperInfo, 100, false);
 
 const setCopperSize = () => {
     const cropper = refCropper.value.cropper;
@@ -332,11 +378,8 @@ onMounted(() => {
 
 })
 
-const closeCropper = () => {
-    emit('update:show', false);
-}
-
 const onCancelCropper = () => {
+    emit('cancel')
     emit('update:show', false);
 }
 
@@ -348,30 +391,41 @@ const onCropper = async (): Promise<void> => {
     const canvasOptions = props.isLockSize
         ? { width: props.width, height: props.height }
         : {};
+
+    // 这个截图工具无法放大，只能缩小，改为后面自己处理缩放
+    // if (isLockSizeOutWidth.value || isLockSizeOutHeight.value) {
+    //     canvasOptions.width = Number(currentWidth.value);
+    //     canvasOptions.height = Number(currentHeight.value);
+    //     cropper.crop();
+    //     const sizeData = refCropper.value.cropper.getCanvasData();
+    //     cropper.setCropBoxData({
+    //         height: sizeData.naturalHeight,
+    //         width: sizeData.naturalWidth,
+    //         top: 0,
+    //         left: 0
+    //     });
+    // }
+    const canvas = cropper.getCroppedCanvas(canvasOptions);
+    let blob = await canvasToBlob(canvas);
+    // 缩放
     if (isLockSizeOutWidth.value || isLockSizeOutHeight.value) {
-        canvasOptions.width = Number(currentWidth.value);
-        canvasOptions.height = Number(currentHeight.value);
-        cropper.crop();
-        const sizeData = refCropper.value.cropper.getCanvasData();
-        cropper.setCropBoxData({
-            height: sizeData.naturalHeight,
-            width: sizeData.naturalWidth,
-            top: 0,
-            left: 0
-        });
+        const params:any = {}
+        if (isLockSizeOutWidth.value) {
+            params["width"] = currentWidth.value;
+        }
+        if (isLockSizeOutHeight.value) {
+            params["height"] = currentHeight.value;
+        }
+        blob = await zoomImage(blob, params);
     }
-    cropper.getCroppedCanvas(canvasOptions).toBlob((blob: any) => {
-        _clipping.value = false;
-        // const fileReader: FileReader = new FileReader();
-        // fileReader.onloadend = (e: ProgressEvent) => {
-        //     // 裁剪完成，准备上传
-        //     console.log('裁剪完成', blob);
-        //     emit("cropped", blob);
-        // };
-        // fileReader.readAsDataURL(blob);
-        console.log('裁剪完成', blob);
-        emit("cropped", blob);
-    }, props.srcItem.type);
+
+    if(_useWatermark.value){
+        const watermarkText = _watermarkText.value;
+        blob = await makeWatermark(blob, watermarkText, props.watermarkFunc);
+    }
+
+    _clipping.value = false;
+    emit("cropped", blob);
 };
 
 
@@ -426,7 +480,7 @@ const onCropper = async (): Promise<void> => {
             // margin-top: 10px;
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 5px 0;
 
             // background-color: #f0f0f0;
             .easy-upload-cropper-toolbar_title {
@@ -467,8 +521,14 @@ const onCropper = async (): Promise<void> => {
         }
     }
 
+    .zoom-toolbox-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     .easy-upload-cropper-buttons {
-        text-align: right;
+        justify-content: flex-end;
     }
 }
 </style>

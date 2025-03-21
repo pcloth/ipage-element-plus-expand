@@ -20,7 +20,7 @@ const images = ref([
     }
     ])
 const disabled = ref(false)
-const mode = ref('template')
+const mode = ref('append')
 const doDisabled = () => {
     disabled.value = !disabled.value
 }

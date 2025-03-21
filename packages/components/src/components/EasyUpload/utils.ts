@@ -232,3 +232,69 @@ export const zoomImage = (src: string|Blob, zoomLimit: { width: number; height: 
         };
     });
 }
+
+/**
+ * 防抖函数
+ * @param {Function} fn 需要防抖的函数
+ * @param {Number} delay 防抖时间
+ * @param {Boolean} immediate 是否立即执行
+ * @returns {Function} 返回一个防抖函数
+ */
+export const debounce = (fn: Function, delay: number, immediate: boolean) => {
+    let timer: any = null;
+    return function (...args: any[]) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        if (immediate && !timer) {
+            fn.apply(this, args);
+        }
+        timer = setTimeout(() => {
+            fn.apply(this, args);
+        }, delay);
+    };
+};
+
+/** 
+ * 
+ */
+export const suffixToType = (suffix: string) => {
+    const typeMaps:any = {
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        png: 'image/png',
+        webp: 'image/webp',
+        bmp: 'image/bmp'
+    }
+    return typeMaps[suffix] || 'image/png';
+}
+
+/**
+ * 图片文件文件名获取到canvas格式。
+ */
+export const getFileFormatToCanvasType = (fileName: string="") => {
+    const fileExtension = fileName.split('.').pop().toLowerCase();
+    const canvasType = suffixToType(fileExtension);
+    return canvasType;
+}
+
+/**
+ * getObjectValueByPath
+ * @param {Object} obj 对象
+ * @param {String} path 路径，支持.分割
+ * @param {String} defaultValue 默认值
+ */
+export const getObjectValueByPath = (obj: any, path: string, defaultValue: any) => {
+    const paths = path.split('.');
+    let result = obj;
+    for (let i = 0; i < paths.length; i++) {
+        const key = paths[i];
+        if (result[key] === undefined) {
+            return defaultValue;
+        }
+        result = result[key];
+    }
+    return result;
+}
+
+

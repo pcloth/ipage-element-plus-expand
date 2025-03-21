@@ -41,8 +41,10 @@
 
                     </div>
                     <slot name="name" :file="file">
-                        <div v-if="props.showItemName && !file.error" class="easy-upload-review-item-title">{{ file.name
-                        }}</div>
+                        <div v-if="props.showItemName && !file.error" class="easy-upload-review-item-title"
+                            :style="mergeItemTitleStyle">{{
+                                file.name
+                            }}</div>
                     </slot>
                     <div v-if="file?.status === 'error'" class="easy-upload-review-item-error">
                         <!-- 上传失败 -->
@@ -66,14 +68,15 @@
                     + {{ props.uploadButtonText }}
 
                 </div>
-                <div v-if="currentItem?.status === 'error'" class="easy-upload-review-item-error">
+                <div v-if="currentItem?.status === 'error'" class="easy-upload-review-item-error" >
                     {{ currentItem?.error }}
                 </div>
             </div>
         </slot>
         <ReviewBox :zIndex="props.zIndex" v-model:show="showReviewBox" :src="currentSrc" :isVideo="currentSrcIsVideo" />
-        <Cropper v-model:show="showCropper" :zIndex="props.zIndex" :src="currentSrc" :useWatermark="props.useWatermark"
-            :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
+        <Cropper @cancel="cancelUpload" v-model:show="showCropper" :zIndex="props.zIndex" :src="currentSrc"
+            :src-item="currentItem" :useWatermark="props.useWatermark" :quality="props.quality" :useZoom="props.useZoom"
+            :zoomLimit="props.zoomLimit" :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
             :allowChangeWatermarkTextText="props.allowChangeWatermarkTextText" @cropped="onCropped" />
     </div>
 </template>
@@ -91,7 +94,10 @@ import {
     testIsBase64,
     getFileSuffix,
     makeWatermark,
-    zoomImage
+    zoomImage,
+    suffixToType,
+    getFileFormatToCanvasType,
+    getObjectValueByPath
 } from './utils'
 import ReviewBox from './reviewBox.vue'
 import Cropper from './cropper.vue'
@@ -108,7 +114,10 @@ const emits = defineEmits([
     "upload-progress",
     "update:modelValue",
     "file-error",
-    "delete-file"
+    "delete-file",
+    "before-remove",
+    "before-upload",
+    "update:watermarkText"
 ]);
 
 const props = defineProps(props_)
@@ -200,11 +209,16 @@ const mergeReviewItemStyle = computed(() => {
     } else {
         style_['height'] = props.itemHeight
     };
+    return style_;
+});
 
-    // if(props.disabled){
-    //     style_['pointer-events'] = 'none'
-    // }
-    console.log('mergeReviewItemStyle', style_)
+const mergeItemTitleStyle = computed(() => {
+    const style_: any = {};
+    if (typeof props.itemWidth === 'number') {
+        style_['width'] = props.itemWidth + 'px'
+    } else {
+        style_['width'] = props.itemWidth
+    };
     return style_;
 });
 
@@ -231,11 +245,8 @@ const mergeUploadButtonClass = computed((file: any) => {
 
 
 
-
 onMounted(() => {
     fileList.value = getModelValue();
-    console.log(props, 'props', fileList)
-    window.fileList = fileList
 });
 
 const showUploadButton = computed(() => {
@@ -307,11 +318,16 @@ const hanldeClickUpload = (item: any = null) => {
     input.click();
 };
 
+const cancelUpload = () => {
+    currentItem.value[props.valueProps.url] = ''
+    currentItem.value.raw = ''
+    // currentItem.value.status = 'error'
+    // currentItem.value.error = '用户取消'
+}
+
 const inputOnChange = async (e: any) => {
     const file = e.target.files[0];
     if (!file) return;
-    console.log('openfile', file)
-
 
     emits("openfile", file);
     // @ts-ignore // 上传前检查
@@ -323,7 +339,6 @@ const inputOnChange = async (e: any) => {
     currentItem.value.status = 'waitUpload'
     currentItem.value.raw = file
     const type = fileType(file.name);
-    console.log('准备上传', file, currentItem.value)
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async (e: any) => {
@@ -341,10 +356,8 @@ const inputOnChange = async (e: any) => {
                 return
             }
         }
-
         // 直接上传
-        await uploadFile(currentItem.value)
-
+        await prepareToUpload(currentItem.value)
     };
 };
 
@@ -387,12 +400,7 @@ const showReviewBox = ref(false)
 const currentSrc = ref('')
 const currentSrcIsVideo = ref(false)
 const viewImage = (file: any) => {
-    // 打开图片预览 TODO
-    console.log('viewImage', file)
-    // // 测试剪裁
-    // currentSrc.value = file[props.valueProps.url]
-    // showCropper.value = true
-    // return
+    // 打开图片预览
     currentSrc.value = file[props.valueProps.url]
     currentSrcIsVideo.value = _getFileType(file) === 'video'
     showReviewBox.value = true
@@ -428,19 +436,18 @@ const remoteFile = async (file: any, idx: number) => {
 
 const onCropped = async (fileblob: any) => {
     // 裁剪完成
-    console.log('裁剪完成', fileblob)
+    // console.log('裁剪完成', fileblob)
     currentItem.value.raw = fileblob
-    await uploadFile(currentItem.value)
+    await prepareToUpload(currentItem.value)
 }
 
 /** 
  * 上传文件：之前需要检查是否允许手动剪裁处理，是否需要强制缩放，是否需要加水印
  */
-const uploadFile = async (fileItem: any) => {
+const prepareToUpload = async (fileItem: any) => {
     // 上传文件
-    console.log('准备上传文件', fileItem)
     let fileBlob = fileItem.raw
-    if(typeof fileBlob === 'string'){
+    if (typeof fileBlob === 'string') {
         // base64
         fileBlob = await fetch(fileBlob).then(res => res.blob())
     }
@@ -448,21 +455,92 @@ const uploadFile = async (fileItem: any) => {
         // 是否需要强制缩放
         if (props.useZoom && props.forceZoom) {
             fileBlob = await zoomImage(fileBlob, props.zoomLimit)
-            // demo 预览一个img到body上
-            const img = document.createElement('img')
-            img.src = URL.createObjectURL(fileBlob)
-            document.body.appendChild(img)
         }
-
         // 是否需要加水印
         if (props.useWatermark && (props.watermarkText || props.watermarkFunc)) {
             fileBlob = await makeWatermark(fileBlob, props.watermarkText, props.watermarkFunc)
-            const img = document.createElement('img')
-            img.src = URL.createObjectURL(fileBlob)
-            console.log('需要加水印 1',fileBlob)
-            document.body.appendChild(img)
         }
     }
+    let convertType = getFileFormatToCanvasType(fileItem.name || "")
+    if (props.convertExt) {
+        convertType = suffixToType(props.convertExt)
+        fileItem.name = fileItem.name.replace(/\.\w+$/, `.${props.convertExt}`)
+    }
+    // 最后一次转换，处理格式和质量 preview
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    const img = new Image()
+    img.src = URL.createObjectURL(fileBlob)
+    img.onload = () => {
+        canvas.width = img.width
+        canvas.height = img.height
+        ctx?.drawImage(img, 0, 0, img.width, img.height)
+        canvas.toBlob((blob) => {
+            fileItem.raw = blob
+            fileItem.status = 'uploading'
+            // const img = document.createElement('img')
+            // img.src = URL.createObjectURL(fileBlob)
+            // console.log('最后处理完的图片', fileBlob, convertType, fileItem)
+            // document.body.appendChild(img)
+            uploadFile(fileItem)
+        }, convertType, props.quality)
+    }
+
+}
+
+const uploadFile = async (fileItem: any) => {
+    // 上传文件
+    const formData = new FormData();
+    formData.append(props.fileName, fileItem.raw, fileItem.name);
+    emits("beforce-upload", fileItem);
+    let res = null
+    if (props.uploadFunc) {
+        try {
+            res = await props.uploadFunc(fileItem);
+        } catch (error) {
+            fileItem.status = 'error'
+            fileItem.error = error
+            emits("upload-error", fileItem);
+            return
+        }
+
+    } else if (props.action) {
+        const formData = new FormData();
+        formData.append('file', fileItem.raw, fileItem.name);
+        if (props.data) {
+            for (let key in props.data) {
+                formData.append(key, props.data[key])
+            }
+        }
+        const headers = props.headers || {}
+        try {
+            res = await fetch(props.action, {
+                method: 'POST',
+                headers: headers,
+                body: formData
+            }).then(res => res.json())
+        } catch (error) {
+            fileItem.status = 'error'
+            fileItem.error = error
+            emits("upload-error", fileItem);
+            return
+        }
+    } else {
+        throw new Error('请配置uploadFunc或者action')
+    }
+    const url = getObjectValueByPath(res, props.responseSrcPath, null)
+    if (!url) {
+        throw new Error('上传失败，未获取到url，请检查responseSrcPath配置或者接口返回')
+    }
+    fileItem.status = 'success'
+    fileItem[props.valueProps.url] = url
+    fileItem[props.valueProps.name] = fileItem.name
+    emits("upload-success", fileItem);
+    if(props.mode === 'append'){
+        fileList.value.push(fileItem)
+    }
+    outPutValue()
+    showCropper.value = false
 }
 
 
