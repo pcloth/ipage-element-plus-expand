@@ -203,7 +203,6 @@ export const zoomImage = (src: string|Blob, zoomLimit: { width: number; height: 
             img.src = src;
         }else{
             // 它是一个blob
-            console.log(src,'in zoomImage')
             img.src = URL.createObjectURL(src);
         }
         img.onload = () => {

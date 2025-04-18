@@ -3,6 +3,8 @@ import SplitDownloadAndExport from "./SplitDownloadAndExport.vue";
 import RangeSelect from "./RangeSelect/index.vue";
 import RangeSelectItem from "./RangeSelect/RangeSelectItem.vue";
 import Renderer from "./Renderer.vue";
+import EasyUpload from "./EasyUpload/index.vue";
+
 import type { ElementConfigType } from "../type.d";
 export const ElementConfig: ElementConfigType = {
     render: {
@@ -184,5 +186,8 @@ export const ElementConfig: ElementConfigType = {
     "range-select":{
         dom: () => <RangeSelect />,
         optionDom: () => <RangeSelectItem/>
+    },
+    "easy-upload": {
+        dom: () => <EasyUpload />
     },
 };

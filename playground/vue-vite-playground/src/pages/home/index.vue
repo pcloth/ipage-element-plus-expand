@@ -144,7 +144,7 @@ const item = {
     slot:'range-select',
     props:{
         // options:rangeOptions.value,
-        mode:'range',
+        mode:'template',
     },
     options:rangeOptions.value,
     

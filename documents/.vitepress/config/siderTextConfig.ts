@@ -11,6 +11,7 @@ export default {
     "/examples/RenderCellExtend/selectMore": "select-more 分页下拉选择器",
     "/examples/RenderCellExtend/exportButton": "export 导出按钮",
     "/examples/RenderCellExtend/rangeSelect": "range-select 范围选择器",
+    "/examples/RenderCellExtend/easyUpload": "easy-upload 多功能上传",
     "Bussiness": "Bussiness 业务组件",
     "/examples/Bussiness/ISearch": "ISearch 组合搜索",
     "/examples/Bussiness/IForm": "IForm 动态表单",

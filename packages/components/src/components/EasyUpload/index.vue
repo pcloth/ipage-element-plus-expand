@@ -40,10 +40,10 @@
                         </div>
 
                     </div>
-                    <slot name="name" :file="file">
+                    <slot name="title" :file="file" :index="idx" :fileList="fileList">
                         <div v-if="props.showItemName && !file.error" class="easy-upload-review-item-title"
                             :style="mergeItemTitleStyle">{{
-                                file.name
+                                file.title||file.name||''
                             }}</div>
                     </slot>
                     <div v-if="file?.status === 'error'" class="easy-upload-review-item-error">
@@ -77,6 +77,7 @@
         <Cropper @cancel="cancelUpload" v-model:show="showCropper" :zIndex="props.zIndex" :src="currentSrc"
             :src-item="currentItem" :useWatermark="props.useWatermark" :quality="props.quality" :useZoom="props.useZoom"
             :forceZoom="props.forceZoom"
+            :uploadLoading="uploadLoading"
             :zoomLimit="props.zoomLimit" :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
             :allowChangeWatermarkTextText="props.allowChangeWatermarkTextText" @cropped="onCropped" />
     </div>
@@ -183,11 +184,21 @@ const getModelValue = () => {
 /** 输出modelValue */
 const outPutValue = () => {
     const arr: any = [];
+    if(props.mode === 'template'){
+        // 模板模式下，直接返回当前文件列表
+        const outarr = fileList.value.map((item: any) => {
+            const { raw, ...rest } = item
+            return rest
+        })
+        emits("update:modelValue", outarr);
+        return
+    }
     fileList.value.forEach((item: any) => {
         if (item.status === "success") {
-            arr.push(item.src);
+            arr.push(item[props.valueProps.url]);
         }
     });
+    console.log('输出的文件列表', arr)
     if (props.valueFormat === "array") {
         emits("update:modelValue", arr);
     } else if (props.valueFormat === "string") {
@@ -489,6 +500,7 @@ const prepareToUpload = async (fileItem: any) => {
 
 }
 
+const uploadLoading = ref(false)
 const uploadFile = async (fileItem: any) => {
     // 上传文件
     const formData = new FormData();
@@ -496,6 +508,7 @@ const uploadFile = async (fileItem: any) => {
     emits("beforce-upload", fileItem);
     let res = null
     if (props.uploadFunc) {
+        uploadLoading.value = true
         try {
             res = await props.uploadFunc(fileItem);
         } catch (error) {
@@ -503,9 +516,12 @@ const uploadFile = async (fileItem: any) => {
             fileItem.error = error
             emits("upload-error", fileItem);
             return
+        } finally {
+            uploadLoading.value = false
         }
 
     } else if (props.action) {
+        uploadLoading.value = true
         const formData = new FormData();
         formData.append('file', fileItem.raw, fileItem.name);
         if (props.data) {
@@ -525,6 +541,8 @@ const uploadFile = async (fileItem: any) => {
             fileItem.error = error
             emits("upload-error", fileItem);
             return
+        } finally {
+            uploadLoading.value = false
         }
     } else {
         throw new Error('请配置uploadFunc或者action')

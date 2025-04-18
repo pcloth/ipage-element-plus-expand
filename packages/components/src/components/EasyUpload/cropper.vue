@@ -1,9 +1,10 @@
 <template>
-    <div class="easy-upload-cropper" v-if="props.show">
+    <div class="easy-upload-cropper" v-if="props.show" :style="{
+        zIndex: props.zIndex
+    }">
         <div class="easy-upload-cropper-mask" :style="{
-            zIndex: props.zIndex
+            zIndex: props.zIndex + 1
         }" @click="onCancelCropper" />
-
         <div class="easy-upload-cropper-content" :style="_mergeContentStyle">
             <div class="easy-upload-cropper-content-close" @click="onCancelCropper">
                 x
@@ -21,39 +22,37 @@
                 <div class="easy-upload-zoom-toolbox" v-if="props.useZoom">
                     <div class="easy-upload-cropper-toolbar">
                         <div class="zoom-toolbox-row">
-                            <el-checkbox 
-                            :disabled="_parentLockSize"
-                            @change="changeLockZoom($event, 'width')"
+                            <el-checkbox :disabled="_parentLockSize" @change="changeLockZoom($event, 'width')"
                                 v-model="isLockSizeOutWidth">按宽度缩放</el-checkbox>
                             <el-input v-model="currentWidth" size="small" :input-style="{ textAlign: 'right' }"
-                                :disabled="!isLockSizeOutWidth||_parentLockSize" @change="setZoomSize($event, 'width')">
+                                :disabled="!isLockSizeOutWidth || _parentLockSize"
+                                @change="setZoomSize($event, 'width')">
                                 <template #prefix>宽度:</template>
                                 <template #append> 像素 </template>
                             </el-input>
                         </div>
                         <div class="zoom-toolbox-row">
-                            <el-checkbox 
-                            :disabled="_parentLockSize"
-                            v-model="isLockSizeOutHeight"
+                            <el-checkbox :disabled="_parentLockSize" v-model="isLockSizeOutHeight"
                                 @change="changeLockZoom($event, 'height')">按高度缩放</el-checkbox>
                             <el-input v-model="currentHeight" size="small" :input-style="{ textAlign: 'right' }"
-                                @change="setZoomSize($event, 'height')" :disabled="!isLockSizeOutHeight||_parentLockSize">
+                                @change="setZoomSize($event, 'height')"
+                                :disabled="!isLockSizeOutHeight || _parentLockSize">
                                 <template #prefix>宽度:</template>
                                 <template #append> 像素 </template>
                             </el-input>
                         </div>
                         <div class="zoom-toolbox-row" v-if="props.useWatermark">
-                            <el-checkbox @change="changeWatermarkText()" :disabled="!props.allowChangeWatermarkTextText" v-model="_useWatermark">使用水印</el-checkbox>
+                            <el-checkbox @change="changeWatermarkText()" :disabled="!props.allowChangeWatermarkTextText"
+                                v-model="_useWatermark">使用水印</el-checkbox>
                             <el-input v-model="_watermarkText" size="small" :input-style="{ textAlign: 'right' }"
-                                :disabled="!props.allowChangeWatermarkTextText||!_useWatermark" 
-                                @change="changeWatermarkText"
-                                >
+                                :disabled="!props.allowChangeWatermarkTextText || !_useWatermark"
+                                @change="changeWatermarkText">
                             </el-input>
                         </div>
                     </div>
                     <div class="zoom-toolbox-row easy-upload-cropper-buttons">
                         <el-button @click="onCancelCropper">取消</el-button>
-                        <el-button type="primary" @click="onCropper">确定</el-button>
+                        <el-button :loading="uploadLoading" type="primary" @click="onCropper">确定</el-button>
                     </div>
                 </div>
             </div>
@@ -66,8 +65,7 @@
 import { ref, onMounted, nextTick, watch, computed, PropType } from 'vue';
 import VueCropper from './vueCropperjs';
 import type { Options } from "./vueCropperjs"
-import { makeWatermark, zoomImage,debounce, getFileFormatToCanvasType } from "./utils";
-import { el } from 'element-plus/es/locale';
+import { makeWatermark, zoomImage, debounce, getFileFormatToCanvasType } from "./utils";
 
 const refCropper = ref<any>(null);
 const emit = defineEmits([
@@ -208,6 +206,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    uploadLoading: {
+        type: Boolean,
+        default: false
+    },
 })
 
 const _watermarkText = ref(props.watermarkText);
@@ -229,8 +231,7 @@ const _parentLockSizeWidthHeight = computed(() => {
 const _mergeContentStyle = computed(() => {
     return {
         width: '700px',
-        // height: '500px',
-        zIndex: 2501,
+        zIndex: props.zIndex + 2,
         ...props.contentStyle,
     }
 })
@@ -249,16 +250,16 @@ const _mergeRatioList = computed<any>(() => {
     if (props.noCutIsAllowed) {
         arr.unshift({ label: "不剪裁", value: -1 });
     }
-    if(_parentLockSizeWidthHeight.value){
+    if (_parentLockSizeWidthHeight.value) {
         let w = props.zoomLimit.width;
         let h = props.zoomLimit.height;
         let ratio = 0;
-        if(w && h){
+        if (w && h) {
             // 如果两个都有，强制比例
             ratio = +(w / h).toFixed(2);
-        }else if(w){
+        } else if (w) {
             ratio = w / h;
-        }else if(h){
+        } else if (h) {
             ratio = h / w;
         } else {
             throw new Error("强制比例必须设置宽度、高度");
@@ -308,7 +309,7 @@ const onCropEnd = (e: any) => {
     }
 };
 
-const canvasToBlob = (canvas: any, type:any=undefined, quality=1) => {
+const canvasToBlob = (canvas: any, type: any = undefined, quality = 1) => {
     return new Promise((resolve, reject) => {
         canvas.toBlob((blob: any) => {
             resolve(blob);
@@ -329,16 +330,16 @@ const _onCropperInfo = async (e: any) => {
     data.y = Math.ceil(data.y);
     previewInfo.value = data; //JSON.parse(JSON.stringify(data));
     let canvas = refCropper.value.cropper.getCroppedCanvas();
-    if(_parentLockSize.value){
-        if(props.zoomLimit){
+    if (_parentLockSize.value) {
+        if (props.zoomLimit) {
             let w = props.zoomLimit.width;
             let h = props.zoomLimit.height;
             let ratio = 0;
-            if(w && h){
+            if (w && h) {
                 // 如果两个都有，强制比例
                 ratio = +(w / h).toFixed(2);
                 console.log("changeCurrentRatio", ratio, currentRatio.value);
-                if(currentRatio.value!== ratio){
+                if (currentRatio.value !== ratio) {
                     currentRatio.value = ratio;
                     console.log("changeCurrentRatio", ratio);
                     changeCurrentRatio(ratio);
@@ -350,23 +351,23 @@ const _onCropperInfo = async (e: any) => {
                 isLockSizeOutWidth.value = true;
                 isLockSizeOutHeight.value = true;
                 // changeCurrentRatio(ratio);
-            }else if(w){
+            } else if (w) {
                 ratio = w / data.width;
                 currentWidth.value = w;
                 currentHeight.value = Math.ceil(data.height * ratio);
                 isLockSizeOutWidth.value = true;
-            }else if(h){
+            } else if (h) {
                 ratio = h / data.height;
                 currentHeight.value = h;
                 currentWidth.value = Math.ceil(data.width * ratio);
                 isLockSizeOutHeight.value = true;
             }
         }
-    }else{
+    } else {
         currentHeight.value = canvas.height;
         currentWidth.value = canvas.width;
     }
-    
+
 
     canvas.style.objectFit = "contain";
     canvas.style.maxWidth = "100%";
@@ -385,7 +386,7 @@ const _onCropperInfo = async (e: any) => {
         };
         previewCanvasRef.value.innerHTML = "";
         previewCanvasRef.value.appendChild(canvas);
-    }else{
+    } else {
         previewCanvasRef.value.innerHTML = "";
         previewCanvasRef.value.appendChild(canvas);
     }
@@ -484,7 +485,7 @@ const onCropper = async (): Promise<void> => {
     let blob = await canvasToBlob(canvas);
     // 缩放
     if (isLockSizeOutWidth.value || isLockSizeOutHeight.value) {
-        const params:any = {}
+        const params: any = {}
         if (isLockSizeOutWidth.value) {
             params["width"] = currentWidth.value;
         }
@@ -494,7 +495,7 @@ const onCropper = async (): Promise<void> => {
         blob = await zoomImage(blob, params);
     }
 
-    if(_useWatermark.value){
+    if (_useWatermark.value) {
         const watermarkText = _watermarkText.value;
         blob = await makeWatermark(blob, watermarkText, props.watermarkFunc);
     }
