@@ -42,10 +42,10 @@
                             </el-input>
                         </div>
                         <div class="zoom-toolbox-row" v-if="props.useWatermark">
-                            <el-checkbox @change="changeWatermarkText()" :disabled="!props.allowChangeWatermarkTextText"
+                            <el-checkbox @change="changeWatermarkText()" :disabled="!props.allowChangeWatermarkText"
                                 v-model="_useWatermark">使用水印</el-checkbox>
                             <el-input v-model="_watermarkText" size="small" :input-style="{ textAlign: 'right' }"
-                                :disabled="!props.allowChangeWatermarkTextText || !_useWatermark"
+                                :disabled="!props.allowChangeWatermarkText || !_useWatermark"
                                 @change="changeWatermarkText">
                             </el-input>
                         </div>
@@ -202,7 +202,7 @@ const props = defineProps({
     /** 
      * 允许修改水印文字: 必须要允许剪裁的时候生效，会让用户输入水印文字
      */
-    allowChangeWatermarkTextText: {
+    allowChangeWatermarkText: {
         type: Boolean,
         default: false
     },

@@ -84,7 +84,7 @@ export default {
     /** 
      * 允许修改水印文字: 必须要允许剪裁的时候生效，会让用户输入水印文字
      */
-    allowChangeWatermarkTextText:{
+    allowChangeWatermarkText:{
         type: Boolean,
         default: true
     },
@@ -203,7 +203,7 @@ export default {
         default: 2500
     },
     /** 是否显示标题 */
-    showItemName: {
+    showItemTitle: {
         type: Boolean,
         default: true
     },
@@ -216,10 +216,19 @@ export default {
     beforeRemove: {
         type: Function,
     },
+    /** 上传前询问
+     * @param {Object} file 当前上传的文件
+     * @returns {Boolean} 如果返回false，组件会取消上传操作
+     * 可以返回一个Promise，如果返回的是一个Promise，reject的时候会取消上传操作
+     * 也可以返回一个Boolean，如果返回的是false，组件会取消删除操作
+     */
+    beforeUpload: {
+        type: Function,
+    },
     /** 上传url，如果使用这个，将使用内置上传fetch调用 */
     action: {
         type: String,
-        default: 'http://127.0.0.1:5000/upload'
+        default: ''
     },
     /**
      * 内置上传fetch调用的headers
@@ -234,6 +243,11 @@ export default {
     data: {
         type: Object,
         default: () => ({})
+    },
+    /** 上传的文件字段名称 */
+    name: {
+        type: String,
+        default: 'file'
     },
     /** 
      * 上传完成后，返回的数据里，文件路径的key，支持.分割

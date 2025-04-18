@@ -41,9 +41,9 @@
 
                     </div>
                     <slot name="title" :file="file" :index="idx" :fileList="fileList">
-                        <div v-if="props.showItemName && !file.error" class="easy-upload-review-item-title"
+                        <div v-if="props.showItemTitle && !file.error" class="easy-upload-review-item-title"
                             :style="mergeItemTitleStyle">{{
-                                file.title||file.name||''
+                                file.title || file.name || ''
                             }}</div>
                     </slot>
                     <div v-if="file?.status === 'error'" class="easy-upload-review-item-error">
@@ -68,7 +68,7 @@
                     + {{ props.uploadButtonText }}
 
                 </div>
-                <div v-if="currentItem?.status === 'error'" class="easy-upload-review-item-error" >
+                <div v-if="currentItem?.status === 'error'" class="easy-upload-review-item-error">
                     {{ currentItem?.error }}
                 </div>
             </div>
@@ -76,10 +76,9 @@
         <ReviewBox :zIndex="props.zIndex" v-model:show="showReviewBox" :src="currentSrc" :isVideo="currentSrcIsVideo" />
         <Cropper @cancel="cancelUpload" v-model:show="showCropper" :zIndex="props.zIndex" :src="currentSrc"
             :src-item="currentItem" :useWatermark="props.useWatermark" :quality="props.quality" :useZoom="props.useZoom"
-            :forceZoom="props.forceZoom"
-            :uploadLoading="uploadLoading"
-            :zoomLimit="props.zoomLimit" :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
-            :allowChangeWatermarkTextText="props.allowChangeWatermarkTextText" @cropped="onCropped" />
+            :forceZoom="props.forceZoom" :uploadLoading="uploadLoading" :zoomLimit="props.zoomLimit"
+            :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
+            :allowChangeWatermarkText="props.allowChangeWatermarkText" @cropped="onCropped" />
     </div>
 </template>
 <script setup lang="tsx">
@@ -110,16 +109,11 @@ const _getFileType = (item: any) => {
 const emits = defineEmits([
     "openfile",
     "cropped",
-    "beforce-upload",
     "upload-success",
     "upload-error",
-    "upload-progress",
     "update:modelValue",
     "file-error",
-    "delete-file",
-    "before-remove",
-    "before-upload",
-    "update:watermarkText"
+    "delete-file"
 ]);
 
 const props = defineProps(props_)
@@ -184,7 +178,7 @@ const getModelValue = () => {
 /** 输出modelValue */
 const outPutValue = () => {
     const arr: any = [];
-    if(props.mode === 'template'){
+    if (props.mode === 'template') {
         // 模板模式下，直接返回当前文件列表
         const outarr = fileList.value.map((item: any) => {
             const { raw, ...rest } = item
@@ -340,11 +334,14 @@ const cancelUpload = () => {
 const inputOnChange = async (e: any) => {
     const file = e.target.files[0];
     if (!file) return;
-
     emits("openfile", file);
-    // @ts-ignore // 上传前检查
-    const _beforeUpload = props.beforeUpload ? props.beforeUpload : () => Promise.resolve(true)
-    await promisify(_beforeUpload, file)
+    // 用户自己的检查
+    const _beforeUpload: any = props.beforeUpload ? props.beforeUpload : () => Promise.resolve(true)
+    const status = await promisify(_beforeUpload, file)
+    if (!status) {
+        return
+    }
+    // 尺寸和文件文件检查
     if (!beforeUpload(file, currentItem)) {
         return
     }
@@ -374,6 +371,23 @@ const inputOnChange = async (e: any) => {
 };
 
 const beforeUpload = (file: any, templateItem: any) => {
+    // 检查文件类型和大小
+    const ext = file.name.split('.').pop()
+    const accept = templateItem.value[props.valueProps.accept] || props.accept;
+    if (!accept || accept.includes('*.*')) {
+        // 不限制文件类型
+    } else if (accept) {
+        if (!accept.toLowerCase().includes(ext.toLowerCase())) {
+            templateItem.value.status = "error";
+            templateItem.value.error = "文件类型不匹配";
+            emits("file-error", {
+                type: "type",
+                file,
+                accept
+            });
+            return false;
+        }
+    }
     const sizeMb = file.size / 1024 / 1024;
     let status = true;
     let limitSizeMb = props.size;
@@ -448,7 +462,7 @@ const remoteFile = async (file: any, idx: number) => {
 
 const onCropped = async (fileblob: any) => {
     // 裁剪完成
-    // console.log('裁剪完成', fileblob)
+    emits("cropped", fileblob);
     currentItem.value.raw = fileblob
     await prepareToUpload(currentItem.value)
 }
@@ -504,8 +518,16 @@ const uploadLoading = ref(false)
 const uploadFile = async (fileItem: any) => {
     // 上传文件
     const formData = new FormData();
-    formData.append(props.fileName, fileItem.raw, fileItem.name);
-    emits("beforce-upload", fileItem);
+    formData.append(props.name, fileItem.raw, fileItem.name);
+    // 上传前检查
+    if (props.beforeUpload) {
+        const status = await promisify(props.beforeUpload, fileItem)
+        if (!status) return;
+    }
+
+    if (fileItem.status === 'error') {
+        return
+    }
     let res = null
     if (props.uploadFunc) {
         uploadLoading.value = true
@@ -514,7 +536,7 @@ const uploadFile = async (fileItem: any) => {
         } catch (error) {
             fileItem.status = 'error'
             fileItem.error = error
-            emits("upload-error", fileItem);
+            emits("upload-error", fileItem, error);
             return
         } finally {
             uploadLoading.value = false
@@ -539,7 +561,7 @@ const uploadFile = async (fileItem: any) => {
         } catch (error) {
             fileItem.status = 'error'
             fileItem.error = error
-            emits("upload-error", fileItem);
+            emits("upload-error", fileItem, error);
             return
         } finally {
             uploadLoading.value = false
@@ -554,8 +576,8 @@ const uploadFile = async (fileItem: any) => {
     fileItem.status = 'success'
     fileItem[props.valueProps.url] = url
     fileItem[props.valueProps.name] = fileItem.name
-    emits("upload-success", fileItem);
-    if(props.mode === 'append'){
+    emits("upload-success", fileItem, res, fileList.value);
+    if (props.mode === 'append') {
         fileList.value.push(fileItem)
     }
     outPutValue()
