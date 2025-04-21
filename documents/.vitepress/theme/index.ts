@@ -8,7 +8,7 @@ import zhCn from "element-plus/es/locale/lang/zh-cn";
 
 import allDemoComponents from "../MdToVue"
 import allDocComponents  from "../loadExamples"
-
+let install = false;
 export default {
   extends: DefaultTheme, // or ...DefaultTheme
   enhanceApp (e) {
@@ -20,8 +20,13 @@ export default {
                 const IpageElementPlusExpand = res.default
                 // 注册组件
                 app.use(IpageElementPlusExpand)
-                allDemoComponents.intall({app})
-                allDocComponents.install({app})
+                if(!install){
+                    console.log('allDemoComponents',allDemoComponents)
+                    allDemoComponents.intall({app})
+                    allDocComponents.install({app})
+                    install = true
+                }
+                
             })
         }
     })
