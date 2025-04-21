@@ -388,7 +388,9 @@ export default defineComponent({
                             );
                         }
                     },
-                    render: ({ row }: any) => {
+                    render: (scope: any) => {
+                        console.log(scope,'row');
+                        const row = scope.row;
                         const buttons = [];
                         let editButtonConf:any = {};
                         let deleteButtonConf:any = {};
@@ -400,7 +402,8 @@ export default defineComponent({
                                         this.editButton
                                     )
                                 ],
-                                row
+                                row,
+                                scope
                             )[0];
                             buttons.push(editButtonConf);
                         }
@@ -412,12 +415,13 @@ export default defineComponent({
                                         this.deleteButton
                                     )
                                 ],
-                                row
+                                row,
+                                scope
                             )[0];
                             buttons.push(deleteButtonConf);
                         }
                         buttons.push(
-                            ...this._vColumnRenderCell_(this.columnButtons, row)
+                            ...this._vColumnRenderCell_(this.columnButtons, row, scope)
                         );
                         // 排序
                         buttons.sort((a:any, b:any) => {
@@ -537,7 +541,7 @@ export default defineComponent({
             });
             return _columns;
         },
-        _vColumnRenderCell_(allItems: CellItemType[], row: any) {
+        _vColumnRenderCell_(allItems: CellItemType[], row: any, scope:any) {
             return allItems.map(item => {
                 return (
                     <RenderCell
@@ -545,6 +549,7 @@ export default defineComponent({
                         item={{ ...$c.get("button"), ...item }}
                         formData={row}
                         isFormItem={false}
+                        qData={scope}
                     ></RenderCell>
                 );
             });

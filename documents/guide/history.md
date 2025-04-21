@@ -1,8 +1,9 @@
 ## 更新日志
 
-#### 2025-04-21 版本号 `0.0.22` 
+#### 2025-04-21 版本号 `0.0.23` 
 1、`easy-upload`上传组件的所有参数都支持了全局配置
 2、上传组件添加了`zoomFunc`和`ratioList`参数
+3、ipage组件中的操作区按钮`columnButtons`，将el-table-column组件插槽的scope传递给了loadData.qData
 
 #### 2025-04-18 版本号 `0.0.20`
 1. 修复已知的bug

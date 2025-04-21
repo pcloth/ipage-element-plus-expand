@@ -2,6 +2,8 @@
 
 这是一个集成了增删改查的一个标准页面封装，为了更快速的交付业务。
 
+
+
 :::demo 搜索组件是一个对el-form表单的封装，所有的输入单元和按钮都是`RenderCell`组件
 Bussiness/IPage
 :::
@@ -20,7 +22,7 @@ Bussiness/IPage
 | columns | `Array<ColumnType>` | `() => []` | 表格列配置数组 |
 | showColumnButton | `Boolean` | `true` | 是否显示列操作按钮 |
 | showColumnFilter | `Boolean` | `true` | 是否显示列隐藏控制器 |
-| columnButtons | `Array<CellItemType>` | `() => []` | 列操作按钮配置 |
+| columnButtons | `Array<CellItemType>` | `() => []` | 列操作按钮配置，如果要使用el-table-column组件插槽的scope参数，可以去`loadData.qData`中查找 |
 | columnButtonProps | `CellItemType` | `() => ({})` | 列按钮公共配置 |
 | paginationProps | `Object` | `() => ({})` | 分页器属性配置 |
 | tableProps | `Object` | `() => ({})` | 传递给 ITable 的属性 |
