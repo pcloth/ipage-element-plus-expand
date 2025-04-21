@@ -5,7 +5,7 @@
                 <div class="easy-upload-review-item-outside">
                     <div :style="mergeReviewItemStyle" :class="mergeReviewClass(file)">
                         <!-- 如果是template模式下，如果没有图片，显示上传按钮 -->
-                        <template v-if="!props.disabled && props.mode === 'template' && !file[mergeValueProps.value.url]">
+                        <template v-if="!props.disabled && props.mode === 'template' && !file[mergeValueProps.url]">
                             <slot name="upload-button" :upload="hanldeClickUpload" :file="file">
                                 <div :class="[props.uploadButtonClass, 'template-upload']" :style="mergeReviewItemStyle"
                                     @click.stop="hanldeClickUpload(file)">
@@ -14,7 +14,7 @@
                             </slot>
                         </template>
                         <template
-                            v-else-if="props.disabled && props.mode === 'template' && !file[mergeValueProps.value.url]">
+                            v-else-if="props.disabled && props.mode === 'template' && !file[mergeValueProps.url]">
                             <div class="upload-no-data">{{ props.noDataText }}</div>
                         </template>
                         <img v-else-if="_getFileType(file) === 'img'" class="review-image"
@@ -75,6 +75,7 @@
         </slot>
         <ReviewBox :zIndex="props.zIndex" v-model:show="showReviewBox" :src="currentSrc" :isVideo="currentSrcIsVideo" />
         <Cropper @cancel="cancelUpload" v-model:show="showCropper" :zIndex="props.zIndex" :src="currentSrc"
+            :ratioList="props.ratioList"
             :src-item="currentItem" :useWatermark="props.useWatermark" :quality="props.quality" :useZoom="props.useZoom"
             :forceZoom="props.forceZoom" :uploadLoading="uploadLoading" :zoomLimit="props.zoomLimit"
             :watermarkText="props.watermarkText" :watermarkFunc="props.watermarkFunc"
@@ -118,15 +119,19 @@ const emits = defineEmits([
     "delete-file"
 ]);
 
+
+const props = defineProps(props_)
+
+
+
 const mergeValueProps = computed(() => {
     const default_ = $c.get('upload.valueProps')||{}
     return {
-        ...default_,
-        ...props.valueProps
+        ...(default_||{}),
+        ...(props.valueProps||{}),
     }
 })
 
-const props = defineProps(props_)
 const fileList = ref<any>([])
 
 
@@ -280,6 +285,7 @@ const showUploadButton = computed(() => {
 
 // 当前正在操作的文件
 const currentItem = ref<any>(null)
+
 /**
  * 
  * status:  
@@ -490,7 +496,12 @@ const prepareToUpload = async (fileItem: any) => {
     if (!props.useCropper) {
         // 是否需要强制缩放
         if (props.useZoom && props.forceZoom) {
-            fileBlob = await zoomImage(fileBlob, props.zoomLimit)
+            if(props.zoomFunc){
+                // 使用用户自定义的缩放函数
+                fileBlob = await props.zoomFunc(fileBlob, props.zoomLimit)
+            }else{
+                fileBlob = await zoomImage(fileBlob, props.zoomLimit)
+            }
         }
         // 是否需要加水印
         if (props.useWatermark && (props.watermarkText || props.watermarkFunc)) {

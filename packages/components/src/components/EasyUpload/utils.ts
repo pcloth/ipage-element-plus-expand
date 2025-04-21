@@ -52,7 +52,6 @@ export const imageTypes = ['PNG', 'JPG', 'JPEG']
 export const videoTypes = ['MP4', 'AVI']
 
 export const createAccept = (types: string[]) => {
-    console.log(types.map(item => `.${item.toLowerCase()}`).join(','))
     return types.map(item => `.${item.toLowerCase()}`).join(',')
 }
 

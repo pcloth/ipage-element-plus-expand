@@ -16,7 +16,6 @@
 RenderCellExtend/easyUpload
 :::
 
-
 <div style="margin-top: 120px;"/>
 
 ## 自定义上传方法
@@ -29,6 +28,16 @@ RenderCellExtend/easyUpload2
 :::
 
 <div style="margin-top: 120px;"/>
+
+## 使用水印
+:::tip
+有些场景下，我们要对上传的图片打上水印，现在演示一个水印:
+`allowChangeWatermarkText`=true的时候，就允许用户手动修改水印内容，默认是不允许修改的
+:::
+
+:::demo 
+RenderCellExtend/easyUpload2-1
+:::
 
 ## 模板上传
 :::tip
@@ -51,6 +60,18 @@ RenderCellExtend/easyUpload3
 RenderCellExtend/easyUpload4
 :::
 
+<div style="margin-top: 120px;"/>
+
+## 不剪裁，控制按比例缩放，并添加水印
+:::tip
+现在演示一个关闭剪裁框，但是要控制图片的尺寸（按1200像素宽度缩放）并添加水印
+:::
+
+
+:::demo 
+RenderCellExtend/easyUpload5
+:::
+
 
 ## Attributes 属性
 :::tip
@@ -63,14 +84,16 @@ RenderCellExtend/easyUpload4
 | mode | String | 上传模式：<br/>`append` - 追加模式，每次上传追加到原有文件列表<br/>`template` - 模板模式，替换原有文件列表（可控制文件类型和尺寸限制） | `'append'` |
 | useZoom | Boolean | 是否允许缩放 | `true` |
 | forceZoom | Boolean | 是否强制缩放（当 `useZoom` 为 `true` 时生效） | `false` |
+| zoomFunc | Function | 当强制缩放的时候，使用自己的缩放方法，接收参数是fileBolb,zoomLimit | `undefined` |
 | zoomLimit | Object | 缩放限制：<br/>- 单值：优先按该值缩放，另一值按比例<br/>- 双值：裁剪时按限制剪裁<br/>- 未裁剪时按最小值缩放 | 无 |
 | quality | Number | 缩放质量（0-1之间的数字） | `0.92` |
 | convertExt | String | 转换图片后缀（支持 `jpg`/`webp`/`png`） | 无 |
 | useWatermark | Boolean | 是否使用水印 | `false` |
 | watermarkFunc | Function | 自定义水印配置函数（优先级高于 `watermarkText`） | 无 |
 | watermarkText | String | 默认水印文字（`useWatermark` 为 `false` 时无效） | `''` |
-| allowChangeWatermarkText | Boolean | 是否允许修改水印文字（需启用裁剪） | `true` |
+| allowChangeWatermarkText | Boolean | 是否允许修改水印文字（需要`useCropper`=true和`useWatermark`=true才生效） | `false` |
 | useCropper | Boolean | 是否允许手动裁剪（裁剪时应用缩放和水印） | `true` |
+|+| Array | 剪裁比例列表，自由剪裁value=0, 不剪裁value=-1,可以设置isDefault其中一个为默认值 |[{ label: "自由剪裁", value: 0, isDefault:true},{ label: "不剪裁", value: -1 },{ label: "正方形 1:1", value: 1 },{ label: "横屏 4:3", value: 4 / 3 },{ label: "横屏 16:9", value: 16 / 9 },{ label: "竖屏 3:4", value: 3 / 4 },{ label: "竖屏 9:16", value: 9 / 6 }]|
 | modelValue | [String, Array] | 绑定值 | `''` |
 | valueFormat | String | 值格式类型：<br/>`string` - 单文件路径（多文件用分隔符）<br/>`array` - 文件路径数组<br/>`array-object` - 对象数组（含 `url` 和 `name`） | `'string'` |
 | noDataText | String | 无数据时的提示文本 | `'暂无数据'` |

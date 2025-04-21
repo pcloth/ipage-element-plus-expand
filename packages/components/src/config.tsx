@@ -4,6 +4,7 @@ import { Search, RefreshRight, Plus } from "@element-plus/icons-vue";
 import { imageTypes, createAccept } from './components/EasyUpload/utils';
 
 import type { IPageElementPlusExpandConfigType } from "./type.d";
+import { before } from "node:test";
 export const config: IPageElementPlusExpandConfigType = {
     options: {
         class: {
@@ -287,6 +288,16 @@ export const config: IPageElementPlusExpandConfigType = {
             name: "file",
             responseSrcPath: "data.linkPath",
             uploadFunc: null,
+            ratioList: [
+                { label: "自由剪裁", value: 0, isDefault:true},
+                { label: "不剪裁", value: -1 },
+                { label: "正方形 1:1", value: 1 },
+                { label: "横屏 4:3", value: 4 / 3 },
+                { label: "横屏 16:9", value: 16 / 9 },
+                { label: "竖屏 3:4", value: 3 / 4 },
+                { label: "竖屏 9:16", value: 9 / 16 }
+            ],
+            zoomFunc: null
         },
     },
     /** 设置参数，options可以传入参数的内容，保持正确的层级关系，会深度合并 */

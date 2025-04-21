@@ -28,6 +28,17 @@ export default {
         default: $c.get('upload.forceZoom')
     },
     /** 
+     * 自定义缩放方法
+     * @params {blob} file 图片文件
+     * @params {Object} zoomLimit 缩放限制参数
+     * @params {Number} zoomLimit.width 宽度限制
+     * @params {Number} zoomLimit.height 高度限制
+     */
+    zoomFunc:{
+        type: Function,
+        default: $c.get('upload.zoomFunc')
+    },
+    /** 
      * 缩放限制，如果只传一个值，表示按它优先缩放，另一个值会按比例缩放
      * 如果两个值都传，剪裁的时候会按照这个限制剪裁
      * 如果不剪裁，会按照最小的值缩放
@@ -98,6 +109,12 @@ export default {
     useCropper:{
         type: Boolean,
         default: $c.get('upload.useCropper')
+    },
+    ratioList:{
+        type: Array,
+        default: () => {
+            return $c.get('upload.ratioList')
+        }
     },
     modelValue: {
         type: [String, Array],

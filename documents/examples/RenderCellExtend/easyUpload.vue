@@ -16,6 +16,8 @@ const item = ref({
     props:{
         action: 'http://127.0.0.1:5000/upload',
         responseSrcPath: 'data.linkPath',
+        useWatermark: true,
+        watermarkText: '水印文字',
         headers: {
             token:'123456'
         },

@@ -133,11 +133,6 @@ const props = defineProps({
             autoCropArea: 0.8
         })
     },
-    /** 当不锁定比例的时候，允许不剪裁 */
-    noCutIsAllowed: {
-        type: Boolean,
-        default: true
-    },
     /** 不锁定的时候，显示比例控制器 */
     showRatioController: {
         type: Boolean,
@@ -162,15 +157,6 @@ const props = defineProps({
      */
     ratioList: {
         type: Array,
-        default: () => {
-            return [
-                { label: "正方形 1:1", value: 1 },
-                { label: "横屏 4:3", value: 4 / 3 },
-                { label: "横屏 16:9", value: 16 / 9 },
-                { label: "竖屏 3:4", value: 3 / 4 },
-                { label: "竖屏 9:16", value: 9 / 16 }
-            ]
-        }
     },
     /**
      * 是否使用水印
@@ -237,37 +223,35 @@ const _mergeContentStyle = computed(() => {
 })
 
 const currentSrc = ref(props.src);
-const currentRatio = ref(0);
+
 watch(() => props.src, (val) => {
     currentSrc.value = val;
 })
 
 const _mergeRatioList = computed<any>(() => {
     const arr = [
-        { label: "自由剪裁", value: 0 },
-        ...props.ratioList
+        ...(props.ratioList||[])
     ];
-    if (props.noCutIsAllowed) {
-        arr.unshift({ label: "不剪裁", value: -1 });
-    }
-    if (_parentLockSizeWidthHeight.value) {
-        let w = props.zoomLimit.width;
-        let h = props.zoomLimit.height;
-        let ratio = 0;
-        if (w && h) {
-            // 如果两个都有，强制比例
-            ratio = +(w / h).toFixed(2);
-        } else if (w) {
-            ratio = w / h;
-        } else if (h) {
-            ratio = h / w;
-        } else {
-            throw new Error("强制比例必须设置宽度、高度");
-        }
-        arr.unshift({ label: "强制比例", value: ratio });
-    }
+   
     return arr;
 });
+
+
+
+const initCurrentRatio = ()=>{
+    let value = 0;
+    if(!_mergeRatioList.value || _mergeRatioList.value.length === 0){
+        return value;
+    }
+    const def = _mergeRatioList.value.find((item:any)=>item.isDefault)
+    if(def){
+        value = def.value;
+    }else {
+        value = _mergeRatioList.value[0].value;
+    }
+    return value;
+}
+const currentRatio = ref(initCurrentRatio());
 
 /** 给cropperjs的配置参数 */
 const _mergeOptions = computed<Options>(() => {
@@ -276,6 +260,7 @@ const _mergeOptions = computed<Options>(() => {
         autoCropArea: 0.8,
         ...props.options
     }
+    _mp.autoCrop = currentRatio.value<0?false:true;
     if (currentRatio.value <= 0) {
         _mp.aspectRatio = false;
     } else {
@@ -450,7 +435,7 @@ const changeCurrentRatio = async (value: any) => {
 };
 
 
-onMounted(() => {
+onMounted(async () => {
 
 })
 
