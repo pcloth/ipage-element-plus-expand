@@ -53,18 +53,22 @@ RenderCellExtend/easyUpload4
 
 
 ## Attributes 属性
+:::tip
+上传组件的全部参数，都可以从全局配置中设置，路径是`upload.key`，比如mode参数，就可以设置到$c.set('upload.mode','append')
+这样同一个项目中，你只需要设置一次就可以把默认配置全部进行修改
+:::
 
 | 属性 | 类型 | 说明 | 默认值 |
 |--|--|--|--|
 | mode | String | 上传模式：<br/>`append` - 追加模式，每次上传追加到原有文件列表<br/>`template` - 模板模式，替换原有文件列表（可控制文件类型和尺寸限制） | `'append'` |
 | useZoom | Boolean | 是否允许缩放 | `true` |
-| forceZoom | Boolean | 是否强制缩放（当 `useZoom` 为 `true` 时生效） | `true` |
+| forceZoom | Boolean | 是否强制缩放（当 `useZoom` 为 `true` 时生效） | `false` |
 | zoomLimit | Object | 缩放限制：<br/>- 单值：优先按该值缩放，另一值按比例<br/>- 双值：裁剪时按限制剪裁<br/>- 未裁剪时按最小值缩放 | 无 |
 | quality | Number | 缩放质量（0-1之间的数字） | `0.92` |
 | convertExt | String | 转换图片后缀（支持 `jpg`/`webp`/`png`） | 无 |
-| useWatermark | Boolean | 是否使用水印 | `true` |
+| useWatermark | Boolean | 是否使用水印 | `false` |
 | watermarkFunc | Function | 自定义水印配置函数（优先级高于 `watermarkText`） | 无 |
-| watermarkText | String | 默认水印文字（`useWatermark` 为 `false` 时无效） | `'watermark'` |
+| watermarkText | String | 默认水印文字（`useWatermark` 为 `false` 时无效） | `''` |
 | allowChangeWatermarkText | Boolean | 是否允许修改水印文字（需启用裁剪） | `true` |
 | useCropper | Boolean | 是否允许手动裁剪（裁剪时应用缩放和水印） | `true` |
 | modelValue | [String, Array] | 绑定值 | `''` |

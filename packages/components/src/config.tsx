@@ -1,7 +1,9 @@
 import { deepAssign } from "./utils";
 // TODO 在vitepreww文档中引入编译后的config.js文件，会触发报错，有空看一下
 import { Search, RefreshRight, Plus } from "@element-plus/icons-vue";
-import type { IPageElementPlusExpandConfigType } from "./type.d"
+import { imageTypes, createAccept } from './components/EasyUpload/utils';
+
+import type { IPageElementPlusExpandConfigType } from "./type.d";
 export const config: IPageElementPlusExpandConfigType = {
     options: {
         class: {
@@ -20,7 +22,7 @@ export const config: IPageElementPlusExpandConfigType = {
             /** 表格外层的class */
             tableWrap: "ipage_tableWrap",
             /** 分页区额外的class */
-            IPagePagination: "ipage_pagination"
+            IPagePagination: "ipage_pagination",
         },
         /// IPage 相关参数
         /** 返回值所在的地方 */
@@ -34,7 +36,7 @@ export const config: IPageElementPlusExpandConfigType = {
              * data: 返回的数据
              * total: 返回的总数
              */
-            beforeFunc: null
+            beforeFunc: null,
         },
         /** 搜索分页相关参数 */
         search: {
@@ -54,7 +56,7 @@ export const config: IPageElementPlusExpandConfigType = {
              */
             beforeFunc: null,
             /** 单个输入框回车后立即搜索 */
-            singleInput: false
+            singleInput: false,
         },
 
         /** 表格高度锁：仅在IPage组件中的ITable生效
@@ -68,7 +70,7 @@ export const config: IPageElementPlusExpandConfigType = {
         dialogProps: {
             width: "65%",
             "align-center": true,
-            appendToBody: true
+            appendToBody: true,
         },
         /** 弹窗默认的事件，将直接传递给IPage使用的增改数据el-dialog中 */
         dialogOn: {},
@@ -78,14 +80,14 @@ export const config: IPageElementPlusExpandConfigType = {
             columnProps: {
                 label: "操作",
                 minWidth: 140,
-                fixed: "right"
+                fixed: "right",
             },
-            isOperate: true
+            isOperate: true,
         },
         /** 默认的el-pagination 组件的参数，直接传递给el-pagination */
         paginationProps: {
             layout: "total, sizes, prev, pager, next, jumper",
-            pageSizes: [10, 20, 50, 100]
+            pageSizes: [10, 20, 50, 100],
         },
         /** 默认toolbar上的RenderCell组件数据 */
         toolbarButton: {
@@ -93,8 +95,8 @@ export const config: IPageElementPlusExpandConfigType = {
             props: {
                 size: "small",
                 type: "primary",
-                link: true
-            }
+                link: true,
+            },
         },
         /** 默认按钮的RenderCell组件数据
          * 将用在addButton,deleteButton和默认的columnButtons里面
@@ -104,8 +106,8 @@ export const config: IPageElementPlusExpandConfigType = {
             props: {
                 size: "small",
                 type: "primary",
-                link: true
-            }
+                link: true,
+            },
         },
         /** 默认的addButton按钮RenderCell组件数据
          * 注意：IPage在使用addButton的时候，会再叠加一个on:{click:fn}的事件
@@ -116,22 +118,22 @@ export const config: IPageElementPlusExpandConfigType = {
             props: {
                 size: "small",
                 type: "primary",
-                icon: () => <Plus />
-            }
+                icon: () => <Plus />,
+            },
         },
         /** 默认的editButton按钮RenderCell组件数据
          * 注意：IPage在使用editButton的时候，会再叠加一个on:{click:fn}的事件
          */
         editButton: {
             id: "edit",
-            tip: "编辑"
+            tip: "编辑",
         },
         /** 默认的deleteButton按钮RenderCell组件数据
          * 注意：IPage在使用deleteButton的时候，会再叠加一个on:{click:fn}的事件
          */
         deleteButton: {
             id: "delete",
-            tip: "删除"
+            tip: "删除",
         },
         /** 默认的refreshButton按钮RenderCell组件数据
          * 注意：IPage在使用refreshButton的时候，会再叠加一个on:{click:fn}的事件
@@ -139,15 +141,15 @@ export const config: IPageElementPlusExpandConfigType = {
         refreshButton: {
             id: "refresh",
             props: {
-                icon: "el-icon-refresh"
-            }
+                icon: "el-icon-refresh",
+            },
         },
         /// IForm 相关参数
         /** 直接传递给IFrom组件内的el-form组件的class */
         formClass: "iform", // 旧版本参数，后续可能会删除
         /** 直接传递给IFrom组件内的el-form组件 */
         formProps: {
-            "label-width": "120px"
+            "label-width": "120px",
         },
         /** 直接传递给IFrom组件内的el-form-item组件 */
         formOn: {},
@@ -160,18 +162,18 @@ export const config: IPageElementPlusExpandConfigType = {
         submitTitle: "确定",
         cancelTitle: "取消",
         submitButtonProps: {
-            type: "primary"
+            type: "primary",
         },
         showCancelButton: false,
         cancelButtonProps: {
-            type: "default"
+            type: "default",
         },
         /** 优化后的表单提交按钮 RenderCell 组件参数，或者false表示不显示 */
         formSubmitButton: {
             slot: "button",
             props: {
-                type: "primary"
-            }
+                type: "primary",
+            },
         },
         /** 优化后的表单取消按钮 RenderCell 组件参数，或者false表示不显示 */
         formCancelButton: false,
@@ -179,16 +181,16 @@ export const config: IPageElementPlusExpandConfigType = {
         /// ISearch 相关参数
         /** ISearch组件内部的el-form参数 */
         searchFormProps: {
-            inline: true
+            inline: true,
         },
         searchInputProps: {
             size: "small",
-            clearable: true
+            clearable: true,
         },
         searchExpandButtonProps: {
             props: {
-                size: "small"
-            }
+                size: "small",
+            },
         },
         // 旧版本的参数，后续可能会删除，并替换成RenderCell组件参数
         // showSearchButton: true,
@@ -209,16 +211,16 @@ export const config: IPageElementPlusExpandConfigType = {
             props: {
                 icon: () => <Search />,
                 type: "primary",
-                size: "small"
-            }
+                size: "small",
+            },
         },
         searchResetButton: {
             slot: "button",
             props: {
                 icon: () => <RefreshRight />,
                 type: "default",
-                size: "small"
-            }
+                size: "small",
+            },
         },
         /** 强制所有搜索项目进more 比如在有些手机尺寸上可以用这个控制 */
         allinMore: false,
@@ -226,7 +228,66 @@ export const config: IPageElementPlusExpandConfigType = {
         tableProps: {},
         tableOn: {},
         /** 扩展渲染组件，请用jsx直接传入vnode */
-        extendedRenderCell: {}
+        extendedRenderCell: {},
+        /** easy-upload组件的配置 */
+        upload: {
+            /** 上传模式
+             * append: 追加模式，每次上传都会追加到原有的文件列表中
+             * template: 模板模式，每次上传都会替换原有的文件列表（模板模式里面可以控制每个文件的类型和尺寸限制）
+             */
+            mode: "append",
+            /**
+             * 是否允许缩放
+             */
+            useZoom: true,
+            /**
+             * forceZoom: 是否强制缩放，如果为true，会强制缩放到zoomLimit的限制
+             * useZoom为false的时候，forceZoom无效
+             */
+            forceZoom: false,
+            zoomLimit: undefined,
+            quality: 0.92,
+            convertExt: undefined,
+            useWatermark: false,
+            watermarkText: "",
+            allowChangeWatermarkText: false,
+            useCropper: true,
+            valueFormat: "string",
+            noDataText: "暂无数据",
+            valueSplit: ",",
+            valueProps: {
+                url: "url", // 文件路径
+                name: "name", // 如果没有name属性，会根据url属性获取文件名
+                type: "type", // img,video,file
+                accept: "accept", // 允许上传的文件类型，如果有它，优先使用它
+                poster: "poster", // 视频封面，只有type为video的时候有效
+                controls: "controls", // 视频在列表上是否显示控制条，只有type为video的时候有效
+                size: "size", // 文件最大大小
+                minSize: "minSize", // 文件最小尺寸
+                duration: "duration", // 视频时长，只有type为video的时候有效
+            },
+            disabled: false,
+            limit: 0,
+            size: 0,
+            minSize: 0,
+            accept: createAccept(imageTypes),
+            uploadClass: "easy-upload",
+            uploadButtonClass: "easy-upload-review-item easy-upload-review-item--upload",
+            uploadButtonText: "上传文件",
+            reviewClass: "easy-upload-review-item",
+            itemWidth: 100,
+            itemHeight: 100,
+            zIndex: 2500,
+            showItemTitle: true,
+            beforeRemove: null,
+            beforeUpload: null,
+            action: "",
+            headers: {},
+            data: {},
+            name: "file",
+            responseSrcPath: "data.linkPath",
+            uploadFunc: null,
+        },
     },
     /** 设置参数，options可以传入参数的内容，保持正确的层级关系，会深度合并 */
     set(options) {
@@ -237,10 +298,10 @@ export const config: IPageElementPlusExpandConfigType = {
      * 'dialogProps.appendToBody' 它将获取this.options.dialogProps.appendToBody
      * 不传递的话，返回整个配置
      */
-    get(deepPath:string) {
+    get(deepPath: string) {
         if (deepPath) {
             const paths = deepPath.split(".");
-            let result:any = this.options;
+            let result: any = this.options;
             for (const path of paths) {
                 // todo 这里可能要处理异常
                 result = result[path];
@@ -249,5 +310,5 @@ export const config: IPageElementPlusExpandConfigType = {
         } else {
             return this.options;
         }
-    }
+    },
 };

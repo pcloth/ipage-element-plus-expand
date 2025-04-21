@@ -5,7 +5,7 @@
                 <div class="easy-upload-review-item-outside">
                     <div :style="mergeReviewItemStyle" :class="mergeReviewClass(file)">
                         <!-- 如果是template模式下，如果没有图片，显示上传按钮 -->
-                        <template v-if="!props.disabled && props.mode === 'template' && !file[props.valueProps.url]">
+                        <template v-if="!props.disabled && props.mode === 'template' && !file[mergeValueProps.value.url]">
                             <slot name="upload-button" :upload="hanldeClickUpload" :file="file">
                                 <div :class="[props.uploadButtonClass, 'template-upload']" :style="mergeReviewItemStyle"
                                     @click.stop="hanldeClickUpload(file)">
@@ -14,16 +14,16 @@
                             </slot>
                         </template>
                         <template
-                            v-else-if="props.disabled && props.mode === 'template' && !file[props.valueProps.url]">
+                            v-else-if="props.disabled && props.mode === 'template' && !file[mergeValueProps.value.url]">
                             <div class="upload-no-data">{{ props.noDataText }}</div>
                         </template>
                         <img v-else-if="_getFileType(file) === 'img'" class="review-image"
-                            :src="file[props.valueProps.url]" alt="" />
+                            :src="file[mergeValueProps.url]" alt="" />
                         <video v-else-if="_getFileType(file) === 'video'" class="review-image"
-                            :poster="file[props.valueProps.poster]" :controls="file[props.valueProps.controls]"
-                            :src="file[props.valueProps.url]"></video>
+                            :poster="file[mergeValueProps.poster]" :controls="file[mergeValueProps.controls]"
+                            :src="file[mergeValueProps.url]"></video>
                         <div v-else class="review-image">
-                            {{ getFileSuffix(file[props.valueProps.url]) }}
+                            {{ getFileSuffix(file[mergeValueProps.url]) }}
                         </div>
                         <div class="easy-upload-review-item-mask">
                             <img @click.stop="viewImage(file)" title="预览"
@@ -83,6 +83,8 @@
 </template>
 <script setup lang="tsx">
 import { defineProps, ref, computed, onMounted } from 'vue'
+import { config as $c } from '../../config'
+
 import props_ from './props'
 import {
     promisify,
@@ -103,7 +105,7 @@ import {
 import ReviewBox from './reviewBox.vue'
 import Cropper from './cropper.vue'
 const _getFileType = (item: any) => {
-    return fileType(item[props.valueProps.url] || "")
+    return fileType(item[mergeValueProps.value.url] || "")
 }
 
 const emits = defineEmits([
@@ -115,6 +117,14 @@ const emits = defineEmits([
     "file-error",
     "delete-file"
 ]);
+
+const mergeValueProps = computed(() => {
+    const default_ = $c.get('upload.valueProps')||{}
+    return {
+        ...default_,
+        ...props.valueProps
+    }
+})
 
 const props = defineProps(props_)
 const fileList = ref<any>([])
@@ -156,18 +166,18 @@ const getModelValue = () => {
     arr = arr.map((item: any) => {
         if (typeof item === 'object') {
             if (!item.uuid) item.uuid = getUuid(12, 17);
-            if (!item.name) item.name = getName(item[props.valueProps.url]);
+            if (!item.name) item.name = getName(item[mergeValueProps.value.url]);
             if (!item.status) item.status = "success";
-            if (!item.type) item.type = fileType(item[props.valueProps.url]);
+            if (!item.type) item.type = fileType(item[mergeValueProps.value.url]);
             return item
         }
-        const obj = fileList.value.find((it: any) => it[props.valueProps.url] === item);
+        const obj = fileList.value.find((it: any) => it[mergeValueProps.value.url] === item);
         const uuid = obj?.uuid || getUuid(12, 17);
         const name = obj?.name || getName(item);
         return {
             uuid,
-            [props.valueProps.name]: name,
-            [props.valueProps.url]: item,
+            [mergeValueProps.value.name]: name,
+            [mergeValueProps.value.url]: item,
             status: "success",
             type: fileType(item)
         };
@@ -189,7 +199,7 @@ const outPutValue = () => {
     }
     fileList.value.forEach((item: any) => {
         if (item.status === "success") {
-            arr.push(item[props.valueProps.url]);
+            arr.push(item[mergeValueProps.value.url]);
         }
     });
     console.log('输出的文件列表', arr)
@@ -234,7 +244,7 @@ const mergeReviewClass = computed((file: any) => {
         return [props.reviewClass, {
             'easy-upload-review-item-disabled': props.disabled,
             'easy-upload-review-item-template': props.mode === 'template',
-            'is-upload': props.mode === 'template' && !file[props.valueProps.url],
+            'is-upload': props.mode === 'template' && !file[mergeValueProps.value.url],
             'is-error': file.status === 'error',
         }]
     }
@@ -285,7 +295,7 @@ const createNewItem = (params: any = {}): FileType => {
     return {
         uuid: getUuid(12, 17),
         name: params.name || '',
-        [props.valueProps.url]: params.url || '',
+        [mergeValueProps.value.url]: params.url || '',
         status: params.status || '',
         accept: params.accept || props.accept,
         error: params.error || ''
@@ -301,10 +311,10 @@ const hanldeClickUpload = (item: any = null) => {
     currentItem.value.status = 'load'
     let accept = props.accept;
     if (props.mode === 'template') {
-        if (item[props.valueProps.accept]) {
-            accept = item[props.valueProps.accept]
-        } else if (item[props.valueProps.type]) {
-            const type = item[props.valueProps.type]
+        if (item[mergeValueProps.value.accept]) {
+            accept = item[mergeValueProps.value.accept]
+        } else if (item[mergeValueProps.value.type]) {
+            const type = item[mergeValueProps.value.type]
             if (type === 'img') {
                 accept = createAccept(imageTypes)
             } else if (type === 'video') {
@@ -325,7 +335,7 @@ const hanldeClickUpload = (item: any = null) => {
 };
 
 const cancelUpload = () => {
-    currentItem.value[props.valueProps.url] = ''
+    currentItem.value[mergeValueProps.value.url] = ''
     currentItem.value.raw = ''
     // currentItem.value.status = 'error'
     // currentItem.value.error = '用户取消'
@@ -352,7 +362,7 @@ const inputOnChange = async (e: any) => {
     reader.readAsDataURL(file);
     reader.onload = async (e: any) => {
         const base64 = e.target.result;
-        // currentItem.value[props.valueProps.url] = base64;
+        // currentItem.value[mergeValueProps.value.url] = base64;
         currentItem.value.raw = base64;
         currentSrc.value = base64
         currentItem.value.name = file.name;
@@ -373,7 +383,7 @@ const inputOnChange = async (e: any) => {
 const beforeUpload = (file: any, templateItem: any) => {
     // 检查文件类型和大小
     const ext = file.name.split('.').pop()
-    const accept = templateItem.value[props.valueProps.accept] || props.accept;
+    const accept = templateItem.value[mergeValueProps.value.accept] || props.accept;
     if (!accept || accept.includes('*.*')) {
         // 不限制文件类型
     } else if (accept) {
@@ -391,8 +401,8 @@ const beforeUpload = (file: any, templateItem: any) => {
     const sizeMb = file.size / 1024 / 1024;
     let status = true;
     let limitSizeMb = props.size;
-    if (templateItem.value && templateItem.value[props.valueProps.size]) {
-        limitSizeMb = templateItem.value[props.valueProps.size];
+    if (templateItem.value && templateItem.value[mergeValueProps.value.size]) {
+        limitSizeMb = templateItem.value[mergeValueProps.value.size];
     }
     if (limitSizeMb && sizeMb > limitSizeMb) {
         templateItem.value.status = "error";
@@ -406,8 +416,8 @@ const beforeUpload = (file: any, templateItem: any) => {
     }
 
     let minSizeMb = props.minSize;
-    if (templateItem.value && templateItem.value[props.valueProps.minSize]) {
-        minSizeMb = templateItem.value[props.valueProps.minSize];
+    if (templateItem.value && templateItem.value[mergeValueProps.value.minSize]) {
+        minSizeMb = templateItem.value[mergeValueProps.value.minSize];
     }
     if (minSizeMb && sizeMb < minSizeMb) {
         templateItem.value.status = "error";
@@ -427,7 +437,7 @@ const currentSrc = ref('')
 const currentSrcIsVideo = ref(false)
 const viewImage = (file: any) => {
     // 打开图片预览
-    currentSrc.value = file[props.valueProps.url]
+    currentSrc.value = file[mergeValueProps.value.url]
     currentSrcIsVideo.value = _getFileType(file) === 'video'
     showReviewBox.value = true
 
@@ -436,8 +446,8 @@ const viewImage = (file: any) => {
 const downloadFile = (file: any) => {
     // 下载文件
     const a = document.createElement("a");
-    a.href = file[props.valueProps.url];
-    a.download = file[props.valueProps.name];
+    a.href = file[mergeValueProps.value.url];
+    a.download = file[mergeValueProps.value.name];
     a.target = "_blank";
     a.click();
 };
@@ -450,7 +460,7 @@ const remoteFile = async (file: any, idx: number) => {
         if (!status) return;
     }
     if (props.mode === 'template') {
-        file[props.valueProps.url] = ''
+        file[mergeValueProps.value.url] = ''
     } else if (props.mode === 'append') {
         fileList.value.splice(idx, 1);
     } else {
@@ -574,8 +584,8 @@ const uploadFile = async (fileItem: any) => {
         throw new Error('上传失败，未获取到url，请检查responseSrcPath配置或者接口返回')
     }
     fileItem.status = 'success'
-    fileItem[props.valueProps.url] = url
-    fileItem[props.valueProps.name] = fileItem.name
+    fileItem[mergeValueProps.value.url] = url
+    fileItem[mergeValueProps.value.name] = fileItem.name
     emits("upload-success", fileItem, res, fileList.value);
     if (props.mode === 'append') {
         fileList.value.push(fileItem)

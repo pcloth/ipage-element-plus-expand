@@ -155,7 +155,7 @@ const item = {
   <div class="home">
     
     <div>
-        <EasyUpload  :beforeRemove="beforeRemove" :mode="mode" :disabled="disabled"  v-model="images" :limit="0">
+        <EasyUpload action="http://127.0.0.1:5000/upload" :beforeRemove="beforeRemove" :mode="mode" :disabled="disabled"  v-model="images" :limit="0">
             <!-- <template v-slot:upload-button="{upload}">
                 <el-button @click="upload">上传</el-button>
             </template> -->

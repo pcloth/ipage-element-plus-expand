@@ -1,6 +1,8 @@
 
 import { before } from 'node:test';
 import { imageTypes, createAccept } from './utils';
+import { config as $c } from '../../config';
+
 export default {
     /** 上传模式
      * append: 追加模式，每次上传都会追加到原有的文件列表中
@@ -8,14 +10,14 @@ export default {
      */
     mode: {
         type: String,
-        default: 'append'
+        default: $c.get('upload.mode')
     },
     /**
      * 是否允许缩放
      */
     useZoom:{
         type: Boolean,
-        default: true
+        default: $c.get('upload.useZoom')
     },
     /**
      * forceZoom: 是否强制缩放，如果为true，会强制缩放到zoomLimit的限制
@@ -23,7 +25,7 @@ export default {
      */
     forceZoom:{
         type: Boolean,
-        default: true
+        default: $c.get('upload.forceZoom')
     },
     /** 
      * 缩放限制，如果只传一个值，表示按它优先缩放，另一个值会按比例缩放
@@ -34,9 +36,9 @@ export default {
      */
     zoomLimit:{
         type: Object,
-        // default: ()=>({
-        //     height:800,
-        // })
+        default:()=>{
+            return $c.get('upload.zoomLimit')
+        }
     },
     /**
      * 缩放质量
@@ -44,7 +46,7 @@ export default {
      */
     quality:{
         type: Number,
-        default: 0.92
+        default: $c.get('upload.quality')
     },
     /**
      * 转换图片后缀, 默认不转换
@@ -52,14 +54,14 @@ export default {
      */
     convertExt:{
         type: String,
-        // default: 'webp'
+        default: $c.get('upload.convertExt')
     },
     /**
      * 是否使用水印
      */
     useWatermark:{
         type: Boolean,
-        default: true
+        default: $c.get('upload.useWatermark')
     },
     /**
      * 水印配置： 参考watermarkjs
@@ -69,7 +71,8 @@ export default {
      * @returns {Object} 返回canvas对象 或者 watermark.text.lowerLeft等方法的返回值
      */
     watermarkFunc:{
-        type: Function
+        type: Function,
+        default:$c.get('upload.convertExt')
     },
     /** 
      * 水印文字：默认会根据文件名生成水印文字平铺在图片上
@@ -79,21 +82,22 @@ export default {
      */
     watermarkText:{
         type: String,
-        default: 'watermark'
+        default: $c.get('upload.watermarkText')
     },
     /** 
      * 允许修改水印文字: 必须要允许剪裁的时候生效，会让用户输入水印文字
      */
     allowChangeWatermarkText:{
         type: Boolean,
-        default: true
+        default: $c.get('upload.allowChangeWatermarkText')
     },
     /**
      * 是否允许手动裁剪: 如果为true，那缩放和水印都在裁剪时候体现
+     * 如果为false，不会弹出剪裁框，这种情况下，`forceZoom`强制缩放参数=true的话，会直接缩放到zoomLimit的限制
      */
     useCropper:{
         type: Boolean,
-        default: true
+        default: $c.get('upload.useCropper')
     },
     modelValue: {
         type: [String, Array],
@@ -107,105 +111,94 @@ export default {
      */
     valueFormat: {
         type: String,
-        default: 'string'
+        default: $c.get('upload.valueFormat')
     },
     /** value无数据，但是又disabled的时候，会有一个暂无数据的提示 */
     noDataText: {
         type: String,
-        default: '暂无数据'
+        default: $c.get('upload.noDataText')
     },
     /**
      * 如果valueType为string，用什么符号分割多个文件路径
      */
     valueSplit: {
         type: String,
-        default: ','
+        default: $c.get('upload.valueSplit')
     },
     /** 当valueType=array时候，
      * 数组的每个元素是一个对象，包含url和name属性
      */
     valueProps: {
         type: Object,
-        default: () => ({
-            url: 'url', // 文件路径
-            name: 'name', // 如果没有name属性，会根据url属性获取文件名
-            type: 'type', // img,video,file
-            accept: 'accept', // 允许上传的文件类型，如果有它，优先使用它
-            poster: 'poster', // 视频封面，只有type为video的时候有效
-            controls: 'controls', // 视频在列表上是否显示控制条，只有type为video的时候有效
-            size: 'size', // 文件最大大小
-            minSize: 'minSize', // 文件最小尺寸
-            duration: 'duration', // 视频时长，只有type为video的时候有效
-        })
+        default: () => {}
     },
     /** 是否禁用组件响应 */
     disabled: {
         type: Boolean,
-        default: false
+        default: $c.get('upload.disabled')
     },
     /** 组件可以上传数量
      * 0: 无限制
      */
     limit: {
         type: Number,
-        default: 0
+        default: $c.get('upload.limit')
     },
     /** 文件尺寸限制，MB */
     size: {
         type: Number,
-        default: 0
+        default: $c.get('upload.size')
     },
     /** 文件最小尺寸限制，MB
      * 0: 无限制
      */
     minSize: {
         type: Number,
-        default: 0
+        default: $c.get('upload.minSize')
     },
     accept: {
         type: String,
-        default: createAccept(imageTypes)
+        default: $c.get('upload.accept')
     },
     /** 组件根节点 */
     uploadClass: {
         type: String,
-        default: 'easy-upload'
+        default: $c.get('upload.uploadClass')
     },
     /** 上传按钮class */
     uploadButtonClass: {
         type: String,
-        // default: 'el-button el-button--primary el-button--small'
-        default: 'easy-upload-review-item easy-upload-review-item--upload'
+        default: $c.get('upload.uploadButtonClass')
     },
     uploadButtonText: {
         type: String,
-        default: '点击上传'
+        default: $c.get('upload.uploadButtonText')
     },
     reviewClass: {
         type: String,
-        default: 'easy-upload-review-item'
+        default: $c.get('upload.reviewClass')
     },
     /** 陈列区，单box宽度 */
     itemWidth: {
         type: [Number,String],
-        default: 100
+        default: $c.get('upload.itemWidth')
     },
     /**
      * 陈列区，单box高度
      */
     itemHeight: {
         type: [Number,String],
-        default: 100
+        default: $c.get('upload.itemHeight')
     },
     /** 预览框和剪切框的层级 */
     zIndex: {
         type: Number,
-        default: 2500
+        default: $c.get('upload.zIndex')
     },
     /** 是否显示标题 */
     showItemTitle: {
         type: Boolean,
-        default: true
+        default: $c.get('upload.showItemTitle')
     },
     /** 删除前询问
      * @param {Object} file 当前删除的文件
@@ -215,6 +208,7 @@ export default {
      */
     beforeRemove: {
         type: Function,
+        default: $c.get('upload.beforeRemove')
     },
     /** 上传前询问
      * @param {Object} file 当前上传的文件
@@ -224,37 +218,42 @@ export default {
      */
     beforeUpload: {
         type: Function,
+        default: $c.get('upload.beforeUpload')
     },
     /** 上传url，如果使用这个，将使用内置上传fetch调用 */
     action: {
         type: String,
-        default: ''
+        default: $c.get('upload.action')
     },
     /**
      * 内置上传fetch调用的headers
      */
     headers: {
         type: Object,
-        default: () => ({})
+        default: () => {
+            return $c.get('upload.headers')
+        }
     },
     /**
      * 内置上传fetch调用的附加data
      */
     data: {
         type: Object,
-        default: () => ({})
+        default: () => {
+            return $c.get('upload.data')
+        }
     },
     /** 上传的文件字段名称 */
     name: {
         type: String,
-        default: 'file'
+        default: $c.get('upload.name')
     },
     /** 
      * 上传完成后，返回的数据里，文件路径的key，支持.分割
      */
     responseSrcPath: {
         type: String,
-        default: 'data.linkPath'
+        default: $c.get('upload.responseSrcPath')
     },
     /** 
      * 你自己封装上传接口，可以使用这个函数
@@ -262,6 +261,6 @@ export default {
      */
     uploadFunc: {
         type: Function,
-        default: null
+        default: $c.get('upload.uploadFunc')
     },
 };
