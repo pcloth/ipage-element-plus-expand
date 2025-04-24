@@ -98,7 +98,7 @@ RenderCellExtend/easyUpload5
 | valueFormat | String | 值格式类型：<br/>`string` - 单文件路径（多文件用分隔符）<br/>`array` - 文件路径数组<br/>`array<object>` - 对象数组（含 `url` 和 `name`等所有数据，template模式强制使用） | `'string'` |
 | noDataText | String | 无数据时的提示文本 | `'暂无数据'` |
 | valueSplit | String | `valueFormat` 为 `string` 时的文件路径分隔符 | `','` |
-| valueProps | Object | `valueFormat` 为 `array-object` 时的字段映射配置 | `{ url: 'url', name: 'name', type: 'type', accept: 'accept', poster: 'poster', controls: 'controls', size: 'size', minSize: 'minSize', duration: 'duration' }` |
+| valueProps | Object | `valueFormat` 为 `array<object>`或者`mode`=`template` 时的字段映射配置 | `{ url: 'url', name: 'name', type: 'type', accept: 'accept', poster: 'poster', controls: 'controls', size: 'size', minSize: 'minSize', duration: 'duration' }` |
 | disabled | Boolean | 是否禁用组件 | `false` |
 | limit | Number | 最大上传数量（0表示无限制） | `0` |
 | size | Number | 文件最大尺寸限制（单位：MB），当模板中有配置的时候，以模板优先 | `0` |
