@@ -95,7 +95,7 @@ RenderCellExtend/easyUpload5
 | useCropper | Boolean | 是否允许手动裁剪（裁剪时应用缩放和水印） | `true` |
 | ratioList | Array | 剪裁比例列表，自由剪裁value=0, 不剪裁value=-1,可以设置isDefault其中一个为默认值 |[{ label: "自由剪裁", value: 0, isDefault:true},{ label: "不剪裁", value: -1 },{ label: "正方形 1:1", value: 1 },{ label: "横屏 4:3", value: 4 / 3 },{ label: "横屏 16:9", value: 16 / 9 },{ label: "竖屏 3:4", value: 3 / 4 },{ label: "竖屏 9:16", value: 9 / 6 }]|
 | modelValue | [String, Array] | 绑定值 | `''` |
-| valueFormat | String | 值格式类型：<br/>`string` - 单文件路径（多文件用分隔符）<br/>`array` - 文件路径数组<br/>`array-object` - 对象数组（含 `url` 和 `name`） | `'string'` |
+| valueFormat | String | 值格式类型：<br/>`string` - 单文件路径（多文件用分隔符）<br/>`array` - 文件路径数组<br/>`array<object>` - 对象数组（含 `url` 和 `name`等所有数据，template模式强制使用） | `'string'` |
 | noDataText | String | 无数据时的提示文本 | `'暂无数据'` |
 | valueSplit | String | `valueFormat` 为 `string` 时的文件路径分隔符 | `','` |
 | valueProps | Object | `valueFormat` 为 `array-object` 时的字段映射配置 | `{ url: 'url', name: 'name', type: 'type', accept: 'accept', poster: 'poster', controls: 'controls', size: 'size', minSize: 'minSize', duration: 'duration' }` |

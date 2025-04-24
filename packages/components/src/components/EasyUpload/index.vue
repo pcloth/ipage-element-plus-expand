@@ -192,7 +192,7 @@ const getModelValue = () => {
 
 /** 输出modelValue */
 const outPutValue = () => {
-    const arr: any = [];
+    let arr: any = [];
     if (props.mode === 'template') {
         // 模板模式下，直接返回当前文件列表
         const outarr = fileList.value.map((item: any) => {
@@ -208,6 +208,13 @@ const outPutValue = () => {
         }
     });
     if (props.valueFormat === "array") {
+        emits("update:modelValue", arr);
+    } else if(props.valueFormat === "array<object>"){
+        // 追加模式的array-object，直接返回当前文件列表
+        arr = fileList.value.map((item: any) => {
+            const { raw, ...rest } = item
+            return rest
+        })
         emits("update:modelValue", arr);
     } else if (props.valueFormat === "string") {
         emits("update:modelValue", arr.join(props.valueSplit));

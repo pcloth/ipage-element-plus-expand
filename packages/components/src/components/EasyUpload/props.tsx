@@ -124,7 +124,7 @@ export default {
      * value 格式类型
      * string: 单个文件路径;多个文件路径用逗号分隔
      * array: 多个文件路径
-     * array-object: 数组的每个元素是一个对象，包含url和name属性
+     * array<object>: 数组的每个元素是一个对象，包含url和name属性
      */
     valueFormat: {
         type: String,

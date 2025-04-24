@@ -40,11 +40,15 @@ const beforeRemove = (file: any, idx: number) => {
     })
 }
 
+const uploadSuccess = (fileItem, res, fileList)=>{
+    console.log('uploadSuccess', fileItem, res, fileList)
+    fileItem.id = 'temp11'
+}
 </script>
 
 <template>
   <div class="home">
-    
+    {{ images }}
     <div>
         <EasyUpload action="http://127.0.0.1:5000/upload" :beforeRemove="beforeRemove" 
         :mode="mode" 
@@ -52,7 +56,9 @@ const beforeRemove = (file: any, idx: number) => {
         v-model="images" 
         :useWatermark="true"
         watermarkText="水印"
+        valueFormat="array-object"
         allowChangeWatermarkText
+        @upload-success="uploadSuccess"
         >
         </EasyUpload>
     </div>
