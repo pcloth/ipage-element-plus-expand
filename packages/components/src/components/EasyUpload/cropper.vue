@@ -323,13 +323,9 @@ const _onCropperInfo = async (e: any) => {
             if (w && h) {
                 // 如果两个都有，强制比例
                 ratio = +(w / h).toFixed(2);
-                console.log("changeCurrentRatio", ratio, currentRatio.value);
                 if (currentRatio.value !== ratio) {
                     currentRatio.value = ratio;
-                    console.log("changeCurrentRatio", ratio);
                     changeCurrentRatio(ratio);
-                    // const cropper = refCropper.value.cropper;
-                    // cropper.setAspectRatio(ratio);
                 }
                 currentWidth.value = w;
                 currentHeight.value = h;

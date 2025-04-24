@@ -207,7 +207,6 @@ const outPutValue = () => {
             arr.push(item[mergeValueProps.value.url]);
         }
     });
-    console.log('输出的文件列表', arr)
     if (props.valueFormat === "array") {
         emits("update:modelValue", arr);
     } else if (props.valueFormat === "string") {

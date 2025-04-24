@@ -83,7 +83,6 @@ export default {
         },
         /** 重绘表格，如果要控制嵌套列的隐藏，需要手动重绘 */
         reDarw() {
-            console.log("reDarw");
             this.showTable = false;
             setTimeout(() => {
                 this.showTable = true;

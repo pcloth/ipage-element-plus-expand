@@ -389,7 +389,6 @@ export default defineComponent({
                         }
                     },
                     render: (scope: any) => {
-                        console.log(scope,'row');
                         const row = scope.row;
                         const buttons = [];
                         let editButtonConf:any = {};

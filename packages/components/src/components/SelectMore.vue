@@ -304,7 +304,6 @@ export default {
                     data = getPathValue(keyPaths.data, res, []);
                     total = getPathValue(keyPaths.total, res, 0);
                 }
-                // console.log("data", data, total);
                 this.options = [...this.options, ...data];
                 this.total = total;
             } catch (error) {

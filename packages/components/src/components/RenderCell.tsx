@@ -234,7 +234,6 @@ const makeDom = ($props, $rcell, $context) => {
                     _index:index,
                     ...row
                 };
-                // console.log(_otions_, "optionDom", row);
                 return _otions_;
             });
         };
@@ -370,7 +369,6 @@ export default defineComponent({
     props: cellProps,
     directives: { ipageMask, ipageMoney },
     setup(props, context) {
-        // console.log(props.defaultProps, context, "RenderCell", this);
         const $rcell = getCurrentInstance()?.proxy;
         return () => makeDom(props, $rcell, context);
     }
