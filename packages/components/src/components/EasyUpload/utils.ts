@@ -195,7 +195,7 @@ export const makeWatermark = (file: any, text = "", func: Function | null = null
  * @param {Number} zoomLimit.height 高度限制
  * @returns {Promise} 返回一个promise
  */
-export const zoomImage = (src: string|Blob, zoomLimit: { width: number; height: number }) => {
+export const zoomImage = (src: string|Blob, zoomLimit: { width?: number; height?: number }={}) => {
     return new Promise((resolve, reject) => {
         const img = new Image();
         if(typeof src === 'string'){

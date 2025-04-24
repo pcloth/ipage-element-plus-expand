@@ -1,25 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-// const images = ref([
-//     {
-//         url: "https://fakeimg.pl/250x100?text=Hello1.pdf",
-//         name: "Hello1.jpg",
-//         accept: ".pdf,.jpg",
-//         // type: "file",
-//         // size:0.1
-//     },
-//     {
-//         url: "http://192.168.2.236:81/v1/file/20250114/2025011419575000001959.jpg",
-//         name: "Hello2.jpg"
-//     },
-//     {
-//         url:"https://media.w3.org/2010/05/sintel/trailer.mp4",
-//         name: "Hello3.mp4",
-//         // poster: "https://fakeimg.pl/250x100?text=Hello3.jpg"
-//         controls: false
-//     }
-//     ])
-const images = ref("")
+const images = ref([ { "uuid": "A2C397FC1CG1", "name": "pexels-pixabay-50594.jpg", "url": "http://127.0.0.1:5000/uploads/pexels-pixabay-50594.jpg", "status": "success", "accept": ".png,.jpg,.jpeg", "error": "", "type": "img", "id": "temp11" }, { "uuid": "G50267199D8D", "name": "pexels-pixabay-50594.jpg", "url": "http://127.0.0.1:5000/uploads/pexels-pixabay-50594.jpg", "status": "success", "accept": ".png,.jpg,.jpeg", "error": "", "type": "img", "id": "temp11" } ])
+// const images = ref("")
 const disabled = ref(false)
 const mode = ref('append')
 const doDisabled = () => {
@@ -56,7 +38,7 @@ const uploadSuccess = (fileItem, res, fileList)=>{
         v-model="images" 
         :useWatermark="true"
         watermarkText="水印"
-        valueFormat="array-object"
+        valueFormat="array<object>"
         allowChangeWatermarkText
         @upload-success="uploadSuccess"
         >

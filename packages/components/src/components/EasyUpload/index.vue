@@ -141,6 +141,9 @@ const getModelValue = () => {
     if (!props.modelValue) return arr;
     if (props.valueFormat === "array") {
         arr = props.modelValue;
+    } else if(props.valueFormat === "array<object>"){
+        // 追加模式的array-object，直接返回当前文件列表
+        arr = props.modelValue
     } else if (props.valueFormat === "string") {
         if (!props.modelValue) {
             arr = [];
@@ -321,7 +324,7 @@ const hanldeClickUpload = (item: any = null) => {
     }
     currentItem.value = item ? item : createNewItem()
     currentItem.value.status = 'load'
-    let accept = props.accept;
+    let accept = props.accept||"*.*";
     if (props.mode === 'template') {
         if (item[mergeValueProps.value.accept]) {
             accept = item[mergeValueProps.value.accept]
@@ -545,7 +548,7 @@ const uploadLoading = ref(false)
 const uploadFile = async (fileItem: any) => {
     // 上传文件
     const formData = new FormData();
-    formData.append(props.name, fileItem.raw, fileItem.name);
+    formData.append(props.name||"", fileItem.raw, fileItem.name);
     // 上传前检查
     if (props.beforeUpload) {
         const status = await promisify(props.beforeUpload, fileItem)

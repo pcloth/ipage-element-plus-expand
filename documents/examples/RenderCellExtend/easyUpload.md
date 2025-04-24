@@ -98,7 +98,7 @@ RenderCellExtend/easyUpload5
 | valueFormat | String | 值格式类型：<br/>`string` - 单文件路径（多文件用分隔符）<br/>`array` - 文件路径数组<br/>`array<object>` - 对象数组（含 `url` 和 `name`等所有数据，template模式强制使用） | `'string'` |
 | noDataText | String | 无数据时的提示文本 | `'暂无数据'` |
 | valueSplit | String | `valueFormat` 为 `string` 时的文件路径分隔符 | `','` |
-| valueProps | Object | `valueFormat` 为 `array<object>`或者`mode`=`template` 时的字段映射配置 | `{ url: 'url', name: 'name', type: 'type', accept: 'accept', poster: 'poster', controls: 'controls', size: 'size', minSize: 'minSize', duration: 'duration' }` |
+| valueProps | Object | `valueFormat` 为 `array<object>`或者`mode`=`template` 时的字段映射配置 | `{ url: 'url', name: 'name', type: 'type', accept: 'accept', poster: 'poster', controls: 'controls', size: 'size', minSize: 'minSize' }` |
 | disabled | Boolean | 是否禁用组件 | `false` |
 | limit | Number | 最大上传数量（0表示无限制） | `0` |
 | size | Number | 文件最大尺寸限制（单位：MB），当模板中有配置的时候，以模板优先 | `0` |
@@ -121,6 +121,21 @@ RenderCellExtend/easyUpload5
 | responseSrcPath | String | 上传响应中文件路径的字段路径（支持 `.` 分割） | `'data.linkPath'` |
 | uploadFunc | Function | 自定义上传函数（覆盖内置上传） | 无 |
 
+
+### valueProps 配置
+:::tip
+当用户自己的模板和内置数据的配置不相同的时候，可以避免用户清洗数据，用`valueProps`来重新指定模板中的字段值
+:::
+| 属性 | 类型 | 说明 | 默认值 |
+|--|--|--|--|
+|url|String|文件路径|`url`|
+|name|String|文件名称|`name`|
+|type|String|文件类型，当没有accept时，用type所代表的默认类型,value可选为`img`,`video`,其他都会认为`accept="*.*"`|`type`|
+|accept|String|当前可接收的文件字段|`accept`|
+|poster|String|当前位置如果是video，是否用这个字段上的封面图|`poster`|
+|controls|String|当前位置如果是video，是否在列表上展示控制栏|`controls`|
+|size|String|当前位置的最大文件尺寸所指定的key|`size`|
+|minSize|String|当前位置的最小文件尺寸所指定的key|`minSize`|
 
 ## Events 事件
 |事件|说明|参数|
