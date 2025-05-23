@@ -37,8 +37,9 @@ RenderCellExtend/exportButton
 |splitCount|Number|分页查询，每页的数据量|100|
 |splitFileCount|Number|每多少条分割一次文件|10000|
 |fileMode|String|auto=根据splitFileCount分割文件，直接下载;zip=根据splitFileCount 分割文件，然后打包成zip；full=不分割文件，直接下载|auto|
+|xlsxProps|Object|传递给底层xlsx库的参数，用来实现合并单元格等高级功能|无|
 |beforeAction|Function|执行导出功能前的方法，会等待这个方法完成|无|
-|beforeCreateExcel|Function|创建excel前的方法，会把整体的数据放出来|无|
+|beforeCreateExcel|Function、AsyncFunction|创建excel前的方法，会把整体的数据放出来，你也可以再这里修改options的内容，支持异步|无|
 |delParamsEmpty|Boolean|是否删除查询空参数|true|
 
 

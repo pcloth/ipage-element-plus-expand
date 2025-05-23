@@ -1,5 +1,11 @@
 ## 更新日志
 
+
+#### 2025-05-23 版本号 `0.0.26`
+1、导出组件添加了`xlsxProps`参数
+2、导出组件`beforeCreateExcel`参数支持异步方法
+
+
 #### 2025-04-24 版本号 `0.0.25`
 1、移除一些调试console
 2、上传组件的valueFormat=`array<object>`模式的bug修复；

@@ -26,7 +26,11 @@
                                 title:'数值',
                                 key:'value'
                             }
-                        ]
+                        ],
+                        beforeCreateExcel:(data,options)=>{
+                            options.xlsxProps['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }]
+                            console.log(data,options,'>>>>beforeCreateExcel')
+                        }
                     },
                     on:{
                         clickExport:(loadData)=>{
