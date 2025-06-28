@@ -10,5 +10,13 @@ export default defineConfig({
             '@': resolve(__dirname, './src'),
             '@compiled': resolve(__dirname, '../../packages/components/src')
         }
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                silenceDeprecations: ["legacy-js-api", "import"],
+                api: "modern-compiler",
+            }
+        }
     }
 })

@@ -52,5 +52,13 @@ export default defineConfig({
             entryRoot: './src',
             outDir: '../../dist/es'
         }),
-    ]
+    ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                silenceDeprecations: ["legacy-js-api", "import"],
+                api: "modern-compiler",
+            }
+        }
+    }
 })
