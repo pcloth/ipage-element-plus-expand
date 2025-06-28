@@ -76,47 +76,47 @@ export default {
         /** 是否显示表单按钮 */
         showSubmitButton: {
             type: Boolean,
-            default: $c.get("showSubmitButton")
+            default: () => $c.get("showSubmitButton")
         },
         submitTitle: {
             type: String,
-            default: $c.get("submitTitle")
+            default: () => $c.get("submitTitle")
         },
         cancelTitle: {
             type: String,
-            default: $c.get("cancelTitle")
+            default: () => $c.get("cancelTitle")
         },
         /** 表单按钮的配置 */
         submitButtonProps: {
             type: Object,
             default() {
-                return $c.get("submitButtonProps");
+                return () => $c.get("submitButtonProps");
             }
         },
         /** 是否显示重置按钮 */
         showCancelButton: {
             type: Boolean,
-            default: $c.get("showCancelButton")
+            default: () => $c.get("showCancelButton")
         },
         /** 重置按钮的配置 */
         cancelButtonProps: {
             type: Object,
             default() {
-                return $c.get("cancelButtonProps");
+                return () => $c.get("cancelButtonProps");
             }
         },
         /** 新版本的提交按钮参数 */
         submitButton: {
             type: [Object, Boolean],
             default() {
-                return $c.get("formSubmitButton");
+                return () => $c.get("formSubmitButton");
             }
         },
         /** 新版本的取消按钮参数 */
         cancelButton: {
             type: [Object, Boolean],
             default() {
-                return $c.get("formCancelButton");
+                return () => $c.get("formCancelButton");
             }
         },
         /** 表单项目 */
@@ -132,7 +132,7 @@ export default {
         },
         submitPreventRepeat: {
             type: Boolean,
-            default: $c.get("submitPreventRepeat")
+            default: () => $c.get("submitPreventRepeat")
         },
         loading: {
             type: Boolean,

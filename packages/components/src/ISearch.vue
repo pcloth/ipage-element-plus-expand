@@ -105,7 +105,7 @@ export default {
         },
         isFormItem: {
             type: Boolean,
-            default: $c.get("search.isFormItem")
+            default: () => $c.get("search.isFormItem")
         },
         // 重置按钮按下要不要重新搜索
         resetReQuery: {
@@ -194,23 +194,23 @@ export default {
         },
         autoQuery: {
             type: Boolean,
-            default: $c.get("search.autoQuery")
+            default: () => $c.get("search.autoQuery")
         },
         /** 强制所有搜索项目进more 比如在有些手机尺寸上可以用这个控制 */
         allinMore: {
             type: Boolean,
-            default: $c.get("allinMore")
+            default: () => $c.get("allinMore")
         },
         className: {
             type: String,
-            default: $c.get("class").ISearchRoot
+            default: () => $c.get("class").ISearchRoot
         },
         /** 
          * 是否单输入框回车搜索
          */
         singleInput: {
             type: Boolean,
-            default: $c.get("search.singleInput")
+            default: () => $c.get("search.singleInput")
         }
     },
     computed: {

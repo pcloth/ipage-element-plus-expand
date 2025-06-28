@@ -176,7 +176,9 @@ export default {
         },
         beforeCreateExcel: {
             type: Function,
-            default: () => {}
+        },
+        customizeCreateExcel: {
+            type: Function,
         },
         // 是否要删除queryParams查询为空的字段
         delParamsEmpty: {
@@ -317,7 +319,7 @@ export default {
             if (this.beforeAction) {
                 await this.beforeAction();
             }
-            const option = this.getOptions();
+            let option = this.getOptions();
             const { sheetFilter, sheetHeader, columnWidths, fileName } = option;
             this.loading = true;
             try {
@@ -359,12 +361,24 @@ export default {
             }
 
             this.allData = allData;
+            if(this.customizeCreateExcel){
+                return this.customizeCreateExcel(allData, option, ()=>{
+                    this.handleExportSuccess();
+                });
+            }
             if(this.beforeCreateExcel){
                 // 如果beforeCreateExcel是异步的，就await一下
-                if(this.beforeCreateExcel.constructor.name === 'AsyncFunction'){
-                    await this.beforeCreateExcel(allData, option);
-                }else{
-                    this.beforeCreateExcel(allData, option);
+                try {
+                    const resp = await this.beforeCreateExcel(allData, option);
+                    if(resp && resp.data){
+                        allData = resp.data;
+                    }
+                    if(resp && resp.options){
+                        option = resp.options;
+                    }
+                } catch (error) {
+                    this.handleExportError(error);
+                    return;
                 }
             }
             if (splitFile) {
