@@ -5,7 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
     build: {
-        target: 'modules',
+        target: 'es2015',
         outDir: 'es',
         emptyOutDir: false,
         minify: false,
