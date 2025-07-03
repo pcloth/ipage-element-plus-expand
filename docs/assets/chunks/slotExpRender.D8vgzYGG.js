@@ -1,1 +1,0 @@
-import{G as r,a as n,_ as s,C as a,b as l,o as c}from"./framework.CqhmjJAB.js";const u={data(){return{item:{slot:"render",isFormItem:!1,render:e=>(console.log(e,"loadData"),r("span",null,[n("这是一个自定义渲染")]))}}}};function d(e,p,m,_,o,i){const t=a("RenderCell");return c(),l(t,{item:o.item},null,8,["item"])}const E=s(u,[["render",d]]);export{E as default};

@@ -128,6 +128,7 @@
                         return true
                     },
                     formProps:{
+                        gutter: 30,
                         submitFunc:async (data)=>{
                             // 发起保存请求
                             return true

@@ -20,6 +20,7 @@ Bussiness/IForm
 |formProps|object|传递给el-form的props参数|配置项`formProps`|
 |formOn|object|传递给el-form的事件|配置项`formOn`|
 |formRules|object|表单校验规则，直接传递给el-form组件|{}|
+|gutter|number|el-row的参数，用来分割表单项目|配置项`gutter`默认0|
 |expandButtons|array|扩展按钮的`RenderCell`组件配置|[]|
 |submitButton|object,boolean|false=不显示提交按钮，object=显示并控制提交按钮的`RenderCell`组件配置|配置项`submitButton`|
 |cancelButton|object,boolean|false=不显示取消按钮，object=显示并控制取消按钮的`RenderCell`组件配置|配置项`cancelButton`|

@@ -1,7 +1,7 @@
 <template>
     <el-form ref="formRef" :model="form" :class="formClass" v-bind="formProps || {}" v-on="formOn || {}"
         :rules="formRules" @submit.prevent="nativeFormSubmission" v-loading="loading">
-        <el-row>
+        <el-row :gutter="gutter">
             <template v-for="v in formItems" :key="v.id">
                 <RenderCell v-model="form[v.id]" :item="v" :allItems="formItems" :formData="form" :qData="qData"
                     :isFormItem="true" defaultSlot="input" :defaultSpan="12" />
@@ -35,6 +35,10 @@ export default {
             default() {
                 return $c.get("class").IFormRoot || $c.get("formClass");
             }
+        },
+        gutter: {
+            type: Number,
+            default: ()=>$c.get('gutter')||0
         },
         /** 表单配置 */
         formProps: {
