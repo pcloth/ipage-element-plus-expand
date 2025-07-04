@@ -32,13 +32,11 @@ export default {
         },
         formClass: {
             type: String,
-            default() {
-                return $c.get("class").IFormRoot || $c.get("formClass");
-            }
+            default: () => $c.get("class").IFormRoot || $c.get("formClass")
         },
         gutter: {
             type: Number,
-            default: ()=>$c.get('gutter')||0
+            default: () => $c.get('gutter')
         },
         /** 表单配置 */
         formProps: {
@@ -49,9 +47,7 @@ export default {
         },
         formOn: {
             type: Object,
-            default() {
-                return $c.get("formOn");
-            }
+            default: () => $c.get("formOn")
         },
         /** 表单校验规格配置 */
         formRules: {
@@ -63,9 +59,7 @@ export default {
         /** 扩展按钮列表 */
         expandButtons: {
             type: Array,
-            default() {
-                return $c.get("expandButtons");
-            }
+            default: () => $c.get("expandButtons")
         },
         /** 默认的表单配置 */
         formOption: {
@@ -94,7 +88,7 @@ export default {
         submitButtonProps: {
             type: Object,
             default() {
-                return () => $c.get("submitButtonProps");
+                return $c.get("submitButtonProps");
             }
         },
         /** 是否显示重置按钮 */
@@ -106,21 +100,21 @@ export default {
         cancelButtonProps: {
             type: Object,
             default() {
-                return () => $c.get("cancelButtonProps");
+                return $c.get("cancelButtonProps");
             }
         },
         /** 新版本的提交按钮参数 */
         submitButton: {
             type: [Object, Boolean],
             default() {
-                return () => $c.get("formSubmitButton");
+                return $c.get("formSubmitButton");
             }
         },
         /** 新版本的取消按钮参数 */
         cancelButton: {
             type: [Object, Boolean],
             default() {
-                return () => $c.get("formCancelButton");
+                return $c.get("formCancelButton");
             }
         },
         /** 表单项目 */
