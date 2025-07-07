@@ -83,7 +83,7 @@
     </div>
 </template>
 <script setup lang="tsx">
-import { defineProps, ref, computed, onMounted } from 'vue'
+import { defineProps, ref, watch, computed } from 'vue'
 import { config as $c } from '../../config'
 
 import props_ from './props'
@@ -272,12 +272,12 @@ const mergeUploadButtonClass = computed((file: any) => {
     }
 });
 
-
-
-
-onMounted(() => {
+watch(() => props.modelValue, (newVal) => {
+    // 监听modelValue变化
     fileList.value = getModelValue();
-});
+}, { immediate: true });
+
+
 
 const showUploadButton = computed(() => {
     let status = props.disabled ? false : true

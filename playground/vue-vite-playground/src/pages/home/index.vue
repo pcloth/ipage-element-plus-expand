@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const images = ref([
-  {
-    "fileId": "1915232648825987074",
-    "httpPath": "http://192.168.5.141:9880//v1/file/20250424/2025042410334100001528.jpg"
-  }
+{
+            "fileId": "1915232648825987074",
+            "httpPath": "https://zfjg.cq119.gov.cn:10040/api/file/1434933828294656/open"
+        }
 ])
 // const images = ref("")
 const disabled = ref(false)
 const mode = ref('append')
 const doDisabled = () => {
     disabled.value = !disabled.value
+}
+
+const testBtn = ()=>{
+    images.value = [
+        {
+            "fileId": "1915232648825987074",
+            "httpPath": "https://zfjg.cq119.gov.cn:10040/api/file/1434933828294656/open"
+        }
+    ]
 }
 
 const changeMode = () => {
@@ -54,6 +63,7 @@ const uploadSuccess = (fileItem, res, fileList)=>{
     </div>
     <el-button @click="doDisabled">切换disabled {{ disabled }}</el-button>
     <el-button @click="changeMode">切换模式 {{ mode }}</el-button>
+    <el-button @click="testBtn">测试按钮</el-button>
     <!-- <RenderCell v-model="rangeValue" :item="item"/> -->
   </div>
 </template>
