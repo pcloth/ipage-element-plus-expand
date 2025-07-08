@@ -85,7 +85,7 @@ RenderCellExtend/easyUpload5
 | useZoom | Boolean | 是否允许缩放 | `true` |
 | forceZoom | Boolean | 是否强制缩放（当 `useZoom` 为 `true` 时生效） | `false` |
 | zoomFunc | Function | 当强制缩放的时候，使用自己的缩放方法，接收参数是fileBolb,zoomLimit | `undefined` |
-| zoomLimit | Object | 缩放限制：<br/>- 单值：优先按该值缩放，另一值按比例<br/>- 双值：裁剪时按限制剪裁<br/>- 未裁剪时按最小值缩放 | 无 |
+| zoomLimit | Object | `{width:number,height:number}`缩放限制：<br/>- 单值：优先按该值缩放，另一值按比例，比如`{width:800}`,表示`宽度缩放到800px`，高度根据比例自动计算。<br/>- 双值：裁剪时按限制剪裁<br/>- 未裁剪时按最小值缩放 | 无 |
 | quality | Number | 缩放质量（0-1之间的数字） | `0.92` |
 | convertExt | String | 转换图片后缀（支持 `jpg`/`webp`/`png`） | 无 |
 | useWatermark | Boolean | 是否使用水印 | `false` |
