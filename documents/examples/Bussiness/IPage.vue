@@ -1,5 +1,6 @@
 <template>
     <IPage 
+        @resetFields="resetFields"
         v-bind="ipageProps" 
     />
 </template>
@@ -139,6 +140,9 @@
             }
         },
         methods:{
+            resetFields(form){
+                console.log('resetFields',form)
+            },
             async queryFunc(params){
                 return new Promise((resolve, reject) => {
                     const records = []
