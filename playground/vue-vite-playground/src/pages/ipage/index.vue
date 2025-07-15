@@ -54,6 +54,14 @@ const formItems = ref<any[]>([]);
 
 /** 其他页面参数 */
 const otherProps = ref<Record<string, any>>({
+    beforeEditOpenFunc: (ld) => {
+        console.log('beforeEditOpenFunc', ld)
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve({...ld.data})
+            }, 1000)
+        })
+    },
     editButton: {
         tip: '编辑测试',
         show: (loadata) => {

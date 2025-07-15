@@ -199,19 +199,19 @@ export default defineComponent({
             type: Object,
             default: () => ({})
         },
+        beforeAddOpenFunc:{
+            type: Function
+        },
         // 新增表单打开前接口
         befoceAddOpenFunc: {
             type: Function
-            // default: (loadData) => {
-            //     return Promise.resolve({...loadData.data});
-            // },
         },
         // 编辑表单打开前接口
         befoceEditOpenFunc: {
             type: Function
-            // default: (loadData) => {
-            //     return Promise.resolve({...loadData.data});
-            // },
+        },
+        beforeEditOpenFunc: {
+            type: Function
         },
         deleteButton: {
             type: [Object , Boolean] as PropType<CellItemType|Boolean>,
@@ -565,11 +565,17 @@ export default defineComponent({
             if (type === "add") {
                 // @ts-ignore
                 this.dialogTitle = this.addButton?.dialogTitle || "新增";
-                openApi = this.befoceAddOpenFunc;
+                openApi = this.beforeAddOpenFunc || this.befoceAddOpenFunc;
+                if(this.befoceAddOpenFunc){
+                    console.warn('befoceAddOpenFunc已废弃，请使用beforeAddOpenFunc');
+                }
             } else if (type === "edit") {
                 // @ts-ignore
                 this.dialogTitle = this.editButton?.dialogTitle || "编辑";
-                openApi = this.befoceEditOpenFunc;
+                openApi = this.beforeEditOpenFunc || this.befoceEditOpenFunc;
+                if(this.befoceEditOpenFunc){
+                    console.warn('befoceEditOpenFunc已废弃，请使用beforeEditOpenFunc');
+                }
             }
             if (openApi) {
                 this.showDialog = true;

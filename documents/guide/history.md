@@ -1,5 +1,8 @@
 ## 更新日志
 
+#### 2025-07-14 版本号 `0.0.32`
+1、修复`beforeEditOpenFunc`和`beforeAddOpenFunc`拼写错误，兼容旧模式到后续几个版本，请尽快调整
+
 #### 2025-07-10 版本号 `0.0.31`
 1、修复ipage中isearch组件的resetFields没有传参数来的bug
 
