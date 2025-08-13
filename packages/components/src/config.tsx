@@ -4,7 +4,6 @@ import { Search, RefreshRight, Plus } from "@element-plus/icons-vue";
 import { imageTypes, createAccept } from './components/EasyUpload/utils';
 
 import type { IPageElementPlusExpandConfigType } from "./type.d";
-import { before } from "node:test";
 export const config: IPageElementPlusExpandConfigType = {
     options: {
         class: {
