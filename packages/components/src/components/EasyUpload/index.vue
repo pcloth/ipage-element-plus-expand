@@ -149,13 +149,15 @@ const getModelValue = () => {
             arr = [];
         } else if (typeof props.modelValue === "string") {
             if (testIsBase64(props.modelValue)) {
+                const uuid_ = getUuid(12, 17);
                 return [
                     {
-                        uuid: getUuid(12, 17),
-                        name: "base64图片" + getUuid(4, 17) + ".png",
-                        src: props.modelValue,
+                        uuid: uuid_,
+                        [mergeValueProps.value.name]: `base64图片${uuid_}.png`,
+                        [mergeValueProps.value.url]: props.modelValue,
                         status: "success",
-                        isBase64: true
+                        isBase64: true,
+                        [mergeValueProps.value.type]: "img"
                     }
                 ];
             }
@@ -174,9 +176,9 @@ const getModelValue = () => {
     arr = arr.map((item: any) => {
         if (typeof item === 'object') {
             if (!item.uuid) item.uuid = getUuid(12, 17);
-            if (!item.name) item.name = getName(item[mergeValueProps.value.url]);
+            if (!item[mergeValueProps.value.name]) item[mergeValueProps.value.name] = getName(item[mergeValueProps.value.url]);
             if (!item.status) item.status = "success";
-            if (!item.type) item.type = fileType(item[mergeValueProps.value.url]);
+            if (!item[mergeValueProps.value.type]) item[mergeValueProps.value.type] = fileType(item[mergeValueProps.value.url]);
             return item
         }
         const obj = fileList.value.find((it: any) => it[mergeValueProps.value.url] === item);
@@ -187,7 +189,7 @@ const getModelValue = () => {
             [mergeValueProps.value.name]: name,
             [mergeValueProps.value.url]: item,
             status: "success",
-            type: fileType(item)
+            [mergeValueProps.value.type]: fileType(item)
         };
     });
     return arr;

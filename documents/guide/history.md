@@ -1,5 +1,9 @@
 ## 更新日志
 
+#### 2025-08-13 版本号 `0.0.33`
+1、修复element-plus升级到2.10.5以上后，`cascader`组件的props.options造成组件modelValue异常的bug
+2、`cascader`组件也支持了options方法参数，用法和`select`组件一样
+
 #### 2025-07-14 版本号 `0.0.32`
 1、修复`beforeEditOpenFunc`和`beforeAddOpenFunc`拼写错误，兼容旧模式到后续几个版本，请尽快调整
 

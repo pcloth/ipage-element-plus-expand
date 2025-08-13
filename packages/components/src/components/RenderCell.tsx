@@ -217,7 +217,10 @@ const makeDom = ($props, $rcell, $context) => {
         }
     }
 
-    if (!slots.default && item._i_options) {
+    if (['cascader'].includes(slot) && item._i_options) {
+        // 有一些组件的options不是渲染到默认插槽的，是直接丢给props用的
+        props.options = item._i_options;
+    } else if (!slots.default && item._i_options) {
         // 如果外部传入default，就使用默认渲染
         slots.default = () => {
             if (!Array.isArray(item._i_options)) {
@@ -242,7 +245,16 @@ const makeDom = ($props, $rcell, $context) => {
     // 寻找on里面的事件，给其添加荷载数据
     const onEvent = toEventsAppendParams(on, loadData, true);
     // 寻找props里面的事件，给其添加荷载数据
-    const onProps = toEventsAppendParams(props, loadData, false);
+    let onProps:any = {}
+    if(props.options && Array.isArray(props.options)){
+        // element-plus@2.10.5版本开始，cascader组件如果被我toEventsAppendParams递归重置，会造成modelValue无法正确响应
+        // 这里做一个豁免处理，后续找到更好的再优化
+        const {options, ...others} = props;
+        onProps = toEventsAppendParams(others, loadData, false);
+        onProps.options = options;
+    }else{
+        onProps = toEventsAppendParams(props, loadData, false);
+    }
     // 给插槽方法添加荷载数据
     if (domConfig.tipIsDefault && tip && !slots.default) {
         // tip转入default插槽
