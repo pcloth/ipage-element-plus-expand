@@ -2,14 +2,14 @@
     <div :class="props.uploadClass">
         <slot :fileList="fileList" name="default">
             <template v-for="file, idx in fileList" :key="file.uuid">
-                <div class="easy-upload-review-item-outside">
+                <div class="easy-upload-review-item-outside" v-loading="file?.status === 'uploading'">
                     <div :style="mergeReviewItemStyle" :class="mergeReviewClass(file)">
                         <!-- 如果是template模式下，如果没有图片，显示上传按钮 -->
                         <template v-if="!props.disabled && props.mode === 'template' && !file[mergeValueProps.url]">
                             <slot name="upload-button" :upload="hanldeClickUpload" :file="file">
                                 <div :class="[props.uploadButtonClass, 'template-upload']" :style="mergeReviewItemStyle"
                                     @click.stop="hanldeClickUpload(file)">
-                                    + 点击上传
+                                    + {{ props.uploadButtonText }}
                                 </div>
                             </slot>
                         </template>
@@ -35,10 +35,6 @@
                                 class="easy-upload-review-item-mask-btn-icon" src="./images/delete-fill.png"></img>
                         </div>
 
-                        <div class="easy-upload-review-item-progress">
-                            <!-- 上传进度 -->
-                        </div>
-
                     </div>
                     <slot name="title" :file="file" :index="idx" :fileList="fileList">
                         <div v-if="props.showItemTitle && !file.error" class="easy-upload-review-item-title"
@@ -62,7 +58,7 @@
             </template>
         </slot>
         <slot v-if="showUploadButton" name="upload-button" :upload="hanldeClickUpload" :file="null">
-            <div class="easy-upload-review-item-outside">
+            <div class="easy-upload-review-item-outside" v-loading="currentItem?.status === 'uploading'">
                 <div :class="mergeUploadButtonClass(currentItem)" :style="mergeReviewItemStyle"
                     @click.stop="hanldeClickUpload()">
                     + {{ props.uploadButtonText }}
@@ -83,7 +79,7 @@
     </div>
 </template>
 <script setup lang="tsx">
-import { defineProps, ref, watch, computed } from 'vue'
+import { defineProps, ref, watch, computed, nextTick } from 'vue'
 import { config as $c } from '../../config'
 
 import props_ from './props'
@@ -536,10 +532,6 @@ const prepareToUpload = async (fileItem: any) => {
         canvas.toBlob((blob) => {
             fileItem.raw = blob
             fileItem.status = 'uploading'
-            // const img = document.createElement('img')
-            // img.src = URL.createObjectURL(fileBlob)
-            // console.log('最后处理完的图片', fileBlob, convertType, fileItem)
-            // document.body.appendChild(img)
             uploadFile(fileItem)
         }, convertType, props.quality)
     }
@@ -560,6 +552,9 @@ const uploadFile = async (fileItem: any) => {
     if (fileItem.status === 'error') {
         return
     }
+    fileItem.status = 'uploading'
+    console.log('uploading', fileItem)
+    await nextTick()
     let res = null
     if (props.uploadFunc) {
         uploadLoading.value = true

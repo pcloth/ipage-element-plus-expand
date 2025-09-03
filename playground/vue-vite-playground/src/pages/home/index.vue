@@ -51,7 +51,7 @@ const uploadSuccess = (fileItem, res, fileList)=>{
         :mode="mode" 
         :disabled="disabled"  
         v-model="images" 
-        :useWatermark="true"
+        :useCropper="false"
         watermarkText="水印"
         valueFormat="array<object>"
         allowChangeWatermarkText
