@@ -24,7 +24,7 @@
             </slot>
         </div>
 
-        <el-dialog v-bind="mergeDialogProps" v-model="showDialog">
+        <el-dialog v-bind="mergeDialogProps" :title="dialogTitle" v-model="showDialog">
             <slot name="dialog-header" />
             <slot name="dialog-content" :row="currentRow">
                 <!-- 加一个骨架屏幕，等详情接口加载完后在进行渲染表单，避免有些组件初始化时候参数有问题 -->
