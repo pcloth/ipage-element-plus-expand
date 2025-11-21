@@ -40,10 +40,22 @@ Bussiness/IPage
 | formRules | `Object` | `() => ({})` | 表单校验规则 |
 | beforeAddOpenFunc | `Function` | - | 新增弹窗打开前回调函数 |
 | beforeEditOpenFunc | `Function` | - | 编辑弹窗打开前回调函数 |
-| deleteButton | `CellItemType\|Boolean` | `() => ({})` | 删除按钮配置 |
+| deleteButton | `CellItemType\|Boolean` | `() => ({})` | 删除按钮配置，这里除了`CellItemType`的配置外，多了一个`deleteConf`的配置项，它可以控制删除前后的提示行为和文字 |
 | deleteFunc | `Function\|Boolean` | `false` | 删除操作函数 |
 | className | `String` | `$c.get("class").IPageRoot` | 根容器类名 |
 | reloadForm | `Boolean` | `false` | 是否在打开时重绘表单 |
+
+### deleteConf 配置项目
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `askDeleteTitle` | `String` | `"提示"` | 弹窗标题 |
+| `askDeleteMessage` | `String` | `"此操作将永久删除该数据, 是否继续?"` | 弹窗内容 |
+| `askDeleteConfirmButtonText` | `String` | `"确定"` | 确认按钮文案 |
+| `askDeleteCancelButtonText` | `String` | `"取消"` | 取消按钮文案 |
+| `showAskDeleteDialog` | `Boolean` | `true` | 是否显示删除前确认弹窗 |
+| `showDeleteSuccessMessage` | `Boolean` | `true` | 删除成功后是否显示提示信息 |
+| `deleteSuccessMessage` | `String` | `"删除成功"` | 删除成功提示文本 |
 
 ## Methods 方法
 

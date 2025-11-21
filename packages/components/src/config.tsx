@@ -134,6 +134,16 @@ export const config: IPageElementPlusExpandConfigType = {
         deleteButton: {
             id: "delete",
             tip: "删除",
+            // @ts-ignore // 这里处理一下删除提示等信息
+            deleteConf:{
+                askDeleteTitle: "提示",//"此操作将永久删除该数据, 是否继续?",
+                askDeleteMessage: "此操作将永久删除该数据, 是否继续?",
+                askDeleteConfirmButtonText: "确定",
+                askDeleteCancelButtonText: "取消",
+                showAskDeleteDialog: true,
+                showDeleteSuccessMessage: true,
+                deleteSuccessMessage: "删除成功",
+            }
         },
         /** 默认的refreshButton按钮RenderCell组件数据
          * 注意：IPage在使用refreshButton的时候，会再叠加一个on:{click:fn}的事件

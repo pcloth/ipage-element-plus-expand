@@ -479,6 +479,12 @@ export default defineComponent({
             );
             return obj;
         },
+        mergeDeleteButton(): CellItemType {
+            return deepAssign(
+                this.defaultDeleteButton,
+                this.deleteButton || {}
+            );
+        },
         realPageParams(): any {
             // 根据search.mode参数配置分页参数
             const searchOptions = $c.get("search");
@@ -651,18 +657,29 @@ export default defineComponent({
         },
         async askDelete(loadData: LoadDataType) {
             if (this.deleteFunc) {
-                await ElMessageBox.confirm("此操作将永久删除该数据, 是否继续?", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    type: "warning"
-                });
+                // @ts-ignore
+                const deleteConf:any = this.mergeDeleteButton.deleteConf || {};
+                if(deleteConf.showAskDeleteDialog){
+                    const title = deleteConf.askDeleteTitle || "提示";
+                    const message = deleteConf.askDeleteMessage || "此操作将永久删除该数据, 是否继续?";
+                    const confirmButtonText = deleteConf.askDeleteConfirmButtonText || "确定";
+                    const cancelButtonText = deleteConf.askDeleteCancelButtonText || "取消";
+                    await ElMessageBox.confirm(message, title, {
+                        confirmButtonText: confirmButtonText,
+                        cancelButtonText: cancelButtonText,
+                        type: "warning"
+                    });
+                }
+                
                 try{
                     // @ts-ignore
                     await this.deleteFunc(loadData.data)
-                    ElMessage({
-                        type: "success",
-                        message: "删除成功!"
-                    });
+                    if(deleteConf.showDeleteSuccessMessage !== false){
+                        ElMessage({
+                            type: "success",
+                            message: deleteConf.deleteSuccessMessage || "删除成功!"
+                        });
+                    }
                     // @ts-ignore
                     this.$refs?.isearch?.handleSearch();
                 } catch (error) {

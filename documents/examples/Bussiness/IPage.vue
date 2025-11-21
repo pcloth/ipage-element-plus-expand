@@ -18,6 +18,14 @@
                     searchProps:{
                         queryFunc:this.queryFunc
                     },
+                    deleteFunc:()=>{
+                        console.log('deleteFunc')
+                        return new Promise((resolve)=>{
+                            setTimeout(()=>{
+                                resolve(true)
+                            },1000)
+                        })
+                    },
                     searchItems:[
                         {
                             id:'name',
@@ -148,7 +156,7 @@
                     const records = []
                     for(let i=0;i<10;i++){
                         records.push({
-                            name:'张三',
+                            name:'张三'+i,
                             gender:(i%2)+1,
                         })
                     }

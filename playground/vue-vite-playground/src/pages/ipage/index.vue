@@ -150,6 +150,15 @@ const otherProps = ref<Record<string, any>>({
             }, 1000)
         })
     },
+    deleteButton:{
+        deleteConf:{
+            askDeleteTitle: "提示标题111",
+        }
+    },
+    deleteFunc:async (data)=>{
+        // 发起删除请求
+        return true
+    },
     editButton: {
         tip: '编辑测试',
         show: (loadata) => {
