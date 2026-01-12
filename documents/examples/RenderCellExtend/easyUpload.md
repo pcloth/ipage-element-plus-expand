@@ -88,6 +88,7 @@ RenderCellExtend/easyUpload5
 | zoomLimit | Object | `{width:number,height:number}`缩放限制：<br/>- 单值：优先按该值缩放，另一值按比例，比如`{width:800}`,表示`宽度缩放到800px`，高度根据比例自动计算。<br/>- 双值：裁剪时按限制剪裁<br/>- 未裁剪时按最小值缩放 | 无 |
 | quality | Number | 缩放质量（0-1之间的数字） | `0.92` |
 | convertExt | String | 转换图片后缀（支持 `jpg`/`webp`/`png`） | 无 |
+| defaultExt | String | 判断文件后缀的时候，如果没有识别到图片或者视频，使用默认后缀 | 无 |
 | useWatermark | Boolean | 是否使用水印 | `false` |
 | watermarkFunc | Function | 自定义水印配置函数（优先级高于 `watermarkText`） | 无 |
 | watermarkText | String | 默认水印文字（`useWatermark` 为 `false` 时无效） | `''` |

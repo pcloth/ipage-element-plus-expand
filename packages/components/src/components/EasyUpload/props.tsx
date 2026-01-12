@@ -57,7 +57,7 @@ export default {
      */
     quality:{
         type: Number,
-        default: $c.get('upload.quality')
+        default: () => $c.get('upload.quality')
     },
     /**
      * 转换图片后缀, 默认不转换
@@ -65,7 +65,14 @@ export default {
      */
     convertExt:{
         type: String,
-        default: $c.get('upload.convertExt')
+        default: () => $c.get('upload.convertExt')
+    },
+    /** 
+     * 默认后缀：判断文件后缀的时候，如果没有后缀，使用默认后缀
+     */
+    defaultExt:{
+        type: String,
+        default: () => $c.get('upload.defaultExt')
     },
     /**
      * 是否使用水印
@@ -83,7 +90,7 @@ export default {
      */
     watermarkFunc:{
         type: Function,
-        default:$c.get('upload.convertExt')
+        default: $c.get('upload.watermarkFunc')
     },
     /** 
      * 水印文字：默认会根据文件名生成水印文字平铺在图片上

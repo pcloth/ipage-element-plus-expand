@@ -4,7 +4,7 @@ import { ref } from 'vue'
 const images = ref([
 {
             "fileId": "1915232648825987074",
-            "httpPath": "https://zfjg.cq119.gov.cn:10040/api/file/1434933828294656/open"
+            "httpPath": "https://zsjzx.cq119.gov.cn/data/weaver/ecology/filesystem/202305/O/5efb293d-4f62-48ab-9c79-5e1f502bea47"
         }
 ])
 // const images = ref("")
@@ -18,7 +18,7 @@ const testBtn = ()=>{
     images.value = [
         {
             "fileId": "1915232648825987074",
-            "httpPath": "https://zfjg.cq119.gov.cn:10040/api/file/1434933828294656/open"
+            "httpPath": "https://zsjzx.cq119.gov.cn/data/weaver/ecology/filesystem/202305/O/5efb293d-4f62-48ab-9c79-5e1f502bea47"
         }
     ]
 }
@@ -55,6 +55,7 @@ const uploadSuccess = (fileItem, res, fileList)=>{
         watermarkText="水印"
         valueFormat="array<object>"
         allowChangeWatermarkText
+        defaultExt="png"
         :valueProps="{
             url: 'httpPath'
         }"

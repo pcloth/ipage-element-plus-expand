@@ -102,7 +102,11 @@ import {
 import ReviewBox from './reviewBox.vue'
 import Cropper from './cropper.vue'
 const _getFileType = (item: any) => {
-    return fileType(item[mergeValueProps.value.url] || "")
+    const typeString = fileType(item[mergeValueProps.value.url] || "")
+    if((!typeString || typeString==='file') && props.defaultExt){
+        return fileType(`file.${props.defaultExt}`)
+    }
+    return typeString;
 }
 
 const emits = defineEmits([
